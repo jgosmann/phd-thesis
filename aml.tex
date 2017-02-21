@@ -1,0 +1,18 @@
+\chapter{Association Matrix Learning}
+
+The TCM requires two association matrices, $\mat M_\ped{TF}$ and $\mat M_\ped{FT}$, to be updated.
+To translate this into neurons an appropriate learning rule has to be derived.
+The TCM gives the update of such an association matrix as
+\begin{eqnarray}
+    \mat M_{i+1} =& \mat M_i + \Delta \mat M_i \\
+    \Delta \mat M_i =& \vc b_i \vc a_i\Tr
+\end{eqnarray}
+for adding an association from $\vc a$ to $\vc b$.
+The association matrix after $n$ updates can be expressed as
+\begin{equation}
+    \mat M_n = M_0 + \sum_{i=1}^{n} \Delta \mat M_i = M_0 + \sum_{i=1}^n \vc b_i \vc a_i\Tr \text{.}
+\end{equation}
+This allows us to express the neural connection weights after learning $n$ associations as
+\begin{equation}
+
+\end{equation}
