@@ -36,9 +36,9 @@ That alone, however, does not ensure the biological plausibility as any mathemat
 To get a better sense of the biological plausibility it is useful to obtain a formulation of the learning rule in terms of neural activities by replacing the decoded values, yielding
 \begin{eqnarray}
     \od{\tilde{\mat D}}{t} =& \eta (D_v a_v(t)) (D a_u(t))\Tr D \\
-    =& \eta D_v (a_v(t) a_u(t)) D\Tr D \text{.}
+    =& \eta D_v (a_v(t) a_u\Tr(t)) D\Tr D \text{.}
 \end{eqnarray}
-Here, $D\Tr D$ gives a correlation matrix of neurons representing the same dimension and $a_v(t) a_u(t)$ can be interpreted as a \emph{modulatory Hebbian term}.
+Here, $D\Tr D$ gives a correlation matrix of neurons representing the same dimension and $a_v(t) a_u\Tr(t)$ can be interpreted as a \emph{modulatory Hebbian term}.
 Unlike a standard Hebbian term it does not connect neurons that fire together, but the combined firing of two neurons modulates the connection of one of these neurons to a third population (see Fig.~TODO).
 If the population $u$ projects to is used as the $v$ input population, this rule will become truly Hebbian and neurons that fire together will connect with respect to the weighting introduced by $D_v$ and $D\Tr D$.
 Note that in contrast to many other learning rules AML does not produce destructive interference due to the correlation matrix term.

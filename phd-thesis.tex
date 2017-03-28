@@ -79,9 +79,16 @@
 \usepackage{fontspec}
 \usepackage{microtype}
 \usepackage{amsmath,amssymb,amstext}
+\usepackage{bm}
 \usepackage{commath}
 \usepackage[backend=biber]{biblatex}
 \usepackage[]{graphicx}
+\usepackage{tikz}
+
+\usetikzlibrary{graphs}
+\usetikzlibrary{quotes}
+\usetikzlibrary{shadows}
+\usetikzlibrary{shapes.geometric}
 
 \addbibresource{uw-ethesis.bib}
 
@@ -164,7 +171,7 @@
 \let\cleardoublepage\clearemptydoublepage
 
 \newcommand{\mat}[1]{#1}
-\newcommand{\vc}[1]{#1}
+\newcommand{\vc}[1]{\bm{#1}}
 \newcommand{\ped}[1]{{\mathrm{#1}}}
 \newcommand{\Tr}{^{\top}}
 
@@ -182,27 +189,25 @@ description={A programmable machine that receives input data,
 
 % Nomenclature glossary entries -- New definitions, or unusual terminology
 \newglossary*{nomenclature}{Nomenclature}
-\newglossaryentry{dingledorf}
-{
-type=nomenclature,
-name=dingledorf,
-description={A person of supposed average intelligence who makes incredibly brainless misjudgments}
-}
+\newglossary*{symbols}{List of Symbols}
+\makeglossaries
+%\newglossaryentry{dingledorf}
+%{
+%type=nomenclature,
+%name=dingledorf,
+%description={A person of supposed average intelligence who makes incredibly brainless misjudgments}
+%}
 
 % List of Abbreviations (abbreviations type is built in to the glossaries-extra package)
 \newabbreviation{aaaaz}{AAAAZ}{American Association of Amature Astronomers and Zoologists}
 
 % List of Symbols
-\newglossary*{symbols}{List of Symbols}
-\newglossaryentry{rvec}
-{
-name={$\mathbf{v}$},
-sort={label},
-type=symbols,
-description={Random vector: a location in n-dimensional Cartesian space, where each dimensional component is determined by a random process}
-}
- 
-\makeglossaries
+\newcommand{\addsym}[4]{\newglossaryentry{#2}{sort={#2},type=symbols,name={\ensuremath{#3}},description={#4}}\glsadd{#2}\newcommand{#1}{\ensuremath{#3}}}
+\addsym{\ctx}{c}{\vc{c}}{TCM context vector}
+\addsym{\ctxin}{cin}{\vc{c}^\ped{IN}}{TCM input context vector}
+\addsym{\tcmbeta}{beta}{\beta}{TCM beta parameter}
+\addsym{\Heavi}{heavi}{\Theta}{Heaviside function}
+
 
 %======================================================================
 %   L O G I C A L    D O C U M E N T -- the content of your thesis
@@ -233,6 +238,8 @@ description={Random vector: a location in n-dimensional Cartesian space, where e
 \include{ctx-update}
 \include{aml}
 
+\chapter{Acknowledgements}
+IK
 %----------------------------------------------------------------------
 % END MATERIAL
 %----------------------------------------------------------------------

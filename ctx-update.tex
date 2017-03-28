@@ -1,0 +1,88 @@
+\chapter{Context update}
+
+The context update network has to approximate Equation~TODO which, as a reminder, is restated here:
+\begin{equation}
+    \ctx_i = \rho_i \ctx_{i-1} + \tcmbeta \ctxin_i\,\text{.} \label{eqn:ctx-update}
+\end{equation}
+Different methods of approximating this equation can be thought of and in the following I will describe four methods of which only one was successful in matching the data.
+Even though most of these methods have been unsuccessful it is instructive to see why these methods failed to match the data as this demonstrates which features of the mathematical TCM formulation are relevant and which are non-relevant side-effects of a particular formulation.
+
+\section{Boundend integrator}
+Equation~\ref{eqn:ctx-update} assumes discrete steps, but for a neural implementation a continuous formulation is more natural and given by
+\begin{equation}
+    \od{\ctx}{t} = (\bar{\rho} - 1) \ctx + \bar{\tcmbeta} \ctxin\,\text{.}
+\end{equation}
+This equation is easily implemented with a neural integrator for a constant $\bar{rho}$ and $\bar{\tcmbeta}$.
+However, there is no limit on the integration of $\ctxin$ anymore.
+To add at most $\tcmbeta \ctxin$ to the context $\ctx$ we can gate the input to the integrator and add a network computing the dot product between $\ctx$ and $\ctxin$.
+After thresholding it at $\tcmbeta$ it can be used to suppress the input by inhibiting the gate (TODO figure).
+Furthermore, $\bar{\rho}$ needs to be adjusted to keep the unit length of $\ctx$.
+To do so, we can project $c$ to another population \pop{downscale} which projects back to the integrator with a transform of $\gamma = -0.1$.
+Picking a $\gamma$ closer to zero will allow the $\vc c$ vector exceed unit length by a larger amount while the integrator receives input and will increase the time required to settle back to unit length, whereas a large magnitude of $\gamma$ can lead to oscillatory behaviour.
+The \pop{downscale} population needs to be controlled to only provide the inhibitory input to the integrator as long as $\norm{\ctx} > 1$.
+This is achieved by decoding the the length of $\vc c$ from the integrator and thresholding it at $1$.
+As long as the threshold is not exceeded \pop{downscale} will be inhibited.
+\begin{figure}
+    \begin{tikzpicture}[
+        ext/.style={draw=none},
+        net/.style={draw, rounded corners=0.5em},
+        ens/.style={draw, circle, inner sep=0.25ex},
+        rect/.style={draw, diamond, inner sep=0.25ex},
+        state/.style={draw, fill=white, circle, inner sep=0.05em, double copy shadow={opacity=0.6, shadow yshift=-0.3ex, shadow xshift=0.3ex}},
+        recurrent/.style={loop above, min distance=2em, in=120, out=60}
+        ]
+        \graph[grow right sep=15mm, branch down sep=15mm, nodes={anchor=center, minimum width=1.5em, minimum height=1.5em}, edge quotes={above, node font=\small}] {
+            in/\ctxin [ext] -!- {
+                gate/ [state] -> ["$\bar{\tcmbeta}$"] integrator/\ctx [state] -> out/ [ext],
+                threshold/ [rect],
+                dot [net]
+            },
+            in -> gate,
+            in -> dot -> threshold -> ["$\Heavi(x - \bar{\tcmbeta})$" {rotate=90}] gate,
+            integrator -> dot,
+            integrator -> [recurrent, "$\bar{\rho}$" above] integrator
+        };
+    \end{tikzpicture}
+    \caption{TODO}
+\end{figure}
+
+This network fulfills two criteria of the context update equation: the new context is added in with a strength of at most $\tcmbeta$ and the context vector is kept at unit length.
+Unfortunately, it does not give the desired match to human data.
+The main reason for that is that TODO (old context not preserved by increasing length and renormalizing? Context input not orthogonal?)
+
+\section{Alternating update of two memories}
+As the continuous update of a single integrator does not yield the desired results, it is necessary to approximate Equation~\ref{eqn:ctx-update} more closely.
+This can be done with memory populations (TODO describe in previous chapter) that allow to update the stored value quickly instead of continuously shifting the stored vector to the target vector.
+One memory population is used to store the old context $\ctx_{i-1}$.
+This old context and the input context $\ctxin_i$ can be used to update the other memory population with appropriate weightings $\rho = \sqrt{1 - \tcmbeta^2}$ and $\tcmbeta$.
+Note that the $\rho$ weighting is an approximation using the fact that the old context and input will be almost orthogonal in a high-dimensional space.
+
+Once the second memory population has been updated, the input gate can be closed and the first memory population can be updated, thus making the updated context the ``old'' context.
+However, the neural control of this switching between updating the two memory populations is not trivial.
+In a first approximation one can use the dot product between the input and the current context to switch the updating once a threshold of $\tcmbeta$ is exceeded.
+
+Trying to determine if dot product is changing, for what?
+Is there a problem with the dot product changing too early once the old context gets updated?
+
+orthogonality violated on recall
+
+\section{Three memory context update}
+To solve the problems with updating two memories alternatingly a third memory can be introduced.
+That way the current context can be updated as before with a combination of $\rho \ctx_{i-1} + \tcmbeta \ctxin_i$.
+Once the update is done, the third intermediary buffer gets updated before the old context gets updated from this buffer (and updates to the current context are also allowed again). TODO, why exactly solves this problems?
+
+In this scheme it is easy to determine that the current context has been updated by using a dot product between the current context and the input to the current context.
+If it exceeds one, the update is finished and the intermediary buffer can be updated.
+TODO what problem solves this compared to the dot product of $\ctxin_i$ and the current context thresholded at $\tcmbeta$?
+
+Explain remaining problem of growing (?) context.
+
+\section{Externally controlled three memory context update with downscale}
+All approaches to determine required context updates based on vector similarity will fail because the similarity of $\ctxin_i$ and $\ctx_{i-1}$ is not known beforehand and can vary widely depending on what contexts are recalled.
+Thus, for a properly working context update in the TCM model, the update process has to be controlled by an external control signal (TODO reference other chapter).
+The three memory structure works very well in that case with one exception, that with similar vectors the context vector can exceed unit length.
+This can be fixed by introducing a downscaling network as in TODO\@.
+This network fulfills all required criteria for the TCM context update.
+
+It leads to a number of predictions.
+First, the update of the context signal is not directly regulated by the input, but externally controlled. Second, there are neural populations that will start representing the current context in succession. Third, there are neural populations that become active only when highly similar contexts are retrieved (as only in that case the context vector exceeds unit length and will activate the downscale population).

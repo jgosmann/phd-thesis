@@ -113,27 +113,29 @@ This is dedicated to the one I love.
 \renewcommand\contentsname{Table of Contents}
 \tableofcontents
 \cleardoublepage
-\phantomsection    % allows hyperref to link to the correct page
+%\phantomsection    % allows hyperref to link to the correct page
 
 % L I S T   O F   T A B L E S
 % ---------------------------
-\addcontentsline{toc}{chapter}{List of Tables}
+\addchap{List of Tables}
+%\addcontentsline{toc}{chapter}{List of Tables}
 \listoftables
 \cleardoublepage
-\phantomsection		% allows hyperref to link to the correct page
+%\phantomsection		% allows hyperref to link to the correct page
 
 % L I S T   O F   F I G U R E S
 % -----------------------------
-\addcontentsline{toc}{chapter}{List of Figures}
+\addchap{Lisf of Figures}
+%\addcontentsline{toc}{chapter}{List of Figures}
 \listoffigures
 \cleardoublepage
-\phantomsection		% allows hyperref to link to the correct page
+%\phantomsection		% allows hyperref to link to the correct page
 
 % GLOSSARIES (Lists of definitions, abbreviations, symbols, etc. provided by the glossaries-extra package)
 % -----------------------------
 \printglossaries
 \cleardoublepage
-\phantomsection		% allows hyperref to link to the correct page
+%\phantomsection		% allows hyperref to link to the correct page
 
 % Change page numbering back to Arabic numerals
 \pagenumbering{arabic}
