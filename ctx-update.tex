@@ -23,22 +23,15 @@ The \pop{downscale} population needs to be controlled to only provide the inhibi
 This is achieved by decoding the the length of $\vc c$ from the integrator and thresholding it at $1$.
 As long as the threshold is not exceeded \pop{downscale} will be inhibited.
 \begin{figure}
-    \begin{tikzpicture}[
-        ext/.style={draw=none},
-        net/.style={draw, rounded corners=0.5em},
-        ens/.style={draw, circle, inner sep=0.25ex},
-        rect/.style={draw, diamond, inner sep=0.25ex},
-        state/.style={draw, fill=white, circle, inner sep=0.05em, double copy shadow={opacity=0.6, shadow yshift=-0.3ex, shadow xshift=0.3ex}},
-        recurrent/.style={loop above, min distance=2em, in=120, out=60}
-        ]
-        \graph[grow right sep=15mm, branch down sep=15mm, nodes={anchor=center, minimum width=1.5em, minimum height=1.5em}, edge quotes={above, node font=\small}] {
+    \begin{tikzpicture}[nef]
+        \graph {
             in/\ctxin [ext] -!- {
-                gate/ [state] -> ["$\bar{\tcmbeta}$"] integrator/\ctx [state] -> out/ [ext],
+                gate/ [ea] -> ["$\bar{\tcmbeta}$"] integrator/\ctx [ea] -> out/ [ext],
                 threshold/ [rect],
                 dot [net]
             },
             in -> gate,
-            in -> dot -> threshold -> ["$\Heavi(x - \bar{\tcmbeta})$" {rotate=90}] gate,
+            in -> dot -> threshold -> [inhibit, "$\Heavi(x - \bar{\tcmbeta})$" {rotate=90}] gate,
             integrator -> dot,
             integrator -> [recurrent, "$\bar{\rho}$" above] integrator
         };
