@@ -42,48 +42,96 @@ As long as the threshold is not exceeded $\ctx_{\downarrow}$ will be inhibited.
     \caption{Bounded integrator network.}\label{fig:ctx-bounded-integrator}
 \end{figure}
 
-This network fulfills two criteria of the context update equation: the new context is added in with a strength of at most $\tcmbeta$ and the context vector is kept at unit length.
-Unfortunately, it does not give the desired match to human data.
-The main reason for that is that TODO (old context not preserved by increasing length and renormalizing? Context input not orthogonal?)
+This network I fed it with new context vectors $\ctxin$ at a rate of one vector per second and record the represented context $\ctx$.
+I used three metrics to test the basic functionality. First, the norm of the context vector $\norm{ctx}$.
+Second the effective $\tcmbeta$ which is the similarity of the represented context $\ctx$ and the new context vector $\ctxin$.
+For orthogonal $\ctxin$ vectors, the effective $\tcmbeta$ should rise to $\tcmbeta$, but note that for non orthogonal vectors an effective $\tcmbeta$ of more than $\tcmbeta$ is expected.
+In this latter case the new context vectors $\ctxin$ is still supposed to be added with a strength of $\tcmbeta$, but because the context $\ctx$ will already be similar to $\ctxin$, the updated context vectors should have a higher similarity to $\ctxin$ than $\tcmbeta$.
+Third and most importantly, it is useful to look at the decay of the context similarity over time for each updated context vector.
+
+\Cref{fig:bounded-integrator-orthogonal} shows these metrics for the bounded integrator network. With the orthogonal input contexts it seems to be working properly.
+The norm of the context vectors stays at one, the effective $\tcmbeta$ rises to $\tcmbeta$ for each new input vector, and the context similarity decay is roughly what is expected despite a few traces decaying too quickly.
+However, the network fails, if the input context vectors are not orthogonal (\cref{fig:boundint}).
+In this case, the context similarity does not decay nearly as quickly as it should.
+This can be attributed to stopping the updating once the effective $\tcmbeta$ reaches $\tcmbeta$ even though in the case of similar input vectors this is not sufficient.
+\begin{figure}
+    \centering
+    \includegraphics{bounded-integrator-orthogonal}
+    \caption{
+        Properties of the context vectors produces by the bounded integrator context network.
+        It was provided with a new input context vector every second.
+        Upper left: \ltwo-norm of the context.
+        Lower left: Similarity of the context to the new input context.
+        Right: The blue lines show the similarity of the context after each update to future context vectors.
+        The red shading shows the expected similarities for different values of $\tcmbeta$ with the darkest shading corresponding to the target of $\tcmbeta = 0.6$.}\label{fig:bounded-integrator-orthogonal}
+\end{figure}
 \begin{figure}
     \centering
     \includegraphics{boundint}
-    \caption{TODO}
+    \caption{
+        Properties of the context vectors produces by the bounded integrator context network.
+        It was provided with a new input context vector every second.
+        Upper left: \ltwo-norm of the context.
+        Lower left: Similarity of the context to the new input context.
+        Right: The blue lines show the similarity of the context after each update to future context vectors.
+        The red shading shows the expected similarities for different values of $\tcmbeta$ with the darkest shading corresponding to the target of $\tcmbeta = 0.6$.}\label{fig:boundint}
 \end{figure}
 
 \section{Alternating update of two memories}
-As the continuous update of a single integrator does not yield the desired results, it is necessary to approximate Equation~\ref{eqn:ctx-update} more closely.
-This can be done with memory populations (TODO describe in previous chapter) that allow to update the stored value quickly instead of continuously shifting the stored vector to the target vector.
-One memory population is used to store the old context $\ctx_{i-1}$.
-This old context and the input context $\ctxin_i$ can be used to update the other memory population with appropriate weightings $\rho = \sqrt{1 - \tcmbeta^2}$ and $\tcmbeta$.
-Note that the $\rho$ weighting is an approximation using the fact that the old context and input will be almost orthogonal in a high-dimensional space.
+With a single integrator we have to rely on the dot product between the input vector and current context as a measure of $\tcmbeta$.
+To circumvent this we need to use to gated memory populations that are updated in alternating fashion.
+Then the output of the old context and input vector can be combined according to $\rho \ctx + \tcmbeta \ctxin$ and fed into to the memory buffer for the current context.
+The completion of that memory update can be detected by the dot product of the updated context and the current context crossing 1.
+\begin{figure}
+    \centering
+    \begin{tikzpicture}[nef, x=2cm, y=2cm]
+        \graph [no placement] {
+            in/\ctxin [ext, at={(0,0)}] -> ["$\tcmbeta$"] new/ [pnode, at={(1,0)}] -> cgate/ [ea, at={(2, 1)}] -> current/\ctx [ea, at={(3, 1)}] -> oldgate/ [ea, at={(3, -1)}] -> old/$\ctx'$ [ea, at={(2, -1)}] -> ["$\rho$"] new,
+            current -> [bend right, "$-1$"] cgate,
+            new -> [out=0, in=225] dot [net, at={(4, 1)}], current -> dot [net],
+            dot -> rectification/ [rect, at={(4.5, 0.5)}] -> ["$\Heavi(x)$" anchor=west] heavi/ [pnode, at={(4.5, -0.5)}] -> [inhibit, bend left] cgate,
+            heavi -> [inhibit] invert/ [ens, at={(4, -1)}] -> [inhibit] oldgate,
+            bias/1 [ext, at={(4.5, -1)}] -> invert,
+            old -> [bend right, "$-1$" below] oldgate
+        };
+    \end{tikzpicture}
+    \caption{Alternating update of memory buffers.}\label{fig:ctx-bounded-integrator}
+\end{figure}
 
-Once the second memory population has been updated, the input gate can be closed and the first memory population can be updated, thus making the updated context the ``old'' context.
-However, the neural control of this switching between updating the two memory populations is not trivial.
-In a first approximation one can use the dot product between the input and the current context to switch the updating once a threshold of $\tcmbeta$ is exceeded.
+Unfortunately, this still does not work for input vectors with some similarity.
+In that case the dot product of the updated context and current context will already be quite high and the updated context is not completely loaded into the current memory buffer.
+\begin{figure}
+    \centering
+    \includegraphics{alternating-memory-buffers}
+    \caption{
+        Properties of the context vectors produces by the alternating update of two memories context network.
+        It was provided with a new input context vector every second with a similarity of approximately $\sqrt{1. - \beta^2}$ between consecutive vectors.
+        Upper left: \ltwo-norm of the context.
+        Lower left: Similarity of the context to the new input context.
+        Right: The blue lines show the similarity of the context after each update to future context vectors.
+        The red shading shows the expected similarities for different values of $\tcmbeta$ with the darkest shading corresponding to the target of $\tcmbeta = 0.6$.}\label{fig:alternating-memory-buffers}
+\end{figure}
 
-Trying to determine if dot product is changing, for what?
-Is there a problem with the dot product changing too early once the old context gets updated?
 
-orthogonality violated on recall
-
-\section{Three memory context update}
-To solve the problems with updating two memories alternatingly a third memory can be introduced.
-That way the current context can be updated as before with a combination of $\rho \ctx_{i-1} + \tcmbeta \ctxin_i$.
-Once the update is done, the third intermediary buffer gets updated before the old context gets updated from this buffer (and updates to the current context are also allowed again). TODO, why exactly solves this problems?
-
-In this scheme it is easy to determine that the current context has been updated by using a dot product between the current context and the input to the current context.
-If it exceeds one, the update is finished and the intermediary buffer can be updated.
-TODO what problem solves this compared to the dot product of $\ctxin_i$ and the current context thresholded at $\tcmbeta$?
-
-Explain remaining problem of growing (?) context.
-
-\section{Externally controlled three memory context update with downscale}
+\section{Externally controlled alternating memory buffers}
 All approaches to determine required context updates based on vector similarity will fail because the similarity of $\ctxin_i$ and $\ctx_{i-1}$ is not known beforehand and can vary widely depending on what contexts are recalled.
 Thus, for a properly working context update in the TCM model, the update process has to be controlled by an external control signal (TODO reference other chapter).
-The three memory structure works very well in that case with one exception, that with similar vectors the context vector can exceed unit length.
-This can be fixed by introducing a downscaling network as in TODO\@.
-This network fulfills all required criteria for the TCM context update.
+If we take the alternating memory buffer network, it works for both orthogonal and similar input vectors.
+\begin{figure}
+    \centering
+    \begin{tikzpicture}[nef, x=2cm, y=2cm]
+        \graph [no placement] {
+            in/\ctxin [ext, at={(0,0.5)}] -> ["$\tcmbeta$"] new/ [pnode, at={(1,0.5)}] -> cgate/ [ea, at={(2, 1)}] -> current/\ctx [ea, at={(3,1)}] -> oldgate/ [ea, at={(3, -1)}] -> old/$\ctx'$ [ea, at={(2, -1)}] -> ["$\rho$" {very near start, below}] new,
+            current -> [bend right, "$-1$"] cgate,
+            TODO [ext, at={(0,-.5)}] -> ctrl/ [pnode, at={(1,-.5)}] -> [inhibit] cgate,
+            ctrl -> ["$-1$" near end] invert/ [pnode, at={(2.5, -0.5)}] -> [inhibit] oldgate,
+            bias/1 [ext, at={(2.5, 0)}] -> invert,
+            old -> [bend right, "$-1$" below] oldgate
+        };
+    \end{tikzpicture}
+    \caption{Alternating update of memory buffers.}\label{fig:ctx-bounded-integrator}
+\end{figure}
 
-It leads to a number of predictions.
-First, the update of the context signal is not directly regulated by the input, but externally controlled. Second, there are neural populations that will start representing the current context in succession. Third, there are neural populations that become active only when highly similar contexts are retrieved (as only in that case the context vector exceeds unit length and will activate the downscale population).
+This leads to a number of predictions.
+First, the update of the context signal is not directly regulated by the input, but externally controlled.
+Second, there are neural populations that will start representing the current context in succession.
