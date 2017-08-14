@@ -1,0 +1,42 @@
+\chapter{The Neural Engineering Framework}
+
+To construct a large-scale spiking neural network with a certain behaviour, some method for obtaining that behaviour is required.
+In most cases this method will be a learning algorithm (TODO example ref).
+However, this requires time-intensive training of the model and is often not viable for large models, complex behaviours, or models combining different behaviours.
+In this work I opt to use the Neural Engineering Framework (NEF) (TODO ref) which allows the direct construction of a spiking neural network from the mathematical equations describing the desired dynamics without the time-intensive training.
+As such the final model does not provide an developmental account of how the neural network became organized or learned to perform its task.
+But it provides a biological plausible explanation of how the brain might perform that task.
+Furthermore, it allows for manipulations to test known experimental results in the model or obtain new predictions.
+
+The NEF consists out of the three core principles for \emph{representation}, \emph{transformation}, and \emph{dynamics} in a neural network that I will introduce in this order.
+
+\section{Representation}
+Neurons within a (natural) neural network will have a preferred stimulus: they will fire most strongly for that stimulus and less strongly as the stimulus gets more dissimilar to the preferred stimulus. (TODO figure)
+To capture this in a mathematical description, we can treat the stimulus as a vector $\vc x(t)$ that varies over time.
+The preferred stimulus vector, that is the vector a neuron $i$ fires most strongly for, will be denoted with $\enc_i$.
+The spiking activity $\act_i(t)$ of a neuron can then be described with
+\begin{equation}
+    \act_i(t) = \nl\!\sbr{\gain_i \langle\enc_i, \vc x(t)\rangle + \jbias_i}
+\end{equation}
+where $\gain_i$ is a neuron gain factor, $\jbias_i$ a bias input current, and $\nl$ the neuron nonlinearity.
+The nonlinearity $\nl$ represents the neuron model and converts an input current into spikes.
+Usually this will be the spiking, leaky integrate-and-fire model (LIF) discussed in TODO which provides a good trade-off of captured neuron behaviour, detail, and simulation effort.
+But simpler neuron models (e.g., a rate-based LIF model, or rectified linear units) could be used, as well as much more complex neuron models like the compartmental model in TODO ref Biospaun and Pete's work.
+The input current to the neuron is obtained from how well the stimulus aligns with the preferred stimulus as measured by the dot product.
+As this alignment with the preferred stimulus ``encodes'' the stimulus into the neural representational space, $\enc$ is usually referred to as \emph{encoder} in the context of the NEF\@.
+Furthermore, the gain factor $\gain_i$ and bias term $\jbias_i$ allow to adjust the neuron's tuning curve to experimentally observed firing rates.
+As it is rare to have detailed information about the tuning curves in many part of the brain, those values are usually not directly set in the NEF\@.
+Instead a representational space $\repspace$ is defined, usually as the $\dim$-dimensional $\dim$-hyperball with radius $\radius$.
+Furthermore, for each neuron a maximum firing rate $\act_{\max}$ and an intercept point $p$ are sampled from random distributions.
+These values are used to calculate the gain and bias so that the neuron starts firing at $p \cdot \enc$ when moving along the encoder $\enc$ and that the maximum $\act_{\max}$ is not exceeded across the representational space $\repspace$.
+
+Decoding
+
+Decoder solving
+   
+\section{Transformation}
+
+\section{Dynamics}
+
+\section{Simulating NEF networks}
+Nengo, OCL, trade-offs, optimizer
