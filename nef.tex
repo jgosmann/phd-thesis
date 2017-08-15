@@ -26,15 +26,72 @@ The input current to the neuron is obtained from how well the stimulus aligns wi
 As this alignment with the preferred stimulus ``encodes'' the stimulus into the neural representational space, $\enc$ is usually referred to as \emph{encoder} in the context of the NEF\@.
 Furthermore, the gain factor $\gain_i$ and bias term $\jbias_i$ allow to adjust the neuron's tuning curve to experimentally observed firing rates.
 As it is rare to have detailed information about the tuning curves in many part of the brain, those values are usually not directly set in the NEF\@.
-Instead a representational space $\repspace$ is defined, usually as the $\dim$-dimensional $\dim$-hyperball with radius $\radius$.
+Instead a representational space $\repspace$ is defined, usually as the $\dims$-dimensional $\dims$-hyperball with radius $\radius$.
 Furthermore, for each neuron a maximum firing rate $\act_{\max}$ and an intercept point $p$ are sampled from random distributions.
 These values are used to calculate the gain and bias so that the neuron starts firing at $p \cdot \enc$ when moving along the encoder $\enc$ and that the maximum $\act_{\max}$ is not exceeded across the representational space $\repspace$.
 
-Decoding
+Given a population of neurons, also called a neural \emph{ensemble} in NEF terms, how can the encoded vector $\vc x(t)$ be recovered?
+First the activity or spike trains $\act_i(t)$ are convolved with a synaptic filter $\syn$ to obtain the induced post-synaptic voltage change.
+Usually this will be a decaying exponential $\syn(t) = \exp(-t / \syntau)$, but other filters can be used to more precisely model the dynamics of the synapse.
+From the filtered activity, the represented vector can be reconstructed with a linear, weighted decoding
+\begin{equation}
+    \hat{\vc x}(t) = \sum_i \vc \dec_i \cdot \sbr{a_i * h}\!(t)
+\end{equation}
+with decoding weights $\dec_i$.
 
-Decoder solving
-   
+To get a good reconstruction of the represented value, the decoding weights should minimize the error
+\begin{equation}
+    E = \int_{\repspace} \norm{\vc x - \hat{\vc x}}^2 \dif \vc x \text{.}
+\end{equation}
+In general, this minimization cannot be solved analytically.
+Thus, in the NEF the integral is approximated by randomly sampling $M$ \emph{evaluation points} $\evalp_k \in \repspace$.
+Given the finite number of evaluation points, it becomes possible to solve for the decoding weights with a least-squares minimization.
+The detailed derivation is given in TODO ref NEF book.
+As the final result one obtains the matrices
+\begin{equation}
+    \actmat = \sbr{\begin{array}{cccc}
+            \act_1(\vc x_1) & \act_1(\vc x_2) & \cdots & \act_1(\vc x_M) \\
+            \act_2(\vc x_1) & \act_2(\vc x_2) & \cdots & \act_2(\vc x_M) \\
+            \vdots & \vdots & \ddots & \vdots \\
+            \act_N(\vc x_1) & \act_N(\vc x_2) & \cdots & \act_N(\vc x_M) \\
+    \end{array}}
+    \ \text{and}\ 
+    \evalpmat = \sbr{\begin{array}{c}
+            \vc x_1 \\ \vc x_2 \\ \vdots \\ \vc x_M
+    \end{array}}
+\end{equation}
+where one can use the steady-state activities in the activity matrix $\actmat$ which can be obtained analytically for LIF neurons.
+Given these two matrices the decoding weights can be obtained with the regularized pseudo-inverse as
+\begin{equation}
+    \sbr{\begin{array}{c}
+            \dec_1\Tr \\ \dec_2\Tr \\ \vdots \\ \dec_N\Tr
+        \end{array}} = \del{\actmat \actmat\Tr + M \gamma^2 {\max(\actmat)}^2 \imat}^{-1} \actmat \evalpmat
+\end{equation}
+where $\gamma$ is the regularization scale (usually $\gamma = 0.1$).
+
+The encoders and decoders do not only allow us to encode information into a neural ensembles and decode it back out, but also to transmit that information from one neural population to another.
+By decoding from the pre-synaptic ensemble and encoding into the post-synaptic ensemble, the connection weights required between the two populations can be obtained as
+\begin{equation}
+    W_{ij} = \enc_i\Tr \dec_j \text{.}
+\end{equation}
+
+
 \section{Transformation}
+To be useful, a neural network has to transform or compute functions on the represented information.
+In the NEF, it is straight-forward to implement a given transformation in the connection weights between two ensembles.
+To implement a function $f(\vc x)$, one replaces the matrix $\evalpmat$ with
+\begin{equation}
+    \evalpmat_{f(\vc x)} = \sbr{\begin{array}{c}
+            f(\vc x_1) \\ f(\vc x_2) \\ \vdots \\ f(\vc x_M)
+    \end{array}}
+\end{equation}
+when solving for decoders.
+This corresponds to a minimization of the modified error $E_{f(\vc x)} = \int_{\repspace} \norm{f(\vc x) - \hat{\vc x}}^2 \dif \vc x$.
+
+TODO ref NEF book shows that a neural network constructed in this way is typically best at computing low-order polynomials.
+Non-smooth or discontinuous functions might require a large number of neurons.
+In some cases a better function approximation can be achieved by appropriately selecting parameters like intercepts or encoders or by changing the network structure to decompose a function in a different way.
+An example is the calculation of products and has been discussed in TODO ref multiplication tech report and Section TODO shows this for the thresholding of values.
 
 \section{Dynamics}
 
