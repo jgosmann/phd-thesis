@@ -94,6 +94,36 @@ In some cases a better function approximation can be achieved by appropriately s
 An example is the calculation of products and has been discussed in TODO ref multiplication tech report and Section TODO shows this for the thresholding of values.
 
 \section{Dynamics}
+The final principle of the NEF addresses dynamics.
+In linear control theory a dynamical system is often described by state equations of the form
+\begin{align}
+    \dot{\vc x}(t) &= \mat A \vc x(t) + \mat B \vc u(t) \\
+    \vc y(t) &= \mat C \vc x(t) + \mat D \vc u(t)
+\end{align}
+where $\vc x(t)$ is the state vector, $\vc u(t)$ the input vector, and $\vc y(t)$ the output vector.
+The system behaviour is determined by the dynamics matrix $\mat A$, input matrix $\mat B$, output matrix $\mat C$, and the feedthrough matrix $\mat D$.
+TODO figure
+In the NEF, we want to map a given dynamical system onto neural components (TODO figure).
+The neuron dynamics are dominated by the synaptic filter (TODO ref appendix F.1) which becomes the transfer function and gives
+\begin{equation}
+    \vc x(t) = h(t) * \sbr{\mat A' \vc x(t) + \mat B' \vc u(t)} \text{.}
+\end{equation}
+With help of the Laplace transform one can obtain $\mat A'$ and $\mat B'$ from $\mat A$ and $\mat B$ as
+\begin{align}
+    \mat A' &= \syntau \mat A + \imat \\
+    \mat B' &= \syntau \mat B  \text{.}
+\end{align}
+This implies that to implement a dynamical system with a neural ensemble, the input has to be multiplied by $\syntau$ to account for the synaptic filtering.
+In addition, one needs to add a recurrent transformation implementing the function $f(\vc x) = \syntau \mat A \vc x + \vc x$.
+
 
 \section{Simulating NEF networks}
-Nengo, OCL, trade-offs, optimizer
+To simulate NEF style networks, I use the Python library Nengo (TODO ref).
+It supports different backends, to run neural models on different hardware platforms.
+For example, Nengo OCL targets GPUs with an OpenCL implementation.
+While this allows better simulation performance, special case implementations are necessary for certain features.
+In particular, this applies to the association matrix learning rule (see Section TODO).
+Moreover, I utilized the Sharcnet and Compute Canada high-performance clusters (TODO ref) which typically provide more CPU resources than GPU resources.
+Thus, I mostly used the Nengo reference (CPU) backend.
+To still obtain sufficient simulation performance for the size of models constructed in this work, it was necessary to optimize memory organization of the internal data structures of the backend.
+While the exact details are out of the scope of this thesis, they can be found in TODO ref.
