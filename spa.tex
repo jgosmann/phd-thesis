@@ -1,0 +1,61 @@
+\chapter{The Semantic Pointer Architecture}
+While the Neural Engineering Framework allows us to encode vectors into spiking neural network and transform them, but it does not tell us how to use those vectors to represent structured, conceptual, or symbolic information.
+Different such methods could be devised, though in the context of the NEF the most widely used method is the Semantic Pointer Architecture (SPA\@; TODO ref).
+The SPA is a specific instance of a Vector Symbolic Architecture (VSA\@; TODO ref).
+In VSAs concepts are represented with vectors and linear and nonlinear operators are used to combine basic concepts in more complex structured representations.
+Three types of operators can be considered essential in a VSA\@.
+
+First, a measure of similarity
+\begin{equation}
+    \simmeasure: \mathbb{R}^{\dims} \times \mathbb{R}^{\dims} \longrightarrow \mathbb{R}
+\end{equation}
+for which we will use the normalized dot product
+\begin{equation}
+    \simmeasure(\vc x, \vc y) := \frac{\left\langle \vc x, \vc y \right\rangle}{\norm{\vc x} \cdot \norm{\vc y}}
+\end{equation}
+for the remainder of this thesis.
+Second, a superposition operator
+\begin{equation}
+    \superpos: \mathbb{R}^{\dims} \times \mathbb{R}^{\dims} \longrightarrow \mathbb{R}^{\dims}
+\end{equation}
+that produces a vector similar to both inputs ($\vc x \sim \superpos(\vc x, \vc y) \sim \vc y$).
+This is usually, and will be for the remainder of this thesis, simple addition, i.e. $\superpos(\vc x, \vc y) := \vc x + \vc y$.
+Finally, a binding operator
+\begin{equation}
+    \bind: \mathbb{R}^{\dims_1} \times \mathbb{R}^{\dims_2} \longrightarrow \mathbb{R}^{\dims}
+\end{equation}
+with an approximate inverse or unbinding operation
+\begin{equation}
+    \bind^+: \mathbb{R}^d \times \mathbb{R}^{\dims_2} \longrightarrow \mathbb{R}^{\dims_1}
+\end{equation}
+that satisfies $\bind^+(\bind(\vc x, \vc y), \vc y) \approx \vc x$.
+Note, that some proposed binding operations, like the tensor product (TODO ref), change the dimensionality of the vectors on binding.
+This allows for a general exact inverse $\bind^{-1}(\bind(\vc x, \vc y), y) = \vc x$ to the binding operation.
+However, this will increase the vector dimensionality with each binding and leads to scaling issues in a neural system (TODO ref).
+Thus, we will only consider binding operations that preserve the vector dimensionality, i.e. $\dims_1 = \dims_2 = \dims$.
+This implies, that in general such a binding cannot preserve all the information in both bound vectors.
+It leads to a compressed representation.
+To fully recover the stored information, clean-up memories will be necessary (TODO ref section).
+
+At this point, it is useful to introduce two more definitions.
+\begin{defn}[identity vector]
+    A vector $\bid_{\bind}$ with the property $\bind(\vc x, \bid_{\bind}) = \vc x$ is called \emph{identity vector} under $\bind$.
+\end{defn}
+\begin{defn}[unitary vector]
+    A vector $\vc u$ with the property $\langle \bind(\vc x, \vc u), \bind(\vc y, \vc u) \rangle = \langle \vc x, \vc y \rangle$ is called unitary.
+\end{defn}
+In other words, a unitary vector preserves the dot product under binding.
+This is in analogy to unitary transformation matrices that also preserve the dot product.
+It also implies that binding with a unitary vector preserves the length of the bound vector.
+
+\section{Structured representations}
+
+Representations, the Semantic Pointers, in the SPA act similar to pointers in computer science.
+They can be dereferenced to access information not directly contained in that representation.
+But opposed to computer science pointers, they are also semantic by capturing semantic relations with their distance in vector space.
+
+\section{Binding operations}
+
+
+mention Spaun and other models using SPA
+(including discussion of binding methods)

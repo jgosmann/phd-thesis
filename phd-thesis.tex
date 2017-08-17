@@ -78,7 +78,7 @@
 
 \usepackage{fontspec}
 \usepackage{microtype}
-\usepackage{amsmath,amssymb,amstext}
+\usepackage{amsmath,amssymb,amstext,amsthm}
 \usepackage{bm}
 \usepackage{commath}
 \usepackage[backend=biber]{biblatex}
@@ -178,6 +178,8 @@
 
 \newcommand{\pop}[1]{\textit{#1}}
 
+\newtheorem{defn}{Definition}
+
 % Define Glossary terms (This is properly done here, in the preamble. Could be \input{} from a file...)
 % Main glossary entries -- definitions of relevant terminology
 \newglossaryentry{computer}
@@ -224,6 +226,10 @@ description={A programmable machine that receives input data,
 \addsym{\actmat}{A}{A}{Activity matrix}
 \addsym{\evalpmat}{X}{X}{Evaluation point matrix}
 \addsym{\imat}{I}{I}{Identity matrix}
+\addsym{\superpos}{S}{\mathcal{S}}{Superposition operator}
+\addsym{\simmeasure}{s}{s}{Similarity measure}
+\addsym{\bind}{B}{\mathcal{B}}{Binding operator}
+\addsym{\bid}{i}{\vc i}{Identity under binding}
 % TODO dot product notation
 
 
@@ -257,8 +263,7 @@ description={A programmable machine that receives input data,
 \part{Methods}
 \chapter{Modeling neurons}
 \include{nef}
-\chapter{The Semantic Pointer Architecture}
-(including discussion of binding methods)
+\include{spa}
 \chapter{Optimal high-dimensional representation in spiking neurons}
 \part{The integrated memory model}
 \chapter{The Ordinal Serial Encoding Model}
