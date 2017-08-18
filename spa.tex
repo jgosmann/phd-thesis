@@ -37,10 +37,15 @@ This implies, that in general such a binding cannot preserve all the information
 It leads to a compressed representation.
 To fully recover the stored information, clean-up memories will be necessary (TODO ref section).
 
-At this point, it is useful to introduce two more definitions.
+At this point, it is useful to introduce three more definitions.
 \begin{defn}[identity vector]
     A vector $\bid_{\bind}$ with the property $\bind(\vc x, \bid_{\bind}) = \vc x$ is called \emph{identity vector} under $\bind$.
 \end{defn}
+\begin{defn}[absorbing element]
+    A vector $\bzero_{\bind}$ with the property $\bind(\vc x, \bzero_{\bind}) = c \cdot \bzero_{\bind}$ where $c \in \mathbb{R}$ is called \emph{absorbing element} under $\bind$.
+\end{defn}
+Such an absorbing element effectively destroys the information in the vector $\vc x$.
+For that reason, absorbing elements should be avoided when constructing representations with binding.
 \begin{defn}[unitary vector]
     A vector $\vc u$ with the property $\langle \bind(\vc x, \vc u), \bind(\vc y, \vc u) \rangle = \langle \vc x, \vc y \rangle$ is called unitary.
 \end{defn}
@@ -48,14 +53,56 @@ In other words, a unitary vector preserves the dot product under binding.
 This is in analogy to unitary transformation matrices that also preserve the dot product.
 It also implies that binding with a unitary vector preserves the length of the bound vector.
 
+
+\section{Binding operations}
+TODO some text
+
+\subsection{Circular convolution}
+The binding operator classically used in the SPA is circular convolution and was suggested by TODO ref Plate for his Holographic Reduced Representations (HRRs).
+\begin{defn}[circular convolution binding]
+    The circular convolution binding operator is given by
+    \begin{equation}
+        \bind_{\circledast}(\vc x, \vc y) := \vc x \circledast \vc y\ \text{with}\ \del{\vc x \circledast \vc y}_i = \sum_{j=0}^{d - 1} x_j y_{(i - j) \bmod d}
+    \end{equation}
+    and has the approximate inverse (TODO ref proof)
+    \begin{equation}
+        \bind^+_{\circledast}(\vc x, \vc y) = \vc x \circledast \vc y^+\ \text{with}\ \vc y^+ := \del{y_0, y_{d-1}, y_{d-2}, \dotsc, y_1}\Tr \text{.}
+    \end{equation}
+\end{defn}
+
+The basic properties of
+\begin{align}
+    &\text{distributivity:} &(\vc x_1 + \vc x_2) \circledast \vc y &= \vc x_1 \circledast \vc y + \vc x_2 \circledast \vc y \text{,}\\
+    &\text{associativity:} &(\vc x \circledast \vc y) \circledast \vc z &= \vc x \circledast (\vc y \circledast \vc z) \text{,} \\
+    &\text{commutativity:} &\vc x \circledast \vc y &= \vc y \circledast \vc x
+\end{align}
+hold for circular convolution as a binding operator.
+A useful property of circular convolution for the implementation in a neural network with the NEF is, that it becomes element-wise multiplication in the Fourier space defined by
+\begin{equation}
+    \vc x \circledast \vc y = \fouriermat^{-1}\sbr{(\fouriermat \vc x) \circ (\fouriermat \vc y)}
+\end{equation}
+where $\fouriermat$ is the discrete Fourier transform (DFT) matrix.
+The linear transform with the DFT matrix can be put easily into the neural connection weights and the element-wise product can be done with well-optimized product network (TODO ref).
+
+The expression in Fourier space also allows to derive the special elements of circular convolution.
+The identity vector must not change the complex Fourier coefficient in the element-wise multiplication.
+Thus, its Fourier coefficients must all be $1 + 0\iu$ and the identity vector is given by
+\begin{equation}
+    \bid_{\circledast} = (1, 0, 0, \dotsc, 0)\Tr \text{.}
+\end{equation}
+Furthermore, all vectors with Fourier coefficients $c_n \in \mathbb{C}$ that are of unit length ($\abs{c_n} = 1$) will be unitary as one can easily verify.
+A trivial example of an unitary vector is the identity vector $\bid_{\circledast}$.
+Finally, all vectors $(z, \dotsc, z)\Tr$ with $z \in \mathbb{R}$ are absorbing elements.
+
+\subsection{Vector-derived projection binding}
+
+
 \section{Structured representations}
 
 Representations, the Semantic Pointers, in the SPA act similar to pointers in computer science.
 They can be dereferenced to access information not directly contained in that representation.
 But opposed to computer science pointers, they are also semantic by capturing semantic relations with their distance in vector space.
 
-\section{Binding operations}
 
 
 mention Spaun and other models using SPA
-(including discussion of binding methods)
