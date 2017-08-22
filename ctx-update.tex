@@ -56,7 +56,7 @@ In this case, the context similarity does not decay nearly as quickly as it shou
 This can be attributed to stopping the updating once the effective $\tcmbeta$ reaches $\tcmbeta$ even though in the case of similar input vectors this is not sufficient.
 \begin{figure}
     \centering
-    \includegraphics{bounded-integrator-orthogonal}
+    \includegraphics[draft]{bounded-integrator-orthogonal}
     \caption{
         Properties of the context vectors produces by the bounded integrator context network.
         It was provided with a new input context vector every second.
@@ -67,7 +67,7 @@ This can be attributed to stopping the updating once the effective $\tcmbeta$ re
 \end{figure}
 \begin{figure}
     \centering
-    \includegraphics{boundint}
+    \includegraphics[draft]{boundint}
     \caption{
         Properties of the context vectors produces by the bounded integrator context network.
         It was provided with a new input context vector every second.
@@ -102,7 +102,7 @@ Unfortunately, this still does not work for input vectors with some similarity.
 In that case the dot product of the updated context and current context will already be quite high and the updated context is not completely loaded into the current memory buffer.
 \begin{figure}
     \centering
-    \includegraphics{alternating-memory-buffers}
+    \includegraphics[draft]{alternating-memory-buffers}
     \caption{
         Properties of the context vectors produces by the alternating update of two memories context network.
         It was provided with a new input context vector every second with a similarity of approximately $\sqrt{1. - \beta^2}$ between consecutive vectors.
@@ -111,6 +111,7 @@ In that case the dot product of the updated context and current context will alr
         Right: The blue lines show the similarity of the context after each update to future context vectors.
         The red shading shows the expected similarities for different values of $\tcmbeta$ with the darkest shading corresponding to the target of $\tcmbeta = 0.6$.}\label{fig:alternating-memory-buffers}
 \end{figure}
+neural resources
 
 
 \section{Externally controlled alternating memory buffers}
