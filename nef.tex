@@ -35,7 +35,7 @@ First the activity or spike trains $\act_i(t)$ are convolved with a synaptic fil
 Usually this will be a decaying exponential $\syn(t) = \exp(-t / \syntau)$, but other filters can be used to more precisely model the dynamics of the synapse.
 From the filtered activity, the represented vector can be reconstructed with a linear, weighted decoding
 \begin{equation}
-    \hat{\vc x}(t) = \sum_i \vc \dec_i \cdot \sbr{a_i * h}\!(t)
+    \hat{\vc x}(t) = \sum_i \dec_i \cdot \sbr{a_i * h}\!(t)
 \end{equation}
 with decoding weights $\dec_i$.
 
