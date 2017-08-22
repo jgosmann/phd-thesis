@@ -46,6 +46,7 @@ At this point, it is useful to introduce three more definitions.
 \end{defn}
 Such an absorbing element effectively destroys the information in the vector $\vc x$.
 For that reason, absorbing elements should be avoided when constructing representations with binding.
+Note that this definition slightly differs from the usual definition of absorbing elements by allowing for a scaling factor.
 \begin{defn}[unitary vector]
     A vector $\vc u$ with the property $\langle \bind(\vc x, \vc u), \bind(\vc y, \vc u) \rangle = \langle \vc x, \vc y \rangle$ is called unitary.
 \end{defn}
@@ -91,10 +92,80 @@ Thus, its Fourier coefficients must all be $1 + 0\iu$ and the identity vector is
     \bid_{\circledast} = (1, 0, 0, \dotsc, 0)\Tr \text{.}
 \end{equation}
 Furthermore, all vectors with Fourier coefficients $c_n \in \mathbb{C}$ that are of unit length ($\abs{c_n} = 1$) will be unitary as one can easily verify.
-A trivial example of an unitary vector is the identity vector $\bid_{\circledast}$.
+A trivial example of a unitary vector is the identity vector $\bid_{\circledast}$.
 Finally, all vectors $(z, \dotsc, z)\Tr$ with $z \in \mathbb{R}$ are absorbing elements.
 
-\subsection{Vector-derived projection binding}
+\subsection{Vector-derived transformation binding}
+Circular convolution can be interpreted as moving one of the operands around in the $d$-dimensional space in a way defined by the other operand.
+This leads to the question, whether there are other ways to project one vector to a new location based on the other vector.
+One such way is what I call vector-derived transformation binding (VTB) which to my knowledge has not been described before.
+\begin{defn}[vector-derived transformation binding, VTB]
+    Given a $\dims' = \dims^{\frac{1}{2}} \in \mathbb{N}_{>0}$, the vector-derived transformation binding operator $\vtb: \mathbb{R}^{\dims} \times \mathbb{R}^{\dims} \longrightarrow \mathbb{R}^{\dims}$ is defined as
+    \begin{equation}
+        \vtb(\vc x, \vc y) := \bar{\mat V}_{\vc y} \vc x = \begin{bmatrix}
+            \mat V_{\vc y} & 0 & 0 \\
+            0 & \mat V_{\vc y} & 0 \\
+            0 & 0 & \ddots
+        \end{bmatrix} \vc x
+    \end{equation}
+    with
+    \begin{equation}
+        \mat V_{\vc y} = \dims^{\frac{1}{4}} \begin{bmatrix}
+            y_1 & y_2 & \dotso & y_{\dims'} \\
+            y_{\dims' + 1} & y_{\dims' + 2} & \dotso & y_{2\dims'} \\
+            \vdots & \vdots & \ddots & \vdots \\
+            y_{\dims - \dims' + 1} & y_{d - \dims' + 2} & \dotso & y_{\dims}
+        \end{bmatrix} \text{.}
+    \end{equation}
+    The approximate inverse is given by
+    \begin{equation}
+        \vtb^+(\vc x, \vc y) = \bar{\mat V}_{\vc y}\Tr = \begin{bmatrix}
+            V_{\vc y}\Tr & 0 & 0 \\
+            0 & V_{\vc y}\Tr & 0 \\
+            0 & 0 & \ddots
+        \end{bmatrix} \vc x \text{.}
+    \end{equation}
+\end{defn}
+This binding method is based on the fact that in the SPA vectors are usually randomly generated and uniformly distributed with identically distributed components.
+In that case each subvector (e.g., each row in $\mat V_{\vc y}$) is also uniformly distributed with identically distributed components.
+Furthermore, for high-dimensional vector spaces almost all (uniformly sampled) vectors are orthogonal and semantic pointers have usually unit-length.
+Thus, the matrix $\bar{\mat V}_{\vc y}$ is almost orthogonal with the implication $\bar{\mat V}_{\vc y}\Tr \bar{\mat V}_{\vc y} \approx \imat$.
+Vectors $\vc y$ that give a perfectly orthogonal matrix $\mat V_{\vc y}$, will be unitary.
+One special unitary vector is the identity vector.
+\begin{corollary}[VTB identity vector]
+    The identity vector for VTB is given by
+    \begin{equation}
+        \sbr{\bid_{\ped{V}}}_i = \left\{ \begin{array}{ll}
+                \dims^{\frac{1}{4}} & i \in \cbr{(k - 1) \dims' + k : k \leq \dims', k \in \mathbb{N}_{>0}} \\
+                0 & \text{otherwise}
+        \end{array}\right. \text{.}
+    \end{equation}
+    \begin{proof}
+        $\mat V_{\bid_{\ped{V}}} = I\ \Rightarrow\ \bar{\mat V}_{\bid_{\ped{V}}} = \imat$
+    \end{proof}
+\end{corollary}
+
+\begin{corollary}[VTB distributivity]
+    VTB is distributive: $\vtb(\vc x_1 + \vc x_2, \vc y) = \vtb(\vc x_1, \vc y) + \vtb(\vc x_2, \vc y)$ and $\vtb(\vc x, \vc y_1 + \vc y_2) = \vtb(\vc x, \vc y_1) + \vtb(\vc x, \vc y_2)$.
+    \begin{proof}
+        By applying the definitions for both directions of the distributivity:
+        \begin{itemize}
+            \item $\vtb(\vc x_1 + \vc x_2, \vc y) = \bar{\mat V}_{\vc y} \del{\vc x_1 + \vc x_2} = \bar{\mat V}_{\vc y} \vc x_1 + \bar{\mat V}_{\vc y} \vc x_2 = \vtb(\vc x_1, \vc y) + \vtb(\vc x_2, \vc y)$
+            \item $\vtb(\vc x, \vc y_1 + \vc y_1) = \bar{\mat V}_{\vc y_1 + \vc y_2} \vc x = \del{\bar{\mat V}_{\vc y_1} + \bar{\mat V}_{\vc y_2}} \vc x = \bar{\mat V}_{\vc y_1} \vc x + \bar{\mat V}_{\vc y_2} \vc x = \vtb(\vc x, \vc y_1) + \vtb(\vc x, \vc y_2)$
+    \end{itemize}
+    \end{proof}
+\end{corollary}
+In contrast to circular convolution, VTB is neither commutative
+\begin{equation}
+    \vtb(\vc x, \vc y) = \bar{\mat V}_{\vc y} \vc x \neq \bar{\mat V}_{\vc x} \vc y = \vtb(\vc y, \vc x) \text{,}
+\end{equation}
+nor associative
+\begin{equation}
+    \vtb(\vc x, \vtb(\vc y, \vc z)) = \bar{\mat V}_{\bar{\mat V}_{\vc z} \vc y} \vc x \neq \bar{\mat V}_{\vc z} \bar{\mat V}_{\vc y} \vc x = \vtb(\vtb(\vc x, \vc y), \vc z) \text{.}
+\end{equation}
+This implies that unlike circular convolution multiple binding cannot be undone in a single step, but a separate unbinding step is required for each binding.
+
+\subsection{Comparison of circular convolution and vector-derived transformation binding}
 
 
 \section{Structured representations}
