@@ -136,7 +136,7 @@ One special unitary vector is the identity vector.
     The identity vector for VTB is given by
     \begin{equation}
         \sbr{\bid_{\ped{V}}}_i = \left\{ \begin{array}{ll}
-                \dims^{\frac{1}{4}} & i \in \cbr{(k - 1) \dims' + k : k \leq \dims', k \in \mathbb{N}_{>0}} \\
+                \dims^{-\frac{1}{4}} & i \in \cbr{(k - 1) \dims' + k : k \leq \dims', k \in \mathbb{N}_{>0}} \\
                 0 & \text{otherwise}
         \end{array}\right. \text{.}
     \end{equation}
@@ -178,7 +178,7 @@ It is convenient to set $\radius = 1$ and try to keep the Semantic Pointer vecto
 Figure TODO shows how the mean length of random vectors repeatedly bound with itself changes.
 For the circular convolution the length increases exponentially, while VTB show a much slower increase in the length.
 This is beneficial for the usage in a neural network.
-Moreover, VTB preserves more information of the bound vectors as shown in Figure TODO.
+Moreover, VTB preserves more information of the bound vectors as shown in Figure TODO\@.
 After repeated binding with itself and then the same number of unbindings, the resulting VTB vector is more similar to the original vector than the circular convolution vector.
 
 While binding vectors with themselves can sometimes be useful (e.g., for generating Semantic Pointers with a successive relationship like position indices), it is much more common to bind randomly sampled vectors.
@@ -232,6 +232,66 @@ Nevertheless, it would be interesting to switch the model over to VTB in the fut
 
 
 \section{Structured representations}
+Once we defined a binding operation, it can be used to build up structured representations with Semantic Pointers.
+For example, consider a scene with a red square and blue circle that we want to encode as Semantic Pointer.
+Assume that we have Semantic Pointers \spc{red}, \spc{square}, \spc{blue}, and \spc{circle}.
+One possible encoding would be
+\begin{equation}
+    \vc s = \bind(\spc{red}, \spc{square}) + \bind(\spc{blue}, \spc{circle}) \text{.}
+\end{equation}
+We could then recover the color of the square, assuming a distributive binding operation, as
+\begin{align}
+    \bind^+(\vc s, \spc{color}) &= \bind^+(\bind(\spc{red}, \spc{square}), \spc{square}) + \bind^+(\bind(\spc{blue}, \spc{circle}), \spc{square}) \\
+    &\approx \spc{red} + \mathrm{noise} \text{.}
+\end{align}
+Note, however, that the binding operation needs to be commutative to recover the shape from the color with this encoding scheme.
+Other encoding schemes can be devised to alleviate this concern.
+For example, the properties can be bound to a role and each object to an object identifier:
+\begin{align}
+    \vc o_1 &= \bind(\spc{red}, \spc{color}) + \bind(\spc{square}, \spc{shape}) \\
+    \vc o_2 &= \bind(\spc{blue}, \spc{color}) + \bind(\spc{circle}, \spc{shape}) \\
+    \vc s &= \bind(\vc o_1, \spc{obj}_1) + \bind(\vc o_2, \spc{obj}_2) \text{.}
+\end{align}
+To find the color of a specific shape, each object would have to be retrieved, then the shape of the object to compare it to the target shape, and finally the color has to recovered if the shape matches.
+Thus, different encoding schemes can lead to different timing predictions.
+The latter approach requires scanning and through multiple object and thus it should take longer to recover information with more items, while the former approach can recover any property in a single step.
+Despite those differences, both encoding approaches are similar in so far as pairs of semantic pointers are bound together.
+\begin{defn}[encoding with binding]
+    Given $k$ pairs $(\vc x_i, \vc y_i) \in \mathbb{R}^{\dims} \times \mathbb{R}^{\dims}$, the encoding of these pairs into a single Semantic Pointer $\vc m$ with binding is given by
+    \begin{equation}
+        \vc m = \sum_{i=1}^k \bind(\vc x_i, \vc y_i) \text{.}
+    \end{equation}
+\end{defn}
+An $\vc x_i$ from such a trace can be recalled as $\vc x_i \approx \hat{\vc x}_i = \bind^+(\vc m, \vc x_i)$.
+
+While most concrete encoding schemes make use of encoding with binding, at least one other method, encoding with tagging, has been proposed (TODO ref, Jones, more?).
+\begin{defn}[encoding with tagging]
+    Given $k$ pairs $(\vc x_i, \vc y_i) \in \mathbb{R}^{\dims} \times \mathbb{R}^{\dims}$ and a matrix $\mat M \in \mathbb{R}^{\dims \times \dims}$ with an approximate inverse $\mat M^+$ satisfying $\mat M^+ \mat M \approx \imat$, the encoding into a single Semantic Pointer with tagging is given by
+    \begin{equation}
+        \vc m = \sum_{i=1}^k \mat M^{2i-1} \del{\vc y_i + \mat M \vc x_i} = \sum_{i=1}^k \mat M^{2i-1} \vc y_i + \mat M^{2i} \vc x_i \text{.}
+    \end{equation}
+\end{defn}
+The retrieval of an $\vc x_i \approx \hat{\vc x}_i$ is accomplished with
+\begin{align}
+    \hat{\vc x}_i &:= \del{\mat M^{2c}}^+ \vc m \\
+    c &= \argmax_{j \in \sbr{1, k}}\ \simmeasure\!\del{\vc y_i, \del{\mat M^{2j-1}}^{\!+} \vc m} \text{.}
+\end{align}
+
+There is a number of sensible choices for the matrix $\mat M$.
+\begin{itemize}
+    \item First of all, for both, circular convolution and VTB, binding with a fixed vector $\vc t$ can be expressed as a matrix multiplication.
+        A matrix $\mat M$ derived in this way will be unitary, if and only if the vector $\vc t$ is unitary for the given binding operation.
+    \item A common choice for encoding with tagging are permutation matrices.
+        These are unitary and an exact inverse is given by the transpose.
+    \item A special permutation matrix is the matrix that shift all vector components by one.
+        For a given permutation matrix, the vector space dimensions can be reordered such that the permutation matrix becomes the shift by one.
+        Interestingly, the shift by one is also equivalent to a circular convolution with the vector $(0, 1, 0, 0, \dotsc)\Tr$.
+    \item Another good candidate for $M$, that hasn't been considered to my knowledge, are (random) orthogonal matrices.
+        These are unitary operators on $\mathbb{R}^{\dims}$ and thus have an exact inverse given by the transpose.
+\end{itemize}
+The relations of these different matrix choices is shown in the Venn diagram in Figure TODO\@.
+
+\subsection{Comparison of encoding methods}
 
 Representations, the Semantic Pointers, in the SPA act similar to pointers in computer science.
 They can be dereferenced to access information not directly contained in that representation.
