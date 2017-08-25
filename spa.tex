@@ -1,6 +1,9 @@
 \chapter{The Semantic Pointer Architecture}
 While the Neural Engineering Framework allows us to encode vectors into spiking neural network and transform them, but it does not tell us how to use those vectors to represent structured, conceptual, or symbolic information.
 Different such methods could be devised, though in the context of the NEF the most widely used method is the Semantic Pointer Architecture (SPA\@; TODO ref).
+The SPA has been used to build a multitude of cognitive models, including the n-back task (TODO ref), the Tower of Hanoi task (TODO ref), human-scale knowledge representation (TODO ref).
+The largest and most complex example of an SPA model is Spaun, the Semantic Pointer Architecture Unified Network, combining eight different tasks in a single functional spiking-neuron model.
+
 The SPA is a specific instance of a Vector Symbolic Architecture (VSA\@; TODO ref).
 In VSAs concepts are represented with vectors and linear and nonlinear operators are used to combine basic concepts in more complex structured representations.
 Three types of operators can be considered essential in a VSA\@.
@@ -291,12 +294,40 @@ There is a number of sensible choices for the matrix $\mat M$.
 \end{itemize}
 The relations of these different matrix choices is shown in the Venn diagram in Figure TODO\@.
 
+Either encoding method allows to recover encoded vectors, but the encoding vector itself is (in general) not similar to those encoded vectors.
+In this way, the vector is analogous to a pointer in computer science that doesn't directly contain the information, but can be dereferenced to access the information it is pointing to.
+Unlike pointers, however, these vectors can also capture semantic information by their distance in vector space.
+Due to the combination of these two facts, these vectors are called Semantic Pointers. 
+
+
 \subsection{Comparison of encoding methods}
+Based on experiment~1 from TODO ref Jones, the encoding methods can be compared by measuring the pairwise binding capacity.
+To do so, a set of \num{1000} vectors with normal distributed components $x_i \sim \ndist(0, \dims)$ will be created (note that $\expected[\norm{\vc x}] = 1$).
+From this set \num{500} pairs are sampled with replacement.
+Then $k$ of these pairs are encoded into a single vector and it is tested whether the $\vc x$ of a random encoded pair $\vc(x, \vc y)$ can recovered with the cue $\vc y$.
+A vector counts a successfully recovered if $\hat{\vc x}$ is most similar to $\vc x$ than any other vector in the initial set of vectors.
+TODO trials were run and averaged over for each encoding scheme and vector dimensionality.
+Because VTB requires the dimensionality to be square, \num{256}, \num{484}, \num{1024}, and \num{2025} were picked.
 
-Representations, the Semantic Pointers, in the SPA act similar to pointers in computer science.
-They can be dereferenced to access information not directly contained in that representation.
-But opposed to computer science pointers, they are also semantic by capturing semantic relations with their distance in vector space.
+Figure TODO shows the results for encoding with binding.
+Both binding operators perform about the same.
+While this experiment essentially follows TODO ref Jones, it gives much better results here.
+It is not clear whether they omitted an essential detail from their description or whether their implementation of the binding is flawed.
 
+The results for encoding with tagging by a shift of one are shown in Figure TODO and closely match the results presented in TODO ref Jones.
+Note that the same result applies to any other permutation matrix as the vector components can be reordered accordingly.
+Very similar results are obtained with orthogonal matrices, fixed unitary circular convolution, and fixed VTB (unitary and non-unitary).
+In all these cases, the pairwise binding capacity is below the encoding with binding (opposed to what TODO ref jones reported).
+Intuitively, this can be explained by the fact that encoding with binding is a sum of $k$ vectors, where each vector has encoded information about the pair's constituents, whereas encoding with tagging is a sum of $2k$ vectors because each pair's constituent gets encoded separately.
+In the plots, the retrieval accuracies for encoding with binding at $k$ matches roughly with the retrieval accuracy with tagging at $2k$.
 
+Finally, we can observe (Figure TODO) that encoding with tagging completely fails with fixed non-unitary circular convolution matrices.
+This is likely due to the fact, that repeated circular convolution with the same (non-unitary) leads to an exponential increase in length.
+That causes one pair (or even one vector of that pair) to be much stronger than all the other pairs, preventing their recovery.
 
-mention Spaun and other models using SPA
+These experiments clearly show that encoding with binding is preferable.
+Even more though as retrieving items from an encoding with tagging is much more involved.
+Each potential cue vector $\vc y_i$ has to be recovered and compared to the actual cue $\vc y$ to determine the maximum similarity to the cue and which $\vc x_i$ has to be decoded from the encoding.
+The encoding with binding allows to directly query an $\vc x_i$ with a given $\vc y_i$.
+This makes for a simpler implementation in a neural network.
+That being said, if the main concern is not the implementation in a neural network, but the performance of the vector operations on a classical digital computer, one might come to a different conclusion as in TODO ref jones.
