@@ -202,8 +202,6 @@ Note that binding two unitary vectors will give another unitary vector.
 Thus, repeated binding is not a problem.
 However, the scaling properties of VSAs are based on the fact that the number of almost orthogonal vectors that fits into a vector space grows exponentially with the dimensionality of that space.
 Because not all vectors are unitary, this scaling property might be lost when restricted to unitary vectors.
-In fact, the number of almost orthogonal unitary circular convolution vectors grows only linear (TODO proof).
-For VTB the number of unitary vectors still grows exponentially (TODO proof), but these are picked out of a space that effectively is only $\sqrt{\dims}$-dimensional.
 It might be best to use unitary vectors only for those Semantic Pointers that will be repeatedly used in bindings.
 But it is also worth keeping in mind that achieving the theoretical limit of almost orthogonal vectors in a space is hard and unsolved (TODO accurate?) mathematical problem related to sphere packing (TODO ref).
 Thus, the practical scaling of the number of useable vectors might be closer to linear for both unitary and non-unitary vectors.
