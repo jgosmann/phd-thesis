@@ -241,8 +241,13 @@ description={A programmable machine that receives input data,
 \addsym{\iu}{iu}{\mathrm{i}}{Imaginary unit}
 \addsym{\vtb}{BV}{\mathcal{B}_{\mathrm{V}}}{vector-derived transformation binding operator}
 \addsym{\ndist}{N}{\mathcal{N}}{normal distribution}
-\addsym{\expected}{E}{\mathbb{E}}{expected value}
-% TODO dot product notation, element-wise product, sp
+\addsym{\expected}{Ex}{\mathbb{E}}{expected value}
+\addsym{\err}{E}{E}{error}
+\addsym{\errtotal}{Etot}{E_\ped{tot}}{total error}
+\addsym{\errnoise}{En}{E_\ped{n}}{noise error}
+\addsym{\errdist}{Ed}{E_\ped{d}}{distortion error}
+\addsym{\O}{O}{O}{big O notation}
+% TODO dot product notation, element-wise product, sp, mean
 
 
 %======================================================================
@@ -276,7 +281,7 @@ description={A programmable machine that receives input data,
 \chapter{Modeling neurons}
 \include{nef}
 \include{spa}
-\chapter{Optimal high-dimensional representation in spiking neurons}
+\include{hdrep}
 \part{The integrated memory model}
 \chapter{The Ordinal Serial Encoding Model}
 \chapter{The Temporal Context Model}

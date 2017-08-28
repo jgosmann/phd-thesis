@@ -1,0 +1,36 @@
+\chapter{Optimized high-dimensional representation in spiking neurons}
+The implementation of a Semantic Pointer Architecture in a spiking neural network requires the representation of high-dimensional vectors.
+While the standard NEF already provides us with a method to do this, it does not tell us the best way to do so.
+A good representation will try to minimize the error or noise in the representation.
+Alternatively, if the error is sufficiently small, it allows to reduce the number of neurons which reduces the simulation run time.
+I previously proposed an optimization method for the representation (TODO ref), which improved the accuracy of SPA operations by up to 25 times.
+Here, I will describe a more general applicable method that matches or exceeds the performance of the method among some other advantages.
+
+\section{Error in neural representations}
+In the NEF the total representational error is given by
+\begin{equation}
+    \errtotal^2 = \left\langle \errtotal^2(\vc x) \right\rangle_{\!\vc x \in \repspace} = \left\langle \norm{\vc x - \hat{\vc x}(t)}^2 \right\rangle_{\!t,\,\vc x \in \repspace} \text{.}
+\end{equation}
+As detailed in TODO ref NEF book the total error is constituted out of the error caused by spiking noise $\errnoise$ and the error due to the static distortion $\errdist$ from the non-perfect decoding:
+\begin{align}
+    \errtotal^2(\vc x) &= \errnoise^2(\vc x) + \errdist^2(\vc x) \\
+    \errnoise(\vc x) &= \left\langle \norm{\hat{\vc x}(t) - \langle \hat{\vc x}(t) \rangle_{\!t}}^2 \right\rangle_{\!t} \\
+    \errdist(\vc x) &= \norm{\vc x - \langle \hat{\vc x}(t) \rangle_{\!t}}^2 \text{.}
+\end{align}
+The relation of the error terms is explained by the partitioning of the sum of squares in ordinary least squares model (which is used to solve for decoders in the NEF).
+Note that the noise error will depend on the decoding synapse.
+As $\tausyn \longrightarrow \infty$, the noise error will approach zero ($\errnoise \infty 0$).
+Because the synapse limits how fast the neural representation can be updated, we get a trade-off of the noise in the system and how fast it reacts to new inputs.
+
+Due to the neuron nonlinearities finding analytical solutions for the error terms is likely not possible (except for constrained special cases).
+However, we can estimate the error terms from computational experiments.
+To do so, we sample $\vc x \in \repspace$ or use a regular grid of $\vc x$.
+Each $\vc x$ is then presented for some duration $\Delta t_{\ped{ss}}$ to reach the steady state and then $\hat{\vc x}(t)$ is measured for some duration sample duration $\Delta t_{\ped{sample}}$.
+Appropriate durations will depend on the decoding synapse (longer synapses require more time to reach the steady state) and firing rate (a longer sampling duration is required for accurate estimates with low firing rates).
+
+When looking at the representation of a spiking neural network, the noise error is the main factor to consider.
+It will go down by $\O(1/\sqrt(n))$ where $n$ is the number of neurons, whereas the distortion error will decrease by $\O(1/n)$ and is thus dominated by the noise error (TODO figure, ref NEF book).
+In contrast, for rate neurons $\errnoise = 0$ and only the distortion error is relevant.
+Furthermore, with the Nengo defaults the noise error in the NEF the increase in the noise error with dimensions $\dims$ will be in $\O(d)$ (TODO figure).
+
+\section{Error depending on represented value}
