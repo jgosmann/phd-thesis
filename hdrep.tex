@@ -6,7 +6,7 @@ Alternatively, if the error is sufficiently small, it allows to reduce the numbe
 I previously proposed an optimization method for the representation (TODO ref), which improved the accuracy of SPA operations by up to 25 times.
 Here, I will describe a more general applicable method that matches or exceeds the performance of the method among some other advantages.
 
-\section{Error in neural representations}
+\section{Types of error in neural representations}
 In the NEF the total representational error is given by
 \begin{equation}
     \errtotal^2 = \left\langle \errtotal^2(\vc x) \right\rangle_{\!\vc x \in \repspace} = \left\langle \norm{\vc x - \hat{\vc x}(t)}^2 \right\rangle_{\!t,\,\vc x \in \repspace} \text{.}
@@ -28,9 +28,44 @@ To do so, we sample $\vc x \in \repspace$ or use a regular grid of $\vc x$.
 Each $\vc x$ is then presented for some duration $\Delta t_{\ped{ss}}$ to reach the steady state and then $\hat{\vc x}(t)$ is measured for some duration sample duration $\Delta t_{\ped{sample}}$.
 Appropriate durations will depend on the decoding synapse (longer synapses require more time to reach the steady state) and firing rate (a longer sampling duration is required for accurate estimates with low firing rates).
 
-When looking at the representation of a spiking neural network, the noise error is the main factor to consider.
-It will go down by $\O(1/\sqrt(n))$ where $n$ is the number of neurons, whereas the distortion error will decrease by $\O(1/n)$ and is thus dominated by the noise error (TODO figure, ref NEF book).
-In contrast, for rate neurons $\errnoise = 0$ and only the distortion error is relevant.
-Furthermore, with the Nengo defaults the noise error in the NEF the increase in the noise error with dimensions $\dims$ will be in $\O(d)$ (TODO figure).
+As the dimensionality of the higher-dimensional space increases, it becomes increasingly difficult to cover the whole space with samples from $\repspace$.
+Most of the time, though, we can treat the space as an isotropic hyper-ball, i.e.\ it does not matter along which direction we move through the space.
+This requires that the NEF ensemble's encoders are uniformly sampled from the hyper-sphere surface which is usually the case (but there are some exceptions like certain implementations of a product network, TODO ref).
+Without loss of generality, we assume the representational radius of the hyper-ball to be $r = 1$ (as it is basically just a scaling factor).
+The isotropy property allows us to cut through the center of the hyper-ball with a one-dimensional line.
+Measuring the error $\err(x) = \err(\vc x)$ at $m$ regular spaced points $\vc x_i = (x_i, 0, \dotsc, 0)\Tr$ with $x_i = i * \Delta x - \Delta x/2 - 1, \Delta x = 2/m$ along such a line, the mean error for the hyper-ball can be estimated as
+\begin{align}
+    \err &= \frac{\sa_{\dims}}{2\ballvol_{\dims}} \sum_{i=1}^{m} \err(x_i) \cdot \Delta x \cdot r(x_i) \\
+    \sa_{\dims} &= \frac{2 \pi^{\dims/2}}{\gammafn(\dims/2)} \\
+    \ballvol_{\dims} &= \frac{\pi^{\dims/2}}{\gammafn\!\del{\frac{\dims}{2} + 1}} \\
+    r(x) &= \frac{1}{q} \sum_{i=1}^{q} \abs{x + i \frac{\Delta x}{q + 1}}^{\dims - 1}
+\end{align}
+where $\sa_{\dims}$ is the $\dims$-dimensional solid angle, $\ballvol_{\dims}$ the volume of a $\dims$-ball with radius $\radius = 1$, and $r(x)$ estimates the radius to the power of $\dims-1$ for an $x$ with $q$ evaluation points.
+This later estimation of the radius across the $\Delta x$ interval is necessary to not under- or overestimate the integral by a large amount.
+This were to happen if only the radius at the exact evaluation point would be used. (TODO why is E divided by two)
 
-\section{Error depending on represented value}
+
+\section{Properties of the error in neural representations}
+When looking at the representation of a spiking neural network, the noise error is the main factor to consider.
+It will go down by $\bO(1/\sqrt{n})$ where $n$ is the number of neurons, whereas the distortion error will decrease by $\bO(1/n)$ and is thus dominated by the noise error (TODO figure, ref NEF book).
+In contrast, for rate neurons $\errnoise = 0$ and only the distortion error is relevant.
+Furthermore, with the Nengo defaults the noise error in the NEF the increase in the noise error with dimensions $\dims$ will be in $\bO(d)$ (TODO figure).
+
+When looking at the error along a line through the hyper-ball (TODO figure), it becomes apparent that the distortion is mostly flat, but increases near the surface.
+This becomes more pronounced as the dimensionality increases.
+The noise error will be slightly larger in the center of the ball than towards the surface with higher dimensionalities (it is a flat line for $\dims = 1$).
+This is caused by the uniform sampling of evaluation points from the hyper-ball (Figure TODO).
+When looking at the convex hull of the sample points, this hull will always be smaller than the hyper-ball (even if some evaluation points are exactly on the surface).
+Thus, parts of the hyper-ball near the surface are not covered by the evaluation points and will not be considered in the least squares optimization of the decoders.
+As the number of dimensions increases, this will become a bigger problem as the volume for a hyper-ball goes to zero as $\dims \longrightarrow \infty$ (all of the ball will be surface).
+To show that this distortion is indeed caused by the partial covering, we can increase the radius of the hyper-ball for sampling the evaluation points slightly to cover more of the unit-ball (Figure TODO).
+While this makes the distortion more even, it unfortunately also increases noise level and baseline distortion because evaluation points now have a larger spacing.
+
+Vectors in the SPA are often of unit-length and thus a good, low-distortion representation of the hyper-ball surface is desirable.
+Unfortunately, I am not aware of any method to improve the current state.
+To completely cover the ball in a convex hull of evaluation points, it is necessary to place some evaluation points outside of the ball which will cover space and optimize for space outside of the representational space.
+This will lead to a trade-off of flatness of the distortion and baseline of the distortion.
+
+
+\section{Effect of the intercept distribution on noise and distortion}
+
