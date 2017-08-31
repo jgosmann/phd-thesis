@@ -68,4 +68,43 @@ This will lead to a trade-off of flatness of the distortion and baseline of the 
 
 
 \section{Effect of the intercept distribution on noise and distortion}
+The intercepts in Nengo are chosen to be uniformly distributed by default.
+In higher dimensions, this has the effect that most neurons are either almost never or almost always active for values in the representational space (TODO figure).
+These neurons contribute only minimally to the representation as a neuron that is always in-active does not provide any information about the actually represented value.
+But also always active neurons only contribute minimally to the representation.
+Here the firing rate will still vary a bit about the representational space, but for typical neuron models the response curve is steepest closest to the intercept.
+That mapping of a small change in the represented value to a large change in firing rate allows for a less noisy decoding as a single spike will change the decoded value less.
 
+Thus, a better intercept distribution should have less neurons that are barely ever active, but should also distribute the intercepts so that there is an even distribution of the fraction of space a neuron is active for.
+The latter criterion can be achieved by distributing the intercepts according to $\csdist(\dims+2)$ (TODO ref proof) where $\csdist(d_{\csdist})$ is the cosine similarity distribution.
+This is the distribution of the cosine similarity of two random (uniformly distributed) $d_{\csdist}$ dimensional vectors.
+Its probability density function is given by (TODO ref derivation, TODO fig)
+\begin{equation}
+\pcs(x; d_{\csdist}) = \frac{1}{B\!\del{\frac{1}{2}, \frac{d_{\csdist} - 1}{2}}} \cdot \del{1 - x^2}^{\frac{d_{\csdist}}{2} - \frac{1}{2}} \text{.}
+\end{equation}
+
+Figure TODO shows compares the relative amount of neurons that do not fire for any of the evaluation points.
+For the standard uniform distribution, this fraction rises to about TODO, but is close to zero with the cosine similarity intercept distribution.
+When we look at the actual error (TODO), we see that it is reduced.
+This is mainly due to a reduction in the noise error.
+The distortion seemingly increases, but because most of the volume of the space is near the surface and the distortion there ends up a little bit lower, the total distortion will also decrease.
+However, where the space is distorted changes.
+While the uniform distribution leads to an even distortion except towards the hyper-sphere surface, the cosine similarity distribution gives a distortion that varies more across the space.
+In particular, there is a ring of higher distortion between the center and the surface of the hyper-ball and another such ring around the surface.
+
+In general, there will be a noise-distortion trade-off.
+Reducing the noise error by changing the intercept distribution, will lead to a more uneven distortion and can potentially increase the total distortion.
+For spiking neurons with short synaptic time constants, the noise error is usually much higher and thus the change in the distortion will often be negligible.
+Longer synaptic time constants will shift this trade-off as the noise error will be lower.
+Still, for biological realistic time constants of up to \SI{0.1}{\second}, the cosine similarity intercept distribution will perform better.
+It is also worth noting that this trade-off will be slightly affected by the regularization term when solving for the decoders.
+A higher regularization will flatten out the distortion, but also decrease the noise as the decoders get less sensitive to small fluctuations.
+The opposite effects are observed with less regularization.
+
+rate neurons
+
+other distributions
+
+non-uniformly distributed inputs
+
+spaopt
