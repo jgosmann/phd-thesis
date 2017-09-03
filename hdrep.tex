@@ -101,10 +101,48 @@ It is also worth noting that this trade-off will be slightly affected by the reg
 A higher regularization will flatten out the distortion, but also decrease the noise as the decoders get less sensitive to small fluctuations.
 The opposite effects are observed with less regularization.
 
-rate neurons
+Interestingly, the cosine intercept distribution does not only reduce the noise by a constant factor compared to the uniform distribution.
+Rather it improves the scaling of the noise error from $\bO(d/\sqrt{n})$ to $\bO(d^{3/4}/\sqrt{n})$ (TODO figure).
 
-other distributions
+So far we only considered spiking neurons, but the NEF also allows the usage of rate neuron models.
+In that case, the noise error will be zero because the firing rate can be represented with arbitrary precision.
+With the default parameters, the cosine similarity distribution still gives a slightly lower total distortion (TODO figure).
+However, due to the non-existent noise, the default regularization of $\gamma = 0.1$ too large and a lower error can be obtained by reducing the regularization to $\gamma = 0.01$.
+Then the uniform distribution will perform better (TODO figure), while the cosine similarity intercept distribution increases the distortion.
 
-non-uniformly distributed inputs
+Here I focused on the cosine similarity intercept distribution because it works well over a wide range of neuron types and parameters as well as reducing to the uniform distribution when $\dims = 1$.
+Despite that, other intercept distributions can be used and might produce even better results for a fixed set of parameters (or for the approximation of a specific non-linear function).
+TODO takes a more exhaustive look at different choices and compares them.
 
-spaopt
+It is also worth to note that the present analysis assumes that all values in the representational space $\repspace$ are uniformly distributed.
+If certain values appear more frequently than others, the optimal intercept distribution might change.
+The experimental procedure used here to compare intercept distributions might still be used, but the error needs to be weighted by the frequency of the represented values $\vc x$.
+
+
+\section{Optimized Semantic Pointer Representation and Manipulation}
+The NEF only requires multiple vector dimensions to be represented in a single ensemble if functions with a nonlinear interaction of the individual dimensions is decoded.
+Such interactions are rarely needed in the Semantic Pointer Architecture and there is a number of reasons to split up the $\dims$-dimensional vector into $q$ vectors of $\dims_q = \dims / q$ dimensions.
+
+First of all, solving for decoders requires the inversion of an $n \times n$ matrix with a runtime complexity of $\bO(n^3)$ where $n$ is the total number of neurons in the ensemble.
+When instead using $q$ ensembles with $n/q$ neurons each to represent $\dims_q$ segments of the vector, only $q$ inversions of $n/q \times n/q$ matrices are required, which give a runtime complexity of only $\bO(n^3/s^2)$.
+Thus, solving for the decoders can be a lot more efficient when splitting up a vector into multiple ensembles for the representation.
+
+Second, the noise error grows only in $\bO(\sqrt{q/n})$ if $\dims_q$ is kept constant.
+In other words, adding $\dims_q$ more dimensions, requires only $n/q$ additional neurons to keep the noise error constant.
+
+Splitting up the input space in this manner, however, introduces a slight complication.
+While we can assume the full vectors $\vc x \in \repspace$ to be uniformly distributed, this is not the case for the $\dims_q$-dimensional subvectors.
+The distribution of the subvectors will cluster around shorter vectors.
+One way to account for that, is to reduce the representational radius $\radius$ of the ensembles which will improve the representation of the most common vectors, but worsen the representation of subvectors that fall outside of that radius (which might still occurs occasionally).
+TODO describes in detail how to find a good value for $\radius$.
+
+Here, I use a different method, where both the intercept distribution and evaluation point distribution are set to the cosine similarity distribution $\csdist(\dims + 2)$ (note that this uses the dimensionality of the complete vector, not $\dims_q$).
+In addition to before, the distribution of evaluation points accounts for the fact that the represented values are no longer uniformly distributed.
+
+To verify the performance, I repeated the benchmarks from TODO\@.
+A randomly moving unit-length semantic pointer is fed as input to the set of ensembles and the distribution of resulting error in the representation is measured (TODO fig).
+The new method of setting the intercept and evaluation point distributions performs almost as well as the previous radius adjustment method for $q = \dims$ and better if $q < \dims$.
+It thus generalizes to a wider range of cases.
+Instead of adjusting the hard radius cutoff, the distributions result in the representational quality slowly fading out proportional to the frequency of values in that range.
+
+Besides the representation of a vector, the choice of intercept and evaluation point distribution improves the accuracy of the dot product to the level of the radius adjustment method (TODO figure) and surpasses it for the circular convolution operation (TODO figure).
