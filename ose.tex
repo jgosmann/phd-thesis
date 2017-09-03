@@ -1,0 +1,23 @@
+\chapter{The Ordinal Serial Encoding Model}
+The Ordinal Serial Encoding (OSE) model (TODO ref) is an NEF and SPA based model of serial recall.
+It was able to reproduce the various effects found in human recall data such as the primacy effect, recency effect, and transposition gradients in serial and delayed forward recall.
+Within the integrated memory model it provides the basis for the short-term memory component.
+
+In the OSE $m$ presented items $\vc v_i$ are bound to fixed position vectors $\vc p_i$ and stored in two memory traces
+\begin{align}
+    \osestm &= \sum_{i=1}^m \osestmdecay^{m - i} \bind(\vc v_i, \vc p_i) \\
+    \oseepis &= \sum_{i=1}^m \oseepisscale^{m - i} \bind(\vc v_i, \vc p_i)
+\end{align}
+with decay factor $\osestmdecay < 1$ and scaling factor $\oseepisscale > 1$.
+The memory traces $\osestm$ and $\oseepis$ represent the short-term and episodic memory store, respectively.
+The binding operation $\bind$ used here is circular convolution, but it could be worth exploring the effect of other binding operations in the future.
+The recall of an item is given by unbinding the corresponding position vector as
+\begin{equation}
+    \vc v_i \approx \bind^+(\osestm + \oseepis, \vc p_i) \text{.}
+\end{equation}
+These encoding equations produce the primacy and recency effect due to the differential effect of the decay and scaling factors $\osestmdecay$ and $\oseepisscale$.
+
+For the neural implementation each memory trace can be stored in an integrator with some additional processes for updating and unbinding the recalled item.
+For the integration with the integrated memory model, the episodic memory trace will be replaced by a version of the temporal context model presented in the next chapter.
+This introduces a more plausible episodic memory storing experiences in actual synaptic weight changes than the activities of a neural population.
+In addition the recall process will need to be adjusted.

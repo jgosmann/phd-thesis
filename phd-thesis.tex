@@ -83,6 +83,7 @@
 \usepackage{commath}
 \usepackage[backend=biber]{biblatex}
 \usepackage{graphicx}
+\usepackage{siunitx}
 \usepackage{tikz}
 
 \usetikzlibrary{graphs}
@@ -253,6 +254,11 @@ description={A programmable machine that receives input data,
 \addsym{\ballvol}{V}{V}{ball volume}
 \addsym{\csdist}{CS}{\mathcal{CS}}{cosine similarity distribution}
 \addsym{\pcs}{pCS}{p_{\csdist}}{cosine similarity distribution pdf}
+\addsym{\osestm}{mstm}{\vc m^{\ped{stm}}}{OSE short-term memory trace}
+\addsym{\oseepis}{mepis}{\vc m^{\ped{epis}}}{OSE episodic memory trace}
+\addsym{\osestmdecay}{gamma}{\gamma}{OSE short term decay}
+\addsym{\oseepisscale}{rho}{\rho}{OSE episodic decay}
+\addsym{\tauref}{tauref}{\tau_{\ped{ref}}}{refractory period}
 % TODO dot product notation, element-wise product, sp, mean
 
 
@@ -284,12 +290,12 @@ description={A programmable machine that receives input data,
 %======================================================================
 \chapter{Introduction}
 \part{Methods}
-\chapter{Modeling neurons}
+\include{neurons}
 \include{nef}
 \include{spa}
 \include{hdrep}
 \part{The integrated memory model}
-\chapter{The Ordinal Serial Encoding Model}
+\include{ose}
 \chapter{The Temporal Context Model}
 \include{ctx-update}
 \include{aml}
