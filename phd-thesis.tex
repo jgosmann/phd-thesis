@@ -212,8 +212,12 @@ description={A programmable machine that receives input data,
 
 % List of Symbols
 \newcommand{\addsym}[4]{\newglossaryentry{#2}{sort={#2},type=symbols,name={\ensuremath{#3}},description={#4}}\glsadd{#2}\newcommand{#1}{\ensuremath{#3}}}
+\addsym{\tcmitem}{f}{\vc{f}}{TCM item vector}
+\addsym{\tcmitemin}{fin}{\vc{f}^{\ped{iN}}}{recalled TCM item vector}
 \addsym{\ctx}{c}{\vc{c}}{TCM context vector}
 \addsym{\ctxin}{cin}{\vc{c}^\ped{IN}}{TCM input context vector}
+\addsym{\mft}{Mft}{\mat{M}_{\ped{FT}}}{TCM item to context matrix}
+\addsym{\mtf}{Mtf}{\mat{M}_{\ped{TF}}}{TCM context to item matrix}
 \addsym{\ltwo}{ltwo}{l^2}{Euclidean norm} 
 \addsym{\tcmbeta}{beta}{\beta}{TCM beta parameter}
 \addsym{\Heavi}{heavi}{\Theta}{Heaviside function}
@@ -296,7 +300,7 @@ description={A programmable machine that receives input data,
 \include{hdrep}
 \part{The integrated memory model}
 \include{ose}
-\chapter{The Temporal Context Model}
+\include{tcm}
 \include{ctx-update}
 \include{aml}
 \chapter{Recalling items}
