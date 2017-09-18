@@ -81,7 +81,7 @@
 \usepackage{amsmath,amssymb,amstext,amsthm}
 \usepackage{bm}
 \usepackage{commath}
-\usepackage[backend=biber]{biblatex}
+\usepackage[backend=biber,style=authoryear]{biblatex}
 \usepackage{graphicx}
 \usepackage{siunitx}
 \usepackage{tikz}
@@ -90,7 +90,7 @@
 \usetikzlibrary{nef}
 \usetikzlibrary{quotes}
 
-\addbibresource{uw-ethesis.bib}
+\addbibresource{references.bib}
 
 % Hyperlinks make it very easy to navigate an electronic document.
 % In addition, this is where you should specify the thesis title
@@ -263,6 +263,7 @@ description={A programmable machine that receives input data,
 \addsym{\osestmdecay}{gamma}{\gamma}{OSE short term decay}
 \addsym{\oseepisscale}{rho}{\rho}{OSE episodic decay}
 \addsym{\tauref}{tauref}{\tau_{\ped{ref}}}{refractory period}
+\addsym{\taurc}{taurc}{\tau_{RC}}{membrane time constant}
 % TODO dot product notation, element-wise product, sp, mean
 
 
@@ -338,7 +339,7 @@ IK
 
 % The following statement causes the specified references to be added to the bibliography% even if they were not 
 % cited in the text. The asterisk is a wildcard that causes all entries in the bibliographic database to be included (optional).
-\nocite{*}
+%\nocite{*}
 \printbibliography
 
 % The \appendix statement indicates the beginning of the appendices.
