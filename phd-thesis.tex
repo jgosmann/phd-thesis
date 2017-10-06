@@ -172,7 +172,7 @@
   \clearpage{\pagestyle{empty}\origdoublepage}}
 \let\cleardoublepage\clearemptydoublepage
 
-\newcommand{\mat}[1]{#1}
+\newcommand{\mat}[1]{\bm{#1}}
 \newcommand{\vc}[1]{\bm{#1}}
 \newcommand{\ped}[1]{{\mathrm{#1}}}
 \newcommand{\Tr}{^{\top}}
@@ -221,8 +221,11 @@ description={A programmable machine that receives input data,
 \addsym{\ltwo}{ltwo}{l^2}{Euclidean norm} 
 \addsym{\tcmbeta}{beta}{\beta}{TCM beta parameter}
 \addsym{\Heavi}{heavi}{\Theta}{Heaviside function}
-\addsym{\enc}{encoder}{\vc e}{NEF Encoder}
-\addsym{\dec}{decoder}{\vc d}{NEF Decoder}
+\addsym{\enc}{e}{\vc e}{NEF encoding vector}
+\addsym{\dec}{d}{\vc d}{NEF decoding vector}
+\addsym{\menc}{E}{\mat E}{NEF encoder matrix}
+\addsym{\mdec}{D}{\mat D}{NEF decoder matrix}
+\addsym{\weights}{W}{\mat W}{Synaptic weight matrix}
 \addsym{\act}{activity}{a}{Neural spiking activity}
 \addsym{\gain}{alpha}{\alpha}{NEF neuron gain}
 \addsym{\jbias}{jbias}{J^{\mathrm{bias}}}{NEF bias input current}
@@ -235,7 +238,7 @@ description={A programmable machine that receives input data,
 \addsym{\evalp}{x}{\vc x}{Evaluation point}
 \addsym{\actmat}{A}{A}{Activity matrix}
 \addsym{\evalpmat}{X}{X}{Evaluation point matrix}
-\addsym{\imat}{I}{I}{Identity matrix}
+\addsym{\imat}{I}{\mat I}{Identity matrix}
 \addsym{\superpos}{S}{\mathcal{S}}{Superposition operator}
 \addsym{\simmeasure}{s}{s}{Similarity measure}
 \addsym{\bind}{B}{\mathcal{B}}{Binding operator}
