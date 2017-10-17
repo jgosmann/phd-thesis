@@ -21,3 +21,69 @@ For the neural implementation each memory trace can be stored in an integrator w
 For the integration with the integrated memory model, the episodic memory trace will be replaced by a version of the temporal context model presented in the next chapter.
 This introduces a more plausible episodic memory storing experiences in actual synaptic weight changes than the activities of a neural population.
 In addition the recall process will need to be adjusted.
+
+
+\section{Neural STM implementation}
+In the CUE model the short-term memory buffer of the OSE model is implemented as depicted in Figure TODO\@.
+The network gets an item and position Semantic Pointer as input which are bound together.
+The bound result is added into the memory trace stored in \pop{combine} as long as it does not receive the \nin{input\_store} signal.
+Once the \nin{input\_store} signal is received, the contents from \pop{combine} are transferred to \pop{mem}.
+Items are decoded from the memory via the \pop{recall} inverse circular convolution.
+The decay factor of $\osestmdecay = 0.9775$ is taken from the original OSE implementation (TODO ref) and is implemented on the connection from \pop{mem} to \pop{combine}.
+
+
+\section{Neural position counting}
+For the OSE it is necessary to keep track of the ordinal position of the current item.
+Figure TODO shows the network implementing this functionality.
+All ensembles in this networks are implementing a threshold at 0 so that represented values are always positive.
+The \pop{state} ensemble array has one ensemble for each possible position and only the ensemble for the current position will be active.
+This is ensured by providing a small negative bias ($-0.2$) to all ensembles to prevent spontaneous activity.
+Furthermore, a recurrent connection with $\syntau = \SI{0.1}{\second}$ decoding a constant of $1.2$ keeps the current position in a state of stable activity.
+
+To advance to the next position a signal with a rising edge as to be provided to the \nin{input\_inc} input.
+To detect the rising edge a differentiator ensemble is used that receives its input via two connections where one connection has a fast synaptic time constant ($\syntau = \SI{5}{\milli\second}$) and the other connection has a slow synaptic time constant ($\syntau = \SI{50}{\milli\second}$) and a transform of $-1$.
+The output is fed through a gate ensemble that can be inhibited to prevent position increments.
+
+Then the Heaviside step function is decoded from the \pop{rising\_edge\_gate} and fed into the \pop{advance\_threshold} ensemble array scaled by a factor of \num{0.8}.
+The output of \pop{state} is also fed into \pop{advance\_threshold} with the transform
+\begin{equation}
+    \mat T_1 = \sbr{\begin{array}{cccc}
+        0 & -1 & -1 & \cdots \\
+        -1 & 0 & -1 & \cdots \\
+        -1 & -1 & 0 & \cdots \\
+        \vdots & \vdots & \vdots & \ddots
+    \end{array}}
+\end{equation}
+which will inhibit all ensembles except the one corresponding to the current position.
+This ensemble will only become active when a rising edge is detected.
+The \pop{advance\_threshold} ensemble project back to the \pop{state} ensembles with a transform of
+\begin{equation}
+    \mat T_2 = \sbr{\begin{array}{ccccc}
+        0 & 0 & \cdots & 0 & 0 \\
+        2 & 0 & \cdots & 0 & 0 \\
+        0 & 2 & \cdots & 0 & 0 \\
+        \vdots & \vdots & \ddots & \vdots & \vdots \\
+        0 & 0 & \cdots & 2 & 0
+    \end{array}}
+\end{equation}
+to excite the population representing the next position.
+
+When the next position gets active, the old position needs to be inhibited at some point to prevent two position from being active at the same time.
+This is done via the \pop{inhibit\_threshold} ensemble array.
+It receives a bias input of \num{-0.6} and input from the decoded constant from \pop{state}.
+Once the threshold (decoded as Heaviside step function) is exceeded, the previous and next item are inhibited with the transform given by
+\begin{equation}
+    \mat T_3 = -\sbr{\begin{array}{ccccc}
+            0 & 2 & 0 & \cdots 0 \\
+            0 & 0 & 2 & \cdots 0 \\
+            \vdots & \vdots & \vdots & \ddots & \vdots \\
+            0 & 0 & 0 & \cdots 2 \\
+            2 & 0 & 0 & \cdots 0
+    \end{array}} - \sbr{\begin{array}{ccccc}
+        0 & 0 & \cdots & 2 & 0 \\
+        0 & 0 & \cdots & 0 & 2 \\
+        2 & 0 & \cdots & 0 & 0 \\
+        0 & 2 & \cdots & 0 & 0 \\
+        \vdots & \vdots & \ddots & \vdots & \vdots
+    \end{array}} \text{.}
+\end{equation}
