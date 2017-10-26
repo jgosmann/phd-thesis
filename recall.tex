@@ -1,0 +1,32 @@
+\chapter{Recalling items}
+In the original TCM model (TODO ref) the activations $a_i$ of items in the memory is mapped to a recall probability by a softmax function
+\begin{equation}
+    P(\tcmitem_i | \ctx) = \frac{\exp(2a_i/\tau)}{\sum_j \exp(2a_j/\tau)}
+\end{equation}
+with a free parameter $\tau$ controlling for the sensitivity.
+While this does well in capturing the recall probabilities, it does not provide much insight in how this recall process might be realized neurally.
+In an extension of the TCM model (TODO ref) a winner-take-all (WTA) process based on the widely-used leaky, competing accumulator (LCA) model by TODO ref was used.
+This works well if the output can be evaluated in a mathematical analysis.
+However, within the CUE model other parts of the model need to recognize when a single recall is completed to update the context and reset the recall system.
+As I will show, this is difficult to do robustly with the LCA model, but more easily with an alternate WTA mechanism termed the independent accumulator (IA) model.
+A comparison of these two networks has also been previously published as TODO ref.
+
+
+\section{Leaky, competing accumulator model}
+Given $D$ choices, the leaky, competing accumulator (LCA) model proposed by TODO ref describes the dynamics of $D$ scalar state variables $x_i(t), 1 \leq i \leq D$ as
+\begin{equation}
+    \od{x_i}{t} = \frac{1}{\tau} \del{u_i(t) -\kappa x_i - \lambda \sum_{j \neq i} x_j}, \quad x_i \geq 0
+\end{equation}
+where $u_i(t)$ are the external inputs, $\kappa$ is the leak rate, $\lambda$ the lateral inhibition, and $\tau$ the integration time-constant.
+Each state variable $x_i$ is kept non-negative by setting negative values to 0.
+Intuitively, each state variable integrates its input with leak term of $-\kappa x_i$ and provides lateral inhibition to all other state variables.
+Given one input $u_i > u_j$ for all $j \neq i$, the state variable $x_i$ will converge to $u_i$ while all other state variable $x_j, j \neq i$ will converge to $0$ if $\kappa = \lambda = 1$ (TODO appendix).
+In the following analysis, $\kappa = \lambda = 1$ will be fixed.
+Other choices of $\lambda$ affect the effective integration time-constant $\tau$ and gain on the input, while changing $\beta$ will result in undesired behaviour (TODO ref/appendix).
+
+By means of priniciple 3 of the NEF, the prescribed dynamics can be exactly implemented in the NEF\@.
+Here, one ensemble per state variable is used (TODO figure) and the gains and biases of the neurons are distributed as described in TODO to ensure the rectification of the state variables.
+
+
+\section{Independent accumulator model}
+
