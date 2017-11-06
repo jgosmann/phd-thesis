@@ -15,7 +15,7 @@ A comparison of these two networks has also been previously published as TODO re
 \section{Leaky, competing accumulator model}
 Given $D$ choices, the leaky, competing accumulator (LCA) model proposed by TODO ref describes the dynamics of $D$ scalar state variables $x_i(t), 1 \leq i \leq D$ as
 \begin{equation}
-    \od{x_i}{t} = \frac{1}{\tau} \del{u_i(t) -\kappa x_i - \lambda \sum_{j \neq i} x_j}, \quad x_i \geq 0
+    \od{x_i}{t} = \frac{1}{\tau} \del{u_i(t) -\kappa x_i - \lambda \sum_{j \neq i} x_j}, \quad x_i \geq 0 \label{eqn:lca}
 \end{equation}
 where $u_i(t)$ are the external inputs, $\kappa$ is the leak rate, $\lambda$ the lateral inhibition, and $\tau$ the integration time-constant.
 Each state variable $x_i$ is kept non-negative by setting negative values to 0.
@@ -29,4 +29,57 @@ Here, one ensemble per state variable is used (TODO figure) and the gains and bi
 
 
 \section{Independent accumulator model}
+The dynamics of the independent accumulator (IA) model are given by
+\begin{align}
+    \od{x_i}{t} &= \frac{1}{\tau_1} u_i(t) + \frac{1}{\tau_2} \del{\bar{x}_i - \bar{\lambda} \sum_{j \neq i} \bar{x}_j}, \quad x_i \geq 0 \\
+    \bar{x}_i &= \Heavi(x_i - \vartheta)
+\end{align}
+where $u_i(t)$ again gives the external input, $\tau_1$ and $\tau_2$ are feedforward and feedback time-constants, $\bar{\lambda}$ is an inhibition constant, $\Heavi$ is the Heaviside step function, and $\vartheta$ is a threshold.
+The Heaviside non-linearity is the crucial difference to the LCA model as we can reduce this equation to \cref{eqn:lca} by setting $\tau = \tau_1$, $k = -\tau_1/\tau_2$, and $\lambda = \bar{\lambda} \tau_1/\tau_2$ when not considering the Heaviside function.
+Through the Heaviside function, the accumulators will act as perfect (opposed to leaky) and independent integrators.
+Only when the threshold $\vartheta$ is reached, the winning choice will be stabilized by feedback while all non-winning choices will be inhibited.
 
+These dynamics can again be neurally implemented by means of the NEF\@.
+While for the LCA model a single layer was sufficient, it is best to use two layers to implement the IA model.
+The first layer consists of independent accumulators representing the state variables $x_i$.
+This layer projects to the second layer that performs the computation of $\bar{x}_i$ (i.e.\ the Heaviside function).
+The second layer projects back to first layer and can be used to read out the output of the network.
+
+\section{Comparisons of the WTA networks}
+The pure analytical description does not tell which network is better suited for certain tasks.
+To compare these networks, I simulate them with an input of $u_i = u - s\del{1 - \krond_{1i}} + \eta_i$, where $u$ is the magnitude of the largest input, $s > 0$ is the target separation, $\krond$ is the Kronecker delta, and $\eta_i$ is Gaussian white noise with a standard deviation of $\sigma$.
+Here, without loss of generality as we can reorder the indices, the first input is always set to be the target and all other inputs are set to be lower by $s$.
+The rationale behind this is that it should present the hardest case because every is close to the largest input.
+As $s \rightarrow 0$, the problem will get more difficult as the separation of the target shrinks.
+Note, that $u$ determines the general baseline of inputs in addition to the value of the largest input.
+Furthermore, it is important to consider the influence of noise $\eta_i$ on the robustness of the decision process.
+
+As the input lists to the CUE model will be about 10 to 12 items, I compare the networks $d=10$ choices.
+To make a fair comparison 200 LIF neurons are used per choice in either model.
+In the IA model this means, that the number of neurons is split between the first and second layer.
+Here I use 150 neurons in the first, and 50 neurons in the second layer.
+As the first layer is performing the evidence accumulation it needs to more accurate and requires more neural resources.
+Due to the lower number of neurons in the output layer, the decoded output has a higher variance.
+This, however, is not as relevant as the variance in interpreting the output.
+If all other choices do not produce an output, the winning choice can still be clearly identified despite the variance.
+
+Given this basic setup of the comparison, a number of metrics give insight in the performance of the networks.
+First, we want the network to reach a \emph{clear decision} which I define as exactly one output being above a threshold of \num{0.15} during the time interval from \SIrange{1}{2}{\second} simulation time while all other outputs remain below the threshold.
+The threshold of \num{0.15} was chosen as it is usually sufficient to tell a zero and non-zero signal apart despite spiking noise (except for very low neuron numbers or firing rates).
+This metric requires that the output does not change during the interval as this might cause problems in downstream networks that operate on the output.
+Also, with a change in output it would be unclear which output should be taken as the actual decision.
+One thing this metric does not take into account is whether the output corresponds to the highest input.
+This, whether a decision is \emph{correct}, is the second metric.
+But note, that in some situations within larger scale network a wrong, but clear decision, can be preferable to a decision that tends to be correct, but is unstable.
+
+Two more metrics are used for all trials that reached a clear decision.
+The amount of time taken to fulfill the conditions for a clear decision are considered as the \emph{decision time}.
+It measures how fast the network is obtaining the decision.
+Finally, the networks can produce transient outputs unrelated to the final decision.
+A downstream network might consider this output as an actual decision and thus those transient outputs should be as small as possible.
+The \emph{highest output of a losing choice} during the whole simulation is taken as a metric for this.
+
+\subsection{Results}
+
+
+biological plausibility, step response in LIP neurons
