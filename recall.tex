@@ -106,5 +106,50 @@ By increasing the feedforward time-constant, this transient response gets reduce
 
 
 \subsection{Discussion}
+Neither network performs better on all metrics.
+Thus, each is best suited for a different purpose.
+In situations where a continuous adjustment of a decision is necessary, the LCA network will most-likely be the better choice.
+Under noisy conditions it is not necessarily able to produce a stable, clear output, but if a clear output was obtained, it was always correct.
+If the input changes, the output will adjust according to the networks time constant and allow for continuous updates.
+Unfortunately, this also makes the network susceptible to noise.
 
-biological plausibility, step response in LIP neurons
+The IA network will be better for discrete series of decisions.
+It does not produce a continuous output, but waits until the evidence integration threshold is crossed at which point the network needs to be inhibited to be reset and obtain another decision.
+While this produces sequential and discrete decisions, it has the advantage that evidence can be accumulated over a longer time frame to average out noise.
+Depending on the choice of the integration time-constant, the IA network will either be not as quick or as reliable in identifying the correct winner as the LCA network.
+However, it will eventually produce a clear decision that a downstream network can act on (as long as at least on input is strictly positive).
+This can be important in a larger scale model where stalling a decision indefinitely can result in a breakdown of model behaviour.
+Or in other words, sometimes it is better to act on a wrong decision that to not act all.
+For example, in memory recall it might be better to produce a wrong output and continue to recall the next item than indefinitely trying to recall an item that cannot be recalled.
+It is also worth pointing out that the IA network allows for dynamic control of the decision speed by adjusting the $\vartheta$ threshold through a bias input to the second layer.
+
+As mentioned it is also important to consider the transient outputs of the network within a larger scale model.
+Such transient responses are inherent in the LCA model as the state variable is directly used as an output.
+One could pass the output through a thresholding layer, but the right choice of threshold is not clear as the output magnitude will depend on the input magnitude.
+If the threshold is too low, a transient response would be produced even with the thresholding layer.
+If it is too high, small inputs might not produce an output at all.
+While the IA can also produce transient responses, these can be reduced to almost zero by a proper selection of the integration time-constant according to the input magnitude and target separation.
+
+By increasing $\tau_1 \rightarrow \infty$, the IA discrimination ability can be increased without bound.
+This is sometimes used as argument to criticize these sort of models (TODO ref) because there is no sensible stopping criterion.
+However, this does not consider that there might be a cost to come to a decision.
+If that cost is included, there is a trade-off between accurate decisions and the cost incurred by taking more time to decide.
+Furthermore, this argument also assumes perfect integration accuracy which an actual neural system cannot have due to neural noise and limited neural resources.
+
+To summarize these findings, for the recall of items in memory experiments the IA network is more suited.
+Such recall requires discrete decisions and a stable input to downstream motor systems producing the response.
+Such a stable input cannot be guaranteed with the LCA network and it provides challenge to detect when a recall is completed.
+TODO ref still used the LCA network for modelling the recall, but it is important to highlight that they upon reaching the decision threshold the state variable where immediately set back to zero.
+This is easy to do in a pure math model, but when transitioning to a full neural model detecting the decision and resetting the state variables is much more difficult as it cannot be done instantaneous.
+
+Finally, let us consider the biological plausibility briefly.
+Both networks where simulated in spiking neurons which ensures a certain degree of biological plausibility.
+Also, accumulation of evidence to a threshold is a well known finding for neurons in LIP (TODO ref).
+Often this is assumed to be a gradual integration, but when looking at individual trials instead of the trial-average, a distinct step response becomes evident (TODO ref).
+This matches the output of the second layer of the IA network.
+However, both networks have in integration layer with gradually increasing firing rates which implies that such neurons should exist too.
+Ultimately, I also want to highlight that this is not as issue which of these two networks is the \emph{one} network employed in the brain.
+It is certainly possible, that the brain employs both networks for different tasks as they have different strengths and weaknesses.
+
+
+\section{Recall network}
