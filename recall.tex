@@ -79,7 +79,32 @@ Finally, the networks can produce transient outputs unrelated to the final decis
 A downstream network might consider this output as an actual decision and thus those transient outputs should be as small as possible.
 The \emph{highest output of a losing choice} during the whole simulation is taken as a metric for this.
 
-\subsection{Results}
 
+\subsection{Results}
+Figure~TODO shows the proportion of trials that the LCA network reaches a clear decision for different input parameters.
+The input magnitude $u$ must be large enough to reliably exceed the \num{0.15} detection threshold under noise.
+For $u = 0.2$ and even low amounts of noise the network fails to reach a clear decision.
+However, it seems that a input magnitude too large decreases performance as well when we compare the performance for $u=0.6$ and $u=1$.
+Increasing the noise standard deviation $\sigma$ or decreasing the target separation $s$, both decrease the performance as this makes the problem harder.
+Interestingly, the IA network does not fail to reach a clear decision in any of these conditions.
+
+Moving on to correct decisions, the LCA network always produced the correct output given it produced a clear decision.
+The IA network, may produce incorrect outputs despite a clear decision (TODO figure).
+Again, as the problem gets harder either by decreased target separation or increased noise, the network performance on this metric decreases.
+Note that the feedforward integration time-constant can be increased to integrate evidence over a prolonged time period  to increase performance on this metric (right-most panel).
+
+This, however, will increase the decision times.
+These tend to be already slower for the IA network than for the LCA network (TODO figure).
+Additional noise can shorten the decision times in the IA network as it increases the likelihood of an integrator randomly accumulating enough evidence to cross the threshold.
+For the LCA network the noise level only has a minor influence on the decision time and was averaged over in the plot.
+In other words, noise in the LCA network influences whether a decision can be reached, but not how long it takes to reach a decision if one is reached.
+
+Finally, both networks might produce a transient response (TODO figure).
+This is inherent in the LCA network because the state variables are directly used as output and gets worse with increased noise.
+In the IA network, this transient response is caused when two accumulators cross the threshold in close temporal proximity before the inhibition from the first one can silence the remaining accumulators.
+By increasing the feedforward time-constant, this transient response gets reduced as the evidence integration gets slowed down and this temporally stretches out when accumulators cross the threshold.
+
+
+\subsection{Discussion}
 
 biological plausibility, step response in LIP neurons
