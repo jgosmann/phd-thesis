@@ -1,37 +1,53 @@
 \chapter{Introduction}
 
-\begin{itemize}
-    \item Importance of memory
-        \begin{itemize}
-            \item fast adaptation (faster then genetics)
-            \item use previous experiences to act better in novel environments
-            \item relationships and shared culture
-            \item sense of self
-        \end{itemize}
-    \item Prospects of better understanding of memory
-        \begin{itemize}
-            \item Treatment for memory loss
-            \item due to hippocampal lesions
-            \item due to Alzheimer's (longer life spans!)
-            \item memory implants (demonstrated in rats by Berger et al. 2011)
-        \end{itemize}
-    \item Open questions
-        \begin{itemize}
-            \item Stability-plasticity dilemma (Abaraham and A. Robins 2005)
-            \item One-shot learning
-            \item Proposed mechanism: multi-stage memory models (Buzsaki 1989), but not whole story?
-            \item At least: memory systems interact
-            \item Bridge gap from neural mechanisms to behaviour
-        \end{itemize}
-    \item General justification for research, but more specific: What is missing from Spaun?
-        \begin{itemize}
-            \item Sensory input
-            \item Behavioural output
-            \item Working memory dependent tasks
-            \item Even some learning
-            \item But not factual long term memory
-        \end{itemize}
-\end{itemize}
+Memory in its different forms is an important aspect of human, but also animal cognition.
+For example, it allows animals to return to previously visited water and food locations (TODO refs).
+Prior experiences also allow to act more optimally in similar situations or avoid dangerous situations.
+In this sense memory allows for adaptation on a faster time scale than genetic selection.
+This is especially important in unstable and changing environments.
+In humans, memory is also important to form social relationships, a shared culture, and even a functioning society.
+Moreover, it contributes to our individual sense of self.
+
+TODO cite Gallistel book on how addressable memory allows for more compact implementation as opposed to pure state machine
+
+Accordingly, there is a long history of memory research.
+TODO more details.
+
+Nevertheless, there are still many open questions.
+One important challenge that has to be solved by a memory system is the so-called \emph{stability-plasticity dilemma} (TODO ref Abaraham and A Robins 2005).
+On the one hand, there is a need to quickly form new memories, sometimes even with a single exposure known as \emph{one-shot learning}.
+On the other hand, such high plasticity can easily lead to overwriting of old memories rendering memory system useless.
+TODO refo Buzsaki and others proposed multi-stage memory models where different memory system are in place for different timescales with different levels of plasticity.
+However, this still leaves open TODO questions.
+
+It also is a strong indication that different memory systems interact.
+Though, it much of experimental research and modeling different memory systems have been treated as isolated.
+This simplifies the analysis on a certain level, but to get a general understanding of memory as a whole the results need to integrated at some point.
+Furthermore, many models of memory or learning focus on either small scale neural changes without any direct connection to behaviour or on the other extreme of describing behaviour with mathematical equations, but no solid grounding in biological plausibility.
+So it is not only important to integrate our understanding of memory systems, but also to bridge the gap from neural mechanisms to behaviour.
+This thesis will try to advance our understanding in this direction.
+
+While this will still be comparably rough sketch and still fairly limited in memory systems covered, there are promising long-term prospects from a better understanding of human memory.
+Many forms of memory loss are currently untreatable.
+However, diseases associated with aging like Alzheimer's significantly impair the function of memory and are getting more common as our life-span increases due to other medical and nutritional advances.
+(TODO stroke, hippocampal lesions?)
+A better understanding of memory might allow us to devise better treatments or even stop and reverse the memory detoriation.
+A potential route to this are memory implants that have already been demonstrated in rats by TODO Berger et all 2011.
+For this sort of implant, an understanding of how memories are encoded is at least helpful if not crucial.
+
+These are certainly strong motivators for research into memory, but it is also worthwhile to advance our general understanding of how the human brain works.
+A question that has puzzled researchers for a long time and probably still will for a long time to come despite great advances.
+An important step in testing our current understanding of the brain was the Spaun model (TODO ref).
+A spiking neural network of XX neurons, thus grounded in biology, that can perform 8 different tasks.
+Like a real brain it gets sensory input (low resolution black and white symbols) and produces a behavioural motor output with a simulated arm.
+The number of tasks it can perform demonstrates that it is not a specialized model for a single task, but can switch between different tasks like a real brain.
+Obviously, Spaun is still much simpler (and has much less neurons) like a real brain.
+So there is no denying that it is still a long way to a full understanding of the whole brain.
+But it incorporates a number of qualitative key aspects.
+However, one key aspect is still missing.
+While it can perform working memory dependent tasks and has simple reinforcement learning, it is missing a declarative and episodic long-term memory.
+The work in this thesis is also a step towards providing Spaun with such a memory by integrating it with a short-term memory component similar to the one used in Spaun.
+
 
 \section{Behavioural characterization of memory}
 by timescale: STM, LTM, vLTM
