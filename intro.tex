@@ -7,12 +7,10 @@ In this sense memory allows for adaptation on a faster time scale than genetic s
 This is especially important in unstable and changing environments.
 In humans, memory is also important to form social relationships, a shared culture, and even a functioning society.
 Moreover, it contributes to our individual sense of self.
-
-TODO cite Gallistel book on how addressable memory allows for more compact implementation as opposed to pure state machine
+In general, the storage of information over time is a fundamental requirement in many cognitive systems and also from a computational point of view an addressable memory is important as it allows for more compact implementations than a pure state machine (TODO cite Gallistel).
 
 Accordingly, there is a long history of memory research.
-TODO more details.
-
+The well-known primacy and recency effect (discussed in more detail in TODO) have already been described by TODO Robinson, Brown 1926.
 Nevertheless, there are still many open questions.
 One important challenge that has to be solved by a memory system is the so-called \emph{stability-plasticity dilemma} (TODO ref Abaraham and A Robins 2005).
 On the one hand, there is a need to quickly form new memories, sometimes even with a single exposure known as \emph{one-shot learning}.
@@ -96,7 +94,49 @@ Sometimes a distraction task will be performed in between each list item which i
 Cerebellum for motor
 Hippocampus
 
+
 \section{Memory models}
+TODO discuss desired properties of models
+TODO categorization by conceptual, abstract mathematical, and neural models
+
+\subsection{Conceptual models}
+\begin{itemize}
+    \item On of the first models: Yntema and Trask 1963, retrieval as search process, each item tag referencing further information including time tag (like context?) encodes time an item was observed
+    \item Baddeley 1985: independent acoustic and visual store (phonological loop and visuospatial sketchpad), also central executive. Tells us about organization of memory, but less about mechanisms. In 2000 extended with episodic buffer binding multimodal information for transfer to episodic long-term memory
+    \item no quantitative predictions, very high-level, no account of neural mechanisms
+\end{itemize}
+
+\subsection{Abstract mathematical models}
+\begin{itemize}
+    \item Enable quantitative predictions, long history, only a subset of most influential ones presented
+    \item recognition memory model retrieving effectively from memory (REM) by Shiffrin Steyvers (1997)
+    \item free recall model search of associative memory (SAM) by Raaijmakers and Shiffrin (1981)
+    \item MINERVA2 episodic memory model by Hintzman (1988)
+    \item pertubation model for serial order by Estes (1972).
+    \item None of these concerned with biological plausibility. Can they be implemented in neurons and will predictions hold up?
+    \item most models assume item-to-item or posititon-to-item association, but primacy model by Page and Norris (1998) uses different approach. Items activated according to a primacy gradient, but agnostic to how that gradient is generated, thus somewhat underspecified?
+    \item But some general useful ideas: representation of item as random vector starting with JA Anderson (1973), relation to SPA, potentially implementable with the NEF
+    \item Especially influential regarding these sort of models was TODAM2 (Murdock, 1993). Aims to be general theory for item recognition, serial order, and associative memory; fits large body of experimental data.
+    \item Neural implementation likely possible (but not attempted) with the NEF\@.
+    \item Choo (2010) pointed out a number of problems with such an implementation: dimensionality of vectors increases with items stored, unbounded growth, response generation not part of the model
+    \item Another useful idea: randomly drifting context signal to associate items to; first model of this type Estes (1955)
+    \item Murdock (1997) extended TODAM2 with context to explain further data.
+    \item OSCAR (GDA Brown, Prees and Hulme, 2000) also matches a large body of experimental data. They use multidimensional oscillators instead of randomly drifting context to avoid re-instatement problem by deterministic context.
+    \item But how is initial context to start recall re-instantiated?
+    \item (grouping structure has to be known in advance for grouping effects)
+    \item symmetric CRP is a problem
+    \item TCM with context updated by item itself, presented as single-store framework, but not all STM data captured (and they don't even try in initial paper?), see Davelaar 2008 (does CUE capture the data?)
+    \item fuzzy temporal memory
+    \item Start-End Model (SEM) (Henson, 1998) reproduces relative positional coding within groups (probably only one), not clear how endmarker can be generated (despite suggestions in the paper)
+    \item Anderson and Matessa 1997 ACT-R model of serial recall, items are associated with serial position and grouped. Detailed steps of recall, but no neural implementation or specification of how exactly items are stored.
+\end{itemize}
+
+
+
+
+
+CUE\@: neural implementation (biological plausibility), includes recall/reinstantiation of context, (limited neural resources)
+
 
 Further points (some maybe for conclusion, not introduction?):
 \begin{itemize}
