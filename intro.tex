@@ -134,32 +134,59 @@ The primacy model by \textcite{Page1998} is worth noting because it uses a diffe
 In that model items are activated according to a primacy gradient, but the model is agnostic to how this gradient is generated.
 This, however, also leaves that aspect underspecified.
 
+Common to all of these models is that they are not demonstrating biological plausibility.
+Thus it is unclear, whether any of the models can be implemented in a neural substrate while preserving the predictions.
+Or even if, what the limitations with regard to noise and requirements for neural resources are.
+Nevertheless, mathematical modelling is an important first step in figuring out what sort of processes are worth considering for a neural implementation.
+Also, there are some reoccurring ideas in these models that are useful to consider in the context of a neural model.
+For example, starting with \textcite{Anderson1973} many models have used random feature vectors to represent individual items.
+That approach is similar to the Semantic Pointer Architecture (SPA) presented in Section TODO which can be implemented neurally with the methods of the Neural Engineering Framework (NEF, Section TODO).
+
+An especially influential model based and random feature vectors was TODAM2 \parencite{Murdock1993}.
+It was able to fit a large body of experimental data and in that aims to be a general theory for item recognition, serial order, and associative memory.
+A neural implementation could very well be possible with the NEF, but has not been attempted so far.
+However, \textcite{Choo2010} pointed out that the dimensionality of the vectors in the model increases with each stored item.
+Thus, the requirement for neural resources grows unbounded.
+It also worth noting, that TODAM2 does not give an account of how responses are generated.
+
+Another useful idea, that had its origin in mathematical models, is the idea of a randomly drifting context signal that items get associated to.
+\Textcite{Estes1955} presented the first model of this type and \textcite{Murdock1997} extended the TODAM2 model in this way to explain additional data.
+An open question in these sort of models is, how the context at an earlier time can be re-instantiated to start the recall and how the context is advanced in the same way during recall as in the study phase to recall the remaining items.
+As the signal drifts randomly a memory for the context signal itself would be needed.
+The OSCAR model \parencite{Brown2000} solves part of this by using a deterministic context signal that is generated from multidimensional oscillators.
+This allows to replay the exact same context signal once it has been reset.
+It still does not answer how the context is re-instantiated to start the recall as this still requires knowledge of the oscillator states at begin of the study phase.
+
+All of these context-based models cannot explain the asymmetric CRP curves.
+The temporal context model (TCM, TODO ref), however, was specifically constructed to explain these free recall data.
+It also uses a context signal, but this signal is updated by the studied (and recalled) items themself.
+Each item recalls a prior context associated with that item to partially update the current context and the updated context gets associated with the studied item.
+This solves the re-instantiation problem as the right cue can set the context to be similar to the study context to retrieve an item.
+That retrieved item in turn updates the context to retrieve more items related to the updated context.
+Thus, it is also available to appropriately advance the context after each recall.
+The model will discussed in more detail in TODO\@.
+But the TCM is not perfect.
+It did not capture immediate free recall data involving short-term memory, even though it was presented as a single-store framework, i.e.\ a single memory for both STM and LTM\@.
+TODO Davellar 2008 critique (does CUE capture the data?)
+
+
+
+
 \begin{itemize}
-    \item Enable quantitative predictions, long history, only a subset of most influential ones presented
-    \item recognition memory model retrieving effectively from memory (REM) by Shiffrin Steyvers (1997)
-    \item free recall model search of associative memory (SAM) by Raaijmakers and Shiffrin (1981)
-    \item MINERVA2 episodic memory model by Hintzman (1988)
-    \item pertubation model for serial order by Estes (1972).
-    \item None of these concerned with biological plausibility. Can they be implemented in neurons and will predictions hold up?
-    \item most models assume item-to-item or posititon-to-item association, but primacy model by Page and Norris (1998) uses different approach. Items activated according to a primacy gradient, but agnostic to how that gradient is generated, thus somewhat underspecified?
-    \item But some general useful ideas: representation of item as random vector starting with JA Anderson (1973), relation to SPA, potentially implementable with the NEF
-    \item Especially influential regarding these sort of models was TODAM2 (Murdock, 1993). Aims to be general theory for item recognition, serial order, and associative memory; fits large body of experimental data.
-    \item Neural implementation likely possible (but not attempted) with the NEF\@.
-    \item Choo (2010) pointed out a number of problems with such an implementation: dimensionality of vectors increases with items stored, unbounded growth, response generation not part of the model
-    \item Another useful idea: randomly drifting context signal to associate items to; first model of this type Estes (1955)
-    \item Murdock (1997) extended TODAM2 with context to explain further data.
-    \item OSCAR (GDA Brown, Prees and Hulme, 2000) also matches a large body of experimental data. They use multidimensional oscillators instead of randomly drifting context to avoid re-instatement problem by deterministic context.
-    \item But how is initial context to start recall re-instantiated?
-    \item (grouping structure has to be known in advance for grouping effects)
-    \item symmetric CRP is a problem
-    \item TCM with context updated by item itself, presented as single-store framework, but not all STM data captured (and they don't even try in initial paper?), see Davelaar 2008 (does CUE capture the data?)
     \item fuzzy temporal memory
     \item Start-End Model (SEM) (Henson, 1998) reproduces relative positional coding within groups (probably only one), not clear how endmarker can be generated (despite suggestions in the paper)
     \item Anderson and Matessa 1997 ACT-R model of serial recall, items are associated with serial position and grouped. Detailed steps of recall, but no neural implementation or specification of how exactly items are stored.
 \end{itemize}
 
 
+Mention?
+\begin{itemize}
+    \item OSCAR matches large body of experimental data
+    \item context-signal-based models: grouping structure has to be known in advance for grouping effects
+\end{itemize}
 
+
+\subsection{Connectionist models}
 
 
 CUE\@: neural implementation (biological plausibility), includes recall/reinstantiation of context, (limited neural resources)
