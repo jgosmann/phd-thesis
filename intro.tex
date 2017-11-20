@@ -169,6 +169,9 @@ But the TCM is not perfect.
 It did not capture immediate free recall data involving short-term memory, even though it was presented as a single-store framework, i.e.\ a single memory for both STM and LTM\@.
 TODO Davellar 2008 critique (does CUE capture the data?)
 
+Many of these models are also vague on the exact processes of recall.
+The ACT-R model of serial recall by \textcite{Anderson1997}, in which items are associated with their serial positions, describes detailed steps necessary for recall.
+
 
 
 
@@ -181,13 +184,43 @@ TODO Davellar 2008 critique (does CUE capture the data?)
 
 Mention?
 \begin{itemize}
-    \item OSCAR matches large body of experimental data
     \item context-signal-based models: grouping structure has to be known in advance for grouping effects
 \end{itemize}
 
 
 \subsection{Connectionist models}
+Compared to the vast amount of mathematical models, there are much fewer connectionist models that try to ensure more biological realism.
+Many of these models focus on reproducing low-level findings in the hippocampus such as sequence compression in replay \parencite{Levy2005} or place cells \parencite{Milford2004}.
+The model presented by \textcite{Hasselmo2012}, might very well be the most comprehensive hippocampus model to date describing the storage of episodic memories as a spatial trajectory.
+It addresses experimental data on place cells and the theta rhythm (TODO explained?).
+This models, however, still leave a large gap to high-level cognitive behaviour as modelled by mathematical models.
+In addition, the \textcite{Hasselmo2012} relies on hypothetical ``arc length'' cells to disambiguate memories \parencite[cp.][]{Robins2014}.
 
+Nevertheless, there are some connectionist models that try to reduce this gap by addressing behavioural effects with a neural network implementation.
+Namely, \textcite{Burgess1992} and \textcite{Burgess1996} proposed models for the articulary loop, \textcite{Norman2003} for recognition and familiarity effects, and \textcite{Botvinick2006} for immediate serial recall.
+All of these models use rate based neurons as an abstraction.
+While these are a useful tool to build tractable biological plausible models, one has to be careful to not introduce biologically implausible features.
+For example, the noise introduced by discrete spikes is neglected.
+In particular, \textcite{Norman2003} use a $k$-winner-take-all mechanism that is hard to realize in spiking neurons as it requires a fine balance of excitation and inhibition.
+Potentially even more problematic is the use of back-propagation learning and a softmax function applied to the network outputs in the model by \textcite{Botvinick2006}.
+While learning with back-propagation is a tremendously successful technique in machine learning, it is still unclear whether biological neural networks can implement this sort of learning.
+But see work on feedback-alignment TODO and talk in lab TODO\@.
+The softmax function is problematic for biological plausibility as it requires global knowledge of the network outputs.
+TODO why is this a problem?
+
+I only know of two memory-related models that address the these concerns about biological plausibility by using spiking neurons while at the same time connecting to behavioural data.
+The first one is the ordinal serial encoding (OSE) model of serial recall by \textcite{Choo2010}.
+As a primarily short-term memory model, it uses recurrently connected neurons to store the memory trace in neural activity.
+This approach is also used to model a long-term memory component that can be attributed to hippocampal storage.
+While this allows for a first approximation, a storage in synaptic weights seems more realistic for such a component.
+The second model was specifically developed to model the storage of serial lists with hippocampus by \textcite{OliverTrujillo2014}.
+It is able to reproduce neural data like replay and theta rhythm.
+However, the length of stored lists is limited in similar fashion as STM capacity while long term memory is certainly able to learn longer lists.
+Learning longer lists in the model would require the chaining of individual lists with different contexts, but not mechanism for this has been given in the model.
+Another questionable feature is the usage of a clock signal that is adjusted to speed up compressed replay.
+
+
+\subsection{Summary}
 
 CUE\@: neural implementation (biological plausibility), includes recall/reinstantiation of context, (limited neural resources)
 
