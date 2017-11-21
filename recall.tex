@@ -153,3 +153,41 @@ It is certainly possible, that the brain employs both networks for different tas
 
 
 \section{Recall network}
+The recall network in the CUE model is based on the independent accumulator network.
+Each potentially recallable item is regarded as one choice.
+An additional choice is added to represent a failed recall.
+This is a stand-in for additional items that might be present in the recall network, but have not occurred in the learned list.
+It is also a way of providing a time-limit on trying to recall a particular item and prevents pure noise resulting in a successful recall of one of the learned list items.
+The additional choice is fed a constant signal of TODO\@.
+
+TODO noise
+
+Furthermore, the IA network is embedded into further components.
+First, items are represented as Semantic Pointers, but the IA network needs a separate utility value for each potential choice.
+Thus, the incoming connection uses the matrix collecting the Semantic Pointers of all possible list items as transform, effectively calculating a dot product between the input signal and each potential item.
+These utility values are then rectified to only consider positive evidence.
+By subtracting TODO OSE threshold from the input utilities provided by the OSE output, the TODO OSE threshold is implemented.
+
+The IA network does not produce an output during the evidence accumulation phase.
+It is, however, helpful to have a persistent output of the last recalled item (note that this is still different from the output of the LCA network).
+To achieve this, the output of the IA network is routed through a gated memory that is only updated when the IA network produces an output.
+As the gated memory stores a Semantic Pointer, a transform matrix needs to be applied to the IA output to project the choice back into the Semantic Pointer space.
+The updating is controlled by inhibiting the memory gate by default and disinhibiting it (by inhbiting the inhibitory population) when the IA network produces output.
+
+Repetition errors are rarely made in recall experiments.
+Thus, it is necessary to inhibit already recalled items.
+However, this inhibition should not happen immediately as otherwise the recall output would be inhibited to quickly for downstream network to act upon.
+Thus, a two-stage process is used.
+First, an initial working memory population gets immediately updated by feeding in the current recall.
+This will add the recalled Semantic Pointer into the representation of items to inhibit.
+From that representation and the current recalled item, a dot product is calculated and thresholded add TODO\@.
+Once the threshold is crossed the gate to the memory population is inhibited as the new item should be added into the representation, but not completely overwrite it.
+The output of that memory population is fed to a gated memory that provides the inhibition to recall state.
+The gate for this memory is controlled externally and disinhibited once the downstream processing has completed.
+Note that the output of that memory population is projected back into utility values and thresholded to prevent positive evidence from the inhibition memory.
+
+Finally, the recall network needs to be reset if a recall fails to allow to continue trying to recall the item for the next position in serial recall.
+Here the proble is, that if the IA output for a failed recall is directly used to inhibit the IA network to reset it, this will also immediately inhibit the output used for the inhibition.
+This will not reliably reset the network as the reset signal is disabling itself.
+Thus, the signal will be fed to an integrator until a threshold is reached and then the signal of the integrator is used to provide an inhibitory pulse to the IA network.
+The slower decay of the integrator ensures a sufficient length of the pulse to restart the recall process.
