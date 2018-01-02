@@ -1,0 +1,149 @@
+\chapter{The complete model}
+
+Now we have all the essential components to construct the complete context-unified encoding (CUE) model.
+\Cref{fig:general-routing} gives an overview of the information flow between the different components.
+The Semantic Pointers $\spv v$ for the presented items are the input to the model and the recalled items $\hat{\spv v}$ of the \pop{item recall} network are the model output.
+The part of the model corresponding to the TCM consists mainly of the $\mft$, $\mtf$, and \pop{context} networks, whereas \pop{OSE} and \pop{position} correspond to the OSE\@.
+The \pop{position} network (TODO ref section) stores a Semantic Pointer $\spv p$ indicating the current list position.
+The position is advanced by a control signal discussed in Section TODO\@.
+Both the current list item and position are input to the $\mft$ and \pop{OSE} networks.
+\begin{figure}
+    \centering
+    \begin{tikzpicture}[nef]
+        \graph [no placement] {
+            item/"list item $\bm{v}$" [ext, x=0, y=0];
+            ose/OSE [net, x=3, y=-1.5];
+            position/"position $\bm{p}$" [net, x=3, y=-3];
+            recall/"item recall $\hat{\bm{v}}$" [net, x=0, y=-5];
+            precall/"position recall $\hat{\bm{p}}$" [net, x=0, y=-6];
+            mfc/"$\mft$" [net, x=-3, y=-1];
+            mcf/"$\mtf$" [net, x=-3, y=-4];
+            ctx/context [net, x=-3, y=-2.5];
+
+            ctx -> [modulatory, bend right, dashed, gray] mfc;
+            item -> [modulatory, out=-120, in=0, dashed, gray] mcf;
+            position -> [modulatory, out=180, in=0, dashed, gray] mcf;
+            item -> [in=0, out=-120] mfc;
+            item -> [out=-60, in=170] ose;
+            position -> [in=0, out=180] mfc;
+            position -> [out=180, in=190, distance=20] ose;
+            mfc -> [bend right] ctx;
+            mfc -> [out=220, in=140] mcf;
+            ctx -> [out=270, in=90] mcf;
+            mcf -> [out=270, in=180] recall;
+            mcf -> [out=270, in=180] precall;
+            precall -> [out=0, in=190] position;
+            ose -> [out=180, in=90] recall;
+            recall -> [out=162, in=-15] mfc;
+        };
+    \end{tikzpicture}
+    \caption{TODO}\label{fig:general-routing}
+\end{figure}
+
+Within the \pop{OSE} network (TODO section), the list item and position Semantic Pointers are bound together and added into the representation of the current list in a neural integrator.
+The inputted position is also used to unbind an item from the list representation and feed it to the \pop{item recall} network.
+
+In the $\mft$ network the superposition of the input item and position (instead of the binding) is created.
+This superposition is used to recall the context previously associated with the item and position and to update the current context in the \pop{context} network accordingly.
+Furthermore, the current context is fed back to $\mft$ as modulatory signal to learn the association from the current item and position input to the current context.
+Via the $\mtf$ network, the context recalls the associated Semantic Pointer and transmits it to the \pop{item recall} and \pop{position recall} networks.
+The current item and position are a modulatory input the $\mtf$ network to create the association from the current context to these Semantic Pointers.
+
+During the recall phase, recalled items and position are routed back to the $\mft$ network to recall further items.
+The recalled position also sets the current position in the \pop{position} network to recall that position from the \pop{OSE} short-term memory.
+The recall networks also store recently recalled items in neural integrators to prevent repetition errors that happen rarely in human experiments.
+
+
+TODO more detailed Gephi visualization? Neuron numbers etc.?
+
+
+\section{Control}
+While the general structure of the model is important, the desired model behaviour can only be achieved by controlling the flow of information appropriately.
+This control happens on multiple levels.
+On the highest levels, the effective connectivity is modified by the general task performed (e.g., an immediate versus a serial recall task) and the task phase (e.g., presentation versus recall phase).
+Below that, certain information routing is done for each item until it has been stored in memory or for each recall.
+On the lowest levels, some control and routing happens within the individual networks of the CUE model as described in the corresponding sections.
+For example, the $\mft$ and $\mtf$ will inhibit the modulatory signal once a certain association strength has been reached.
+
+\Cref{fig:pres-routing} shows the information flow during the presentation phase.
+Parts of the recall networks and the input to them will be inhibited.
+During the recall phase the routing of information depends in part on the type of recall task as shown in \cref{fig:recall-routing}.
+For serial recall, the transmission of the recall network outputs will be inhibited because the recalled item is not supposed to be a cue for recalling the next item.
+Instead, the output of the \pop{position} network is used as a cue.
+Also, for this cue to be most effective the output of the $\mft$ network is routed directly to the $\mtf$ network.
+During free recall, instead, the output of $\mft$ is used to update the context as usual and the updated context acts as input to the $\mtf$ network.
+\begin{figure}
+    \centering
+    \begin{tikzpicture}[nef]
+        \graph [no placement] {
+            item/"list item $\bm{v}$" [ext, x=0, y=0];
+            ose/OSE [net, x=3, y=-1.5];
+            position/"position $\bm{p}$" [net, x=3, y=-3];
+            recall/"item recall $\hat{\bm{v}}$" [net, x=0, y=-5, dashed];
+            precall/"position recall $\hat{\bm{p}}$" [net, x=0, y=-6, dashed];
+            mfc/"$\mft$" [net, x=-3, y=-1];
+            mcf/"$\mtf$" [net, x=-3, y=-4];
+            ctx/context [net, x=-3, y=-2.5];
+
+            ctx -> [modulatory, bend right, dashed, gray] mfc;
+            item -> [modulatory, out=-120, in=0, dashed, gray] mcf;
+            position -> [modulatory, out=180, in=0, dashed, gray] mcf;
+            item -> [in=0, out=-120] mfc;
+            item -> [out=-60, in=170] ose;
+            position -> [in=0, out=180] mfc;
+            position -> [out=180, in=190, distance=20] ose;
+            mfc -> [bend right] ctx;
+            ctx -> [out=270, in=90] mcf;
+            precall -> [out=0, in=190] position;
+            recall -> [out=162, in=-15] mfc;
+        };
+    \end{tikzpicture}
+    \caption{TODO}\label{fig:pres-routing}
+\end{figure}
+\begin{figure}
+    \centering
+    \begin{tikzpicture}[nef]
+        \graph [no placement] {
+            ose/OSE [net, x=3, y=-1.5];
+            position/"position $\bm{p}$" [net, x=3, y=-3];
+            recall/"item recall $\hat{\bm{v}}$" [net, x=0, y=-5];
+            precall/"position recall $\hat{\bm{p}}$" [net, x=0, y=-6];
+            mfc/"$\mft$" [net, x=-3, y=-1];
+            mcf/"$\mtf$" [net, x=-3, y=-4];
+            ctx/context [net, x=-3, y=-2.5];
+
+            position -> [in=0, out=180] mfc;
+            position -> [out=180, in=190, distance=20] ose;
+            mfc -> ctx;
+            mfc -> [out=220, in=140] mcf;
+            mcf -> [out=270, in=180] recall;
+            mcf -> [out=270, in=180] precall;
+            ose -> [out=180, in=90] recall;
+        };
+    \end{tikzpicture}
+    \begin{tikzpicture}[nef]
+        \graph [no placement] {
+            ose/OSE [net, x=3, y=-1.5];
+            position/"position $\bm{p}$" [net, x=3, y=-3];
+            recall/"item recall $\hat{\bm{v}}$" [net, x=0, y=-5];
+            precall/"position recall $\hat{\bm{p}}$" [net, x=0, y=-6];
+            mfc/"$\mft$" [net, x=-3, y=-1];
+            mcf/"$\mtf$" [net, x=-3, y=-4];
+            ctx/context [net, x=-3, y=-2.5];
+
+            position -> [in=0, out=180] mfc;
+            position -> [out=180, in=190, distance=20] ose;
+            mfc -> ctx;
+            ctx -> [out=270, in=90] mcf;
+            mcf -> [out=270, in=180] recall;
+            mcf -> [out=270, in=180] precall;
+            precall -> [out=0, in=190] position;
+            ose -> [out=180, in=90] recall;
+            recall -> [out=162, in=-15] mfc;
+        };
+    \end{tikzpicture}
+    \caption{TODO}\label{fig:recall-routing}
+\end{figure}
+
+
+
