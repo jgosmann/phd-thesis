@@ -37,7 +37,7 @@ Both the current list item and position are input to the $\mft$ and \pop{OSE} ne
             recall -> [out=162, in=-15] mfc;
         };
     \end{tikzpicture}
-    \caption{TODO}\label{fig:general-routing}
+    \caption{General information flow in the CUE model. TODO}\label{fig:general-routing}
 \end{figure}
 
 Within the \pop{OSE} network (TODO section), the list item and position Semantic Pointers are bound together and added into the representation of the current list in a neural integrator.
@@ -98,7 +98,7 @@ During free recall, instead, the output of $\mft$ is used to update the context 
             recall -> [out=162, in=-15] mfc;
         };
     \end{tikzpicture}
-    \caption{TODO}\label{fig:pres-routing}
+    \caption{Information flow during the presentation phase. TODO}\label{fig:pres-routing}
 \end{figure}
 \begin{figure}
     \centering
@@ -142,8 +142,43 @@ During free recall, instead, the output of $\mft$ is used to update the context 
             recall -> [out=162, in=-15] mfc;
         };
     \end{tikzpicture}
-    \caption{TODO}\label{fig:recall-routing}
+    \caption{Information flow during the recall phase. Left: serial recall, right: free recall. TODO}\label{fig:recall-routing}
 \end{figure}
 
+The main control problem for each item is to regulate the context update because as discussed in Section TODO this cannot be done based on the context signal alone, but requires an external control signal.
+Before the context can be updated, the new input signal \ctxin\ needs to be present at the network input which requires a delay after a new list item has been presented.
+Accordingly, as soon as a new item is presented the context update should be stopped until that input signal is propagated and the current context has been propagated to the buffer for the old context in the context network.
+To achieve this delay, the Semantic Pointer of the new item is fed into an integrator with a slow synaptic time constant ($\tau = \SI{100}{\milli\second}$).
+Between the input Semantic Pointer and the the output of the integrator a dot product is calculated which will slowly increase towards one.
+The threshold obtained with a thresholding ensemble gives the required control signal for the presentation phase.
+During the recall phase, the logic is inverted.
+That enables an immediate update of the current context based on the position provided by the \pop{position} network and last recalled item.
+Once an item has been recalled it is used like a newly presented item and fed to the integrator and dot product.
+This will provide the signal to transfer the current context to the secondary buffer after a delay.
+The thresholded dot product signal is also used to control a few more things:
+\begin{itemize}
+    \item It is required to enable the learning of associations in the $\mft$ and $\mtf$ matrices to prevent the creation of associations before the context has been updated.
+    \item It is used to provide the control signal to transfer the updated OSE memory to the secondary memory buffer to allow for the next update.
+    \item The inverted signal is used to gate the transmission of the recalled item in the recall network to the memory of recalled items preventing repetition errors.
+\end{itemize}
+TODO figures
 
+Special control and information routing is also necessary during the distractor tasks or when no list item stimulus is present.
+Because the distractors are irrelevant to the task, they are assumed to be encoded not as strong in the hippocampal long-term memory.
+Thus, during the distractor phases the error signals for the association learning are inhibited to prevent the distractors from being learnt.
+Moreover, the distractors are not part of the learned list and thus the advancement of the positiion counter is inhibited.
+Instead of the position network output, a different Semantic Pointer indicating an irrelevant position will be routed to networks otherwise receiving the position Semantic Pointer. 
 
+Switching of task phases requires also some reconfiguration of the network state.
+The start of the recall phase is detected with thresholded differentiators for serial and free recall (one of them will be inhibited).
+For serial recall the position network will be reset to the first position by feeding exciting the neural ensemble for the first position and inhibiting all others.
+At the same time the Semantic Pointer for the first position will be fed to the \mft\ network to start of the recall while the position network is still transitioning to representing the first position.
+Because some subjects may use a serial recall strategy even in free recall, models are configured with probability TODO to perform this serial recall routing even in free recall.
+In free recall, the position network is inhibited at the start of recall to base the first recall purely on the currently active context signal.
+If during the free recall process a position vector is recalled it may set the position network to represent that position later.
+
+no learn (during recall phase)
+irrelevant positions during distractors, output no pos count
+failed recalls
+
+TODO mention primacy in learning
