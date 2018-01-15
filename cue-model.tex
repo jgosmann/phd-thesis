@@ -177,8 +177,9 @@ Because some subjects may use a serial recall strategy even in free recall, mode
 In free recall, the position network is inhibited at the start of recall to base the first recall purely on the currently active context signal.
 If during the free recall process a position vector is recalled it may set the position network to represent that position later.
 
-no learn (during recall phase)
-irrelevant positions during distractors, output no pos count
-failed recalls
+Finally, the recall networks might fail to recall an item (or position) if the input evidence is too low or too noisy.
+While these networks will restart the recall process internally, some global actions are necessary for the failed recall of items.
+The context network is provided with a signal to update the current context to then use the updated context for the next recall attempt.
+Also, for serial recall, the position network is provided with a signal to increment the current position to attempt recalling the next serial position in the list.
 
 TODO mention primacy in learning

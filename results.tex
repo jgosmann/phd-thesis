@@ -1,0 +1,63 @@
+\chapter{Results}
+To validate the CUE model, I matched it against human experimental data of serial and free recall experiments.
+The same model architecture was used in all of these simulations with only small changes is some parameter values across experimental conditions.
+The simulations were designed to replicate the experimental paradigms as closely as possible.
+In particular, the list length, item presentation times, delay times, and recall times where matched.
+
+To model the effect of distractor tasks during delay phases, non-list items where presented a rate of $\drate$ items per second.
+These were allowed to influence the STM component, but learning in the LTM component was disabled as these items were irrelevant to the main memorization task.
+This is similar to how \textcite{Howard2002} modeled the distractor interval, though in their case they did not define the distractor rate, but the effective length of the distractor interval.
+As I was aiming to match the experimental paradigms as closely as possible, changing the length of the distractor interval was not an option.
+
+As long as not otherwise noted, 100 simulations with different seeds were run per experimental condition.
+This number is sufficient to get clear results with reasonably small confidence intervals, but still small enough that the simulation and parameter matching is feasible on a high-performance computing cluster.
+
+
+TODO parameter values
+
+
+\section{Serial recall}
+In serial recall participants are asked to recall items in the same order as they were presented.
+In an experiment presented by \textcite{Jahnke1968} list of ten items was presented at the rate of one item per second and recalled immediately.
+Figure TODO shows the serial position curve for the experimental and model data and the distribution of transposition errors averaged over all serial positions.
+In both cases the serial position curve show a clear primacy and recency effect.
+While \textcite{Jahnke1968} did not provide the transposition data, the model matches qualitatively the transposition gradients reported elsewhere (TODO ref).
+In general, few transposition errors are made, but for those that occur transpositions of nearby items are more likely than transpositions of distant items.
+
+TODO primacy by LTM, recency by STM\@?
+
+
+\section{Free recall}
+While the order of recall is predetermined in serial recall, in free recall list items may be recalled in any order.
+Here, I provide the model match to the data from \textcite{Howard1999} which also has been used in original fits of the TCM model in \textcite{Howard2002} and \textcite{Sederberg2008}.
+Three experimental conditions were attempted to match: immediate recall, delayed recall, and continuous distractor recall.
+
+In the immediate free recall condition, list items were presented at a rate of one item every second.
+After the presentation phase a recall phase of \SI{45}{\second} followed immediately.
+This protocol was changed to a presentation rate of one item every \SI{1.2}{\second} and a recall phase of \SI{60}{\second} in the delayed and continuous distractor conditions.
+In both of these conditions, the presentation and recall phase were separated by a \SI{16}{\second} distractor task.
+In addition, in the continuous distractor conditions such a \SI{16}{\second} distractor phase would be inserted in between every pair of items.
+A list length of 12 items was used in all conditions.
+
+A number of resulting metrics from the model and experimental data is shown in Figure TODO\@.
+First, the distribution of the total number of successful recalls is shown.
+To my knowledge, this data has not been analyzed for the original TCM model, even though it is arguably the most fundamental comparison.
+In all conditions, the 95\% confidence intervals of the mean, standard deviation, and kurtosis overlap with the exception of the kurtosis in the immediate recall condition.
+Thus, no significant difference for the most essential moments could be shown which indicates that the model approximates the experimental distributions well, even though an equality of the distributions cannot be inferred.
+TODO KL-divergence?
+
+Second, the serial position curves are given.
+The strong recency effect in immediate recall is attenuated in delayed recall, but reappears to some degree in continuous distractor recall.
+Interestingly, the recency effect in immediate recall give the curve an S-like shape that is missing in continuous distractor recall.
+
+Third, these effects also show in the probability of first recall.
+In immediate recall, the first recall is with high probability from the end of the list, whereas in delayed recall the probability is much more uniform.
+In continuous distractor recall, the probability to start the recall at the end of the list is partially restored.
+
+Finally, the conditional response probability (CRP) gives the probability of how much lag between the positions of to recalled items is.
+For example, the asymmetry in immediate recall shows the bias to do forward recall and the peak around zero that nearby items tend to be recalled together.
+Both of these effects become attenuated in delayed and continuous distractor recall.
+In delayed free recall, the model predicts a stronger forward bias than the experimental data shows.
+
+
+\section{Scopolamine}
