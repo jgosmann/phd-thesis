@@ -61,6 +61,19 @@ In delayed free recall, the model predicts a stronger forward bias than the expe
 
 
 \section{Scopolamine}
+A spiking neural network model allows to investigate the effects of drugs more readily than a pure mathematical model.
+I demonstrate this here with the acetylcholine antagonist scopolamine.
+Administered before presentation phase in an immediate recall experiment, it will be detrimental to the recall performance~\parencite{ghoneim1975}.
+However, scopolamine administered inbetween the presentation and recall phase does not influence performance.
+This indicates that scopolamine prevents encoding of new memories in LTM, but does not prevent recall of already encoded memories.
+More precisely, scopolamine has been shown to attenuate long-term potentiation in hippocampus~\parencite{leung2003,ito1988,hirotsu1989}.
+
+To model the effect of scopolamine on LTP, the AML learning rate for learning the $\mtf$ and $\mft$ matrices can be adjusted.
+By reducing it to TODO, the experimental results by \textcite{ghoneim1975} can be reproduced (see Figure TODO).
+The simulation protocols were again modeled to replicate the experimental settings with 16 items per list, and a presentation time of two seconds per item.
+
+
+\section{Hebb repetition effect}
 
 
 \section{Spiking behaviour}
