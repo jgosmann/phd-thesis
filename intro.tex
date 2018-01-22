@@ -1,56 +1,57 @@
 \chapter{Introduction}
 
 Memory in its different forms is an important aspect of human, but also animal cognition.
-For example, it allows animals to return to previously visited water and food locations (TODO refs).
-Prior experiences also allow to act more optimally in similar situations or avoid dangerous situations.
-In this sense memory allows for adaptation on a faster time scale than genetic selection.
+For example, it allows animals to return to previously visited water and food locations~\parencite{vorhees2014}.
+Prior experiences also allow to act more optimally in similar situations or to avoid dangerous situations.
+In this sense, memory allows for adaptation on a faster time scale than genetic selection.
 This is especially important in unstable and changing environments.
 In humans, memory is also important to form social relationships, a shared culture, and even a functioning society.
-Moreover, it contributes to our individual sense of self.
-In general, the storage of information over time is a fundamental requirement in many cognitive systems and also from a computational point of view an addressable memory is important as it allows for more compact implementations than a pure state machine (TODO cite Gallistel).
+For example, strategies in the repeated prisoner's dilemma depend on working memory capacity~\parencite{milinski1998}.
+Moreover, memory contributes to our individual sense of self~\parencite{prebble2013}.
+Apart from this functional perspective, an addressable memory is also important from a computational perspective.
+It allows for a more compact implementation of many computational processes than a pure state machine could achieve~\parencite{gallistel2009}.
+Overall, the storage of information over time is a fundamental requirement in many cognitive systems.
 
 Accordingly, there is a long history of memory research.
-The well-known primacy and recency effect (discussed in more detail in TODO) have already been described by TODO Robinson, Brown 1926.
+The well-known primacy and recency effect (discussed in more detail in \cref{sec:exp-findings}) have already been described by \textcite{Robinson1926}.
 Nevertheless, there are still many open questions.
-One important challenge that has to be solved by a memory system is the so-called \emph{stability-plasticity dilemma} (TODO ref Abaraham and A Robins 2005).
+One important challenge that memory systems have to solve is the so-called \emph{stability-plasticity dilemma}~\parencite{Abraham2005}.
 On the one hand, there is a need to quickly form new memories, sometimes even with a single exposure known as \emph{one-shot learning}.
 On the other hand, such high plasticity can easily lead to overwriting of old memories rendering memory system useless.
-TODO refo Buzsaki and others proposed multi-stage memory models where different memory system are in place for different timescales with different levels of plasticity.
-However, this still leaves open TODO questions.
+\Textcite{Buzsaki1989} and others proposed multi-stage memory models where different memory systems are in place for different timescales with different levels of plasticity.
 
-It also is a strong indication that different memory systems interact.
-Though, it much of experimental research and modeling different memory systems have been treated as isolated.
+Despite this, much of experimental research and modeling treat different memory systems as isolated.
 This simplifies the analysis on a certain level, but to get a general understanding of memory as a whole the results need to integrated at some point.
 Furthermore, many models of memory or learning focus on either small scale neural changes without any direct connection to behaviour or on the other extreme of describing behaviour with mathematical equations, but no solid grounding in biological plausibility.
 So it is not only important to integrate our understanding of memory systems, but also to bridge the gap from neural mechanisms to behaviour.
-This thesis will try to advance our understanding in this direction.
+With this thesis I advance the understanding in this direction by proposing a model integrating short- and long-term memory and thus modeling their interaction.
+Moreover, I implement the model as a spiking neural network to ensure biological plausibility, while at the same time matching behavioural data.
 
 While this will still be comparably rough sketch and still fairly limited in memory systems covered, there are promising long-term prospects from a better understanding of human memory.
 Many forms of memory loss are currently untreatable.
-However, diseases associated with aging like Alzheimer's significantly impair the function of memory and are getting more common as our life-span increases due to other medical and nutritional advances.
-(TODO stroke, hippocampal lesions?)
+However, diseases associated with aging, like Alzheimer's, significantly impair the function of memory and are getting more common as our life-span increases due to other medical and nutritional advances.
 A better understanding of memory might allow us to devise better treatments or even stop and reverse the memory detoriation.
-A potential route to this are memory implants that have already been demonstrated in rats by TODO Berger et all 2011.
-For this sort of implant, an understanding of how memories are encoded is at least helpful if not crucial.
+A potential route to this are memory implants that have already been demonstrated in rats by~\textcite{Berger2011}.
+For these sort of implants, an understanding of how memories are encoded is at least helpful if not crucial.
 
 These are certainly strong motivators for research into memory, but it is also worthwhile to advance our general understanding of how the human brain works.
 A question that has puzzled researchers for a long time and probably still will for a long time to come despite great advances.
-An important step in testing our current understanding of the brain was the Spaun model (TODO ref).
-A spiking neural network of XX neurons, thus grounded in biology, that can perform 8 different tasks.
+An important step in testing our current understanding of the brain was the Spaun model~\parencite{Eliasmith2012}.
+A spiking neural network of 2.5 million neurons, thus grounded in biology, that can perform 8 different tasks.
 Like a real brain it gets sensory input (low resolution black and white symbols) and produces a behavioural motor output with a simulated arm.
 The number of tasks it can perform demonstrates that it is not a specialized model for a single task, but can switch between different tasks like a real brain.
-Obviously, Spaun is still much simpler (and has much less neurons) like a real brain.
-So there is no denying that it is still a long way to a full understanding of the whole brain.
-But it incorporates a number of qualitative key aspects.
+Obviously, Spaun is still much simpler (and has much less neurons) than an actual brain and still far from a full understanding of the brain.
+But it incorporates a number of qualitative key aspects such as the ability to switch task, making human-like errors, and being implemented in a spiking neural network.
 However, one key aspect is still missing.
 While it can perform working memory dependent tasks and has simple reinforcement learning, it is missing a declarative and episodic long-term memory.
-The work in this thesis is also a step towards providing Spaun with such a memory by integrating it with a short-term memory component similar to the one used in Spaun.
+The work in this thesis can also be seen as a step toward implementing a model of such memory for the future integration in even larger scale models integrating further key aspects of cognition.
 
 
 \section{Behavioural characterization of memory}
-Memory is commonly characterized along two orthogonal dimensions:
+Memory systems have been characterized in different and sometimes contradictory ways.
+However, one commonly used distinction is made along two orthogonal dimensions:
 by timescale and by type of information stored.
-On the timescale axis one usually discriminates between short-term memory (STM), and long-term memory or short-term, long-term, and very long-term memory (vLTM).
+On the timescale axis one can differentiate between short-term memory (STM), and long-term memory or short-term, long-term, and very long-term memory (vLTM).
 However, there is no single agreed upon definition which timescales are encompassed in each of these terms.
 Sometimes LTM is used to refer to vLTM, while sometimes LTM is in-between STM and vLTM\@.
 As a rough orientation STM is usually taken to be on the sub-second timescale, up to a few seconds.
@@ -61,33 +62,61 @@ Moreover, the term working memory (WM) is often used to refer to active represen
 In this thesis, I will use the term STM for timescales in the order of seconds and LTM for longer timescales, but separate from vLTM\@.
 Moreover, I will assume STM to be based on neural-activity and thus this definition is somewhat in line with the definition of WM\@.
 
-When classifying memory by type of information, a representation as a tree structure can be helpful.
+When classifying memory by type of information, a representation as a tree structure can be helpful (\cref{fig:memtypes}).
 On the highest level, we have the distinction between implicit and explicit memory.
 Implicit memory does not allow for conscious access.
 A typical example is procedural or motor memory like how to ride a bike.
 Explicit memory allows for conscious access and is further subdivided into declarative and episodic memory.
 The declarative memory allows us to store and reproduce facts like the birthday of a friend, whereas the episodic memory provides a recollection of life experiences.
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        [level 1/.style={sibling distance=7cm},
+        level 2/.style={sibling distance=2.5cm}]
+        \node {Memory}
+        child {node {\strut Explict} child {node {\strut Episodic}} child {node 
+                {\strut Declarative}} child {node {\strut Semantic}}}
+        child {node {\strut Implict} child {node {\strut Priming}} child {node 
+                {\strut Conditioning}} child {node {\strut Procedural}}};
+    \end{tikzpicture}
+    \caption{Categorization of memory by type of stored 
+        information.}\label{fig:memtypes}
+\end{figure}
 
 Here, I will focus on declarative memory as this type of memory has been well studied in many memory experiments.
 
 
-\section{Experimental findings in memory research}
+\section{Experimental findings in memory research}\label{sec:exp-findings}
 Most memory experiments require the participants to memorize lists of words and recall them afterwards.
-The words are typically chosen from the Toronto noun pool and are matched for semantic similarity and occurrence frequency (TODO verify, ref).
 Usually an experiment will fall in one of two categories depending on how the subjects are required to recall the list items: in free recall experiments, the subjects are free to recall the items in any order; in serial recall experiments, the subjects are required to recall the items in order.
 
 The hallmark finding in memory research, especially for serial recall experiments, are the primacy and recency effect.
-Subjects tend to remember the start of list (primacy) and the end of list (recency) better (TODO fig).
+Subjects tend to remember the start of list (primacy) and the end of list (recency) better (\cref{fig:exp-serial-pos}).
 Furthermore, if subjects in a serial recall experiment recall an item at the wrong position, a so-called \emph{transposition}, it is more likely to be an item that was close in the list than an item several positions spaced out.
+\begin{figure}
+    \centering
+    \includegraphics{figures/exp-serial-pos}
+    \caption[Immediate serial recall position curve]{Serial position curve of a immediate serial recall experiment with a 10 item list. Data reproduced from \textcite{Jahnke1968} with 95\% confidence intervals.}\label{fig:exp-serial-pos}
+\end{figure}
 
-In free recall experiments, participants usually start out by recalling the last items first.
-This can be measured by the probability of first recall (TODO fig).
-There is also the tendency, to recall items in forward direction and items close to the last recalled item.
-The conditional response probability (CRP) measures this (TODO fig)
-It gives the probability of how many items forward or backward (know as the lag) the next recall will jump.
+In free recall experiments, a recency effect is observed as well.
+This does not only show in the serial position curve, but participants often start out with recalling the last item first.
+This can be measured by the probability of first recall (\cref{fig:exp-free-recall}).
+Another important aspect of free recall is captured by the conditional response probability (CRP).
+It gives the probability for the difference (the \emph{lag}) in serial positions of two recalled items.
+It is peaked around 0, indicating that items in proximity in the learned list tend to be recalled together, while jumps to remote items are rarer.
+This is known as \emph{contiguity} or the \emph{lag-recency effect}.
+The CRP curve also has a characteristic asymmetry which shows the bias for forward (opposed to backward) recall.
+\begin{figure}
+    \centering
+    \includegraphics{figures/exp-free-recall}
+    \caption[Free recall probablitiy of first recall and CRP]{Data from free recall experiments with 12 item lists. (a) Probability of first recall. (b) Conditional response probability. All data from \textcite{Howard1999} with 95\% confidence intervals.}\label{fig:exp-free-recall}
+\end{figure}
 
-In memory experiments the recall phase can directly follow the study phase, known as an immediate recall experiment, or a delay, potentially with a distractor task, can separate the two, known as delayed recall.
-Sometimes a distraction task will be performed in between each list item which is known as continuous distractor recall.
+By introducing a delay filled with a distractor task, referred to as \emph{delayed (free) recall}, both the probability of first recall and the CRP curve will become much flatter.
+This effect cannot solely be attributed to (suppressed) rehearsal effects as introducing an equally long distractor interval inbetween the list items, known as \emph{continuous distractor (free) recall}, partially restores the recency effect in the probability of first recall.
+
+TODO scopolamine and hebb repetition.
 
 
 \section{Neuroanatomy of memory}
