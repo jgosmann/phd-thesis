@@ -115,19 +115,31 @@ The CRP curve also has a characteristic asymmetry which shows the bias for forwa
 By introducing a delay filled with a distractor task, referred to as \emph{delayed (free) recall}, both the probability of first recall and the CRP curve will become much flatter.
 This effect cannot solely be attributed to (suppressed) rehearsal effects as introducing an equally long distractor interval inbetween the list items, known as \emph{continuous distractor (free) recall}, partially restores the recency effect in the probability of first recall.
 
-TODO scopolamine and hebb repetition.
+While there are many other experimental findings in memory research, there are two more findings that I will focus on in this thesis.
+First, the differential effects of the acetylcholine antagonist scopolamine on encoding and recall~\parencite{ghoneim1975}.
+Recall performance is normal when scopolamine is injected after the presentation phase, but the number of successful recalls is considerably lower when the injection is done before the presentation phase.
+The number of successfully recalled items in the later case is around the short-term memory span which might show an effect purely on LTM, but not STM\@.
+This experiment is of interest as a neural network model is more suited to modeling such drug effects than typical mathematical models.
+
+Second, the Hebb repetition effect the observation that in repeated immediate recall experiments, the recall accuracy of a repeated list (typically every third list) will increase with repetitions~\parencite{Hebb1961}.
+Whether the test subject has to become consciously aware of the repetition is debated~\parencite{Stadler1993}.
+It is of interest in this thesis the Hebb repetition effect has been regarded useful in testing interaction of STM and LTM, or as \textcite{Burgess2005} phrase it, it is  a ``powerful vehicle for developing and testing models of the relationship between STM and LTM''.
 
 
 \section{Neuroanatomy of memory}
-TODO brain regions involved in short term recall
+Short-term memory is attributed to cortical brain regions, but there is no single region that is the unique locus of STM\@.
+Sensory short-term memory is distributed across the corresponding cortical sensory and related brain regions~\parencite{zelano2009,todd2004,baldo2012}.
+For example, auditory memory can be found in the temporal cortex close to speech processing areas, whereas visual short-term memory is located in parietal cortex.
+Furthermore, multimodal integration and manipulation in working memory has been found to lead to increased activation in prefrontal cortex~\parencite{rypma1999}.
 
-The hippocampus (HC) has been implicated in the acquisition of new episodic memories.
-A finding derived from patients with hippocampal lesions, most famously HM who got his hippocampus removed due to severe epilepsy (TODO refs).
-The hippocampus is named for his sea horse shaped structure.
+Compared to short-term memory, the formation of new long-term memories is more localized.
+In particular, the hippocampus (HC) has been implicated in the acquisition of new declarative and episodic memories~\parencite{eichenbaum2001-1}.
+A finding originally derived from patients with hippocampal lesions, most famously HM who got his hippocampus (but also other brain regions) removed due to severe epilepsy~\parencite{penfield1958,scoville1957-1,squire2009}.
+The hippocampus is named for its sea horse shaped structure.
 It is located in the medial temporal lobe (TODO fig) and neighbours the subiculum and entorhinal cortex (EC).
 The hippocampus is further divided into substructures CA3, CA1, and the dentate gyrus (DG) by its cytoarchitectural structure.
-While the CA3 and CA1 regions consist mainly out of pyramidal neurons and about \SI{10}{\percent} GABAergic, inhibitory interneurons (TODO ref Freund and Buzsaki 1996), granule cells are the main constituent of the dentate gyrus.
-Furthermore, the dentate gyrus has a large number of cells compared to CA3.
+While the CA3 and CA1 regions consist mainly out of pyramidal neurons and about \SI{10}{\percent} GABAergic, inhibitory interneurons~\parencite{Freund1996}, granule cells are the main constituent of the dentate gyrus.
+Furthermore, the dentate gyrus has a large number of cells compared to CA3 that exhibit sparse activity.
 In humans the cell count of the DG is about twice as high as in CA3, whereas in rats DG has about five times more cells than the CA3 region.
 
 The connectivity to, from, and within hippocampus is exceptionally well known.
@@ -135,20 +147,29 @@ There are two major pathways from entorhinal cortex.
 The direct pathway originates in layer III of the entorhinal cortex and targets the distal apical dendrites of CA1 neurons.
 The trisynaptic pathway originates in layer II and leads via the dentate gyrus, and CA3 also to CA1, but targeting the proximal dendrites (a signal thus crosses three synapses).
 The connections from the dentate gyrus to the CA3 region in this is termed the mossy fiber pathway.
-Each of these mossy fibers innervates about 15 neurons (TODO ref Claiborne, Amaral and Cowan 1986) which results in each CA3 pyramidal neuron receiving input from about 50 to 90 granule cells (TODO ref Squire, Shimamura, and Amaral 1989, p230).
+Each of these mossy fibers innervates about 15 neurons~\parencite{Claiborne1986} which results in each CA3 pyramidal neuron receiving input from about 50 to 90 granule cells~\parencite[230]{Squire1989}.
 The final bundle of connections from CA3 to CA1 is known as the Schaffer collateral pathway.
-
-TODO further connections: EC to CA3 (mostly targeting same cells as from DG, Paxinos 2014), CA3 recurrent (single cell not innervated by more than 5\% of all CA3 cells Squire, Shimamura and Amaral 1989, p231)
+Further major hippocampal connections exist from the entorhinal cortex to CA3, mostly targeting the same cells as the connection from dentate gyrus~\parencite{Paxinos2014}, and recurrent connections in CA3.
+However, a single cell in CA3 is not recurrently innervated by more than 5\% of all CA3 cells~\parencite[231]{Squire1989}.
 
 Given these neuroanatomical properties, some of the hippocampal regions have been assumed to be involved in specific tasks.
-The sparse cdoing and large cell count of the dentate gyrus led to the belief that it is responsible for pattern separation (TODO ref Rolls 2013).
-The CA3 region with its recurrent connectivity could be involved in pattern completion or forward predictions (TODO ref Leutgeb and Leutgeb 2007, Rolls 2013).
-Additional evidence for this comes from context dependent firing of these neurons (TODO how so? TODO ref Guzowski, KHierim, and Moser 2004, Leutgeb and Leutgeb 2007) and unimpaired recognition memory after lesioning the CA3 to CA1 connections despite impairing selective recall (TODO ref Brun et al 2002). 
+The sparse coding and large cell count of the dentate gyrus led to the belief that it is responsible for pattern separation~\parencite{Rolls2013}.
+The CA3 region with its recurrent connectivity could be involved in pattern completion or forward predictions~\parencite{Leutgeb2007,Rolls2013}.
+Additional evidence for this comes from context dependent firing of these neurons (TODO how so?) \parencite{Guzowski2004,Leutgeb2007} and unimpaired recognition memory after lesioning the CA3 to CA1 connections despite impairing selective recall~\parencite{Brun2002}. 
 
-theta rhythm, SPWs, grid and place cells
+A review of hippocampal structures would not be complete without mentioning hippocampal place cells and entorhinal grid cells~\parencite{hafting2005}, first discovered in rats, but existent also in other animals~\parencite{buzsaki2013}.
+A grid cell fires when the animal is a locations arranged in a regular hexagonal grid in an environment.
+Place cells are similar, but fire only for one specific location in an environment and remap between environments.
+While these cells are involved in navigational tasks, a connection to memory is possible~\parencite{buzsaki2013}.
+However, paying further attention to these cells is out of the scope of this thesis.
 
-vLTM not hippocampal
-Cerebellum for motor
+Closely related to grid and place cells is the hippocampal theta oscillation found in rats.
+The spiking of place cells during a theta cycle is timed according to the distance from corresponding land marks, a phenomen termed \emph{phase precession}~\parencite{tsodyks1996}.
+The coupling of the theta and gamma bands has also been shown to be important in the learning of item-context associations~\parencite{tort2009}.
+However, the theta rhythm is only rarely observed in primates~\parencite{ekstrom2005} and thus I do not consider it in this thesis.
+
+Finally, most commonly during sleep, but also in immobile rats, sharp waves (SPWs) are observed in the rat hippocampus~\parencite{chrobak1994,girardeau2009}.
+These have been implicated to be involved in memory consolidation from hippocampus to the neocortex, a process not covered in this thesis.
 
 
 \section{Memory models}
