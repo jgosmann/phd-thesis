@@ -1,4 +1,4 @@
-\chapter{Modeling neurons}
+\chapter{Modeling neurons}\label{sec:neurons}
 The information processing in the brain is performed by neurons (see \cref{fig:neuron}).
 Despite a wide variety of different neuron types and behaviours, the typical behavior of most neurons can be described as follows.
 These cells build up an electrical potential of about \SI{-70}{\milli\volt}, the resting membrane potential, across their cell membrane with the ions in the intra- and extracellular fluid.
@@ -22,13 +22,13 @@ This latter type of model is common in artificial neural networks and deep learn
 
 A widely used neuron model in computational neuroscience is the leaky integrate-and-fire (LIF) neuron model.
 It is a point neuron model, thus not modeling any spatial extend.
-It models a single membrane voltage described by the differential equation
+It models a single membrane voltage $V(t)$ described by the differential equation
 \begin{equation}
     \taurc \od{V}{t} = -V(t) + R J(t)
 \end{equation}
-where $R$ is the membrane resistance and $J(t)$ the input current.
+where $R$ is the membrane resistance, $J(t)$ the input current, and $\taurc$ the membrane time constant.
 Whenever the membrane voltage reaches a certain threshold $V_{\ped{th}}$, the LIF neuron transmits a spike and its membrane voltage is reset for a refractory period of $\tauref$.
-This type of neuron model allows to derive the firing rate for a given input current $J$ analytically as
+This type of neuron model allows to derive the firing rate for a given constant input current $J$ analytically as
 \begin{equation}
     \act(J) = \frac{1}{\tauref - \taurc \ln\!\del{1 - \frac{V_{\ped{th}}}{R J}}} \text{.}
 \end{equation}

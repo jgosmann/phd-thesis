@@ -1,11 +1,11 @@
 \chapter{The Neural Engineering Framework}\label{sec:nef}
 
 To construct a large-scale spiking neural network with a certain behaviour, some method for obtaining that behaviour is required.
-In most cases this method will be a learning algorithm (TODO example ref).
+In most cases this method will be a learning algorithm~\parencite[e.g.,][]{oreilly2006}.
 However, this requires time-intensive training of the model and is often not viable for large models, complex behaviours, or models combining different behaviours.
-In this work I opt to use the Neural Engineering Framework (NEF) (TODO ref) which allows the direct construction of a spiking neural network from the mathematical equations describing the desired dynamics without the time-intensive training.
+In this work I opt to use the Neural Engineering Framework~\parencite[NEF;][]{eliasmith2003} which allows the direct construction of a spiking neural network from the mathematical equations describing the desired dynamics without the time-intensive training.
 As such the final model does not provide an developmental account of how the neural network became organized or learned to perform its task.
-But it provides a biological plausible explanation of how the brain might perform that task.
+But it provides a biological plausible explanation of how the developed brain might perform that task.
 Furthermore, it allows for manipulations to test known experimental results in the model or obtain new predictions.
 
 The NEF consists out of the three core principles for \emph{representation}, \emph{transformation}, and \emph{dynamics} in a neural network that I will introduce in this order.
@@ -20,19 +20,21 @@ The spiking activity $\act_i(t)$ of a neuron can then be described with
 \end{equation}
 where $\gain_i$ is a neuron gain factor, $\jbias_i$ a bias input current, and $\nl$ the neuron nonlinearity.
 The nonlinearity $\nl$ represents the neuron model and converts an input current into spikes.
-Usually this will be the spiking, leaky integrate-and-fire model (LIF) discussed in TODO which provides a good trade-off of captured neuron behaviour, detail, and simulation effort.
-But simpler neuron models (e.g., a rate-based LIF model, or rectified linear units) could be used, as well as much more complex neuron models like the compartmental model in TODO ref Biospaun and Pete's work.
+Usually this will be the spiking, leaky integrate-and-fire model (LIF) discussed in \cref{sec:neurons} which provides a good trade-off of captured neuron behaviour, detail, and simulation effort.
+But simpler neuron models (e.g., a rate-based LIF model, or rectified linear units) could be used, as well as much more complex neuron models like the compartmental model in \textcite{eliasmith2016} and \textcite{duggins2017c}.
 The input current to the neuron is obtained from how well the stimulus aligns with the preferred stimulus as measured by the dot product.
-As this alignment with the preferred stimulus ``encodes'' the stimulus into the neural representational space, $\enc$ is usually referred to as \emph{encoder} in the context of the NEF\@.
+As this alignment with the preferred stimulus ``encodes'' the stimulus into the neural representational space, $\enc_i$ is usually referred to as \emph{encoder} in the context of the NEF\@.
 Furthermore, the gain factor $\gain_i$ and bias term $\jbias_i$ allow to adjust the neuron's tuning curve to experimentally observed firing rates.
+However, it is also common to use higher maximal firing rates as to use fewer neurons in simulations to achieve an equal accuracy.
+While this is not entirely adhering to biological constraints, in most cases NEF models behave the same when lowering the firing rates and increasing neuron numbers accordingly~\parencite[e.g.,][]{gosmann2015}.
 As it is rare to have detailed information about the tuning curves in many part of the brain, those values are usually not directly set in the NEF\@.
 Instead a representational space $\repspace$ is defined, usually as the $\dims$-dimensional $\dims$-hyperball with radius $\radius$.
-Furthermore, for each neuron a maximum firing rate $\act_{\max}$ and an intercept point $p$ are sampled from random distributions.
-These values are used to calculate the gain and bias so that the neuron starts firing at $p \cdot \enc$ when moving along the encoder $\enc$ and that the maximum $\act_{\max}$ is not exceeded across the representational space $\repspace$.
+Furthermore, for each neuron a maximum firing rate $\act_{\max}$ and an intercept point $p_i$ are sampled from random distributions.
+These values are used to calculate the gain and bias so that the neuron starts firing at $p_i \cdot \enc_i$ when $\vc x$ varies along the encoder $\enc_i$ and that the maximum $\act_{\max,i}$ is not exceeded across the representational space $\repspace$.
 
 Given a population of neurons, also called a neural \emph{ensemble} in NEF terms, how can the encoded vector $\vc x(t)$ be recovered?
 First the activity or spike trains $\act_i(t)$ are convolved with a synaptic filter $\syn$ to obtain the induced post-synaptic voltage change.
-Usually this will be a decaying exponential $\syn(t) = \exp(-t / \syntau)$, but other filters can be used to more precisely model the dynamics of the synapse.
+Usually this will be a decaying exponential $\syn(t) = \exp(-t / \syntau)$, but other filters can be used to more precisely model the dynamics of the synapse~\parencite{voelker2017a} and even extensions to conductance-based synapses are possible~\parencite{stockel2017}.
 From the filtered activity, the represented vector can be reconstructed with a linear, weighted decoding
 \begin{equation}
     \hat{\vc x}(t) = \sum_i \dec_i \cdot \sbr{a_i * h}\!(t)
@@ -46,8 +48,8 @@ To get a good reconstruction of the represented value, the decoding weights shou
 In general, this minimization cannot be solved analytically.
 Thus, in the NEF the integral is approximated by randomly sampling $M$ \emph{evaluation points} $\evalp_k \in \repspace$.
 Given the finite number of evaluation points, it becomes possible to solve for the decoding weights with a least-squares minimization.
-The detailed derivation is given in TODO ref NEF book.
-As the final result one obtains the matrices
+The detailed derivation is given in \textcite[Ch.~2]{eliasmith2003}.
+In short, one obtains the matrices
 \begin{equation}
     \actmat = \sbr{\begin{array}{cccc}
             \act_1(\vc x_1) & \act_1(\vc x_2) & \cdots & \act_1(\vc x_M) \\
@@ -88,23 +90,23 @@ To implement a function $f(\vc x)$, one replaces the matrix $\evalpmat$ with
 when solving for decoders.
 This corresponds to a minimization of the modified error $E_{f(\vc x)} = \int_{\repspace} \norm{f(\vc x) - \hat{\vc x}}^2 \dif \vc x$.
 
-TODO ref NEF book shows that a neural network constructed in this way is typically best at computing low-order polynomials.
+\Textcite[Ch.~7]{eliasmith2003} shows that a neural network constructed in this way is typically best at computing low-order polynomials.
 Non-smooth or discontinuous functions might require a large number of neurons.
 In some cases a better function approximation can be achieved by appropriately selecting parameters like intercepts or encoders or by changing the network structure to decompose a function in a different way.
-An example is the calculation of products and has been discussed in TODO ref multiplication tech report and Section TODO shows this for the thresholding of values.
+An example is the calculation of products and has been discussed in \textcite{gosmann2015-1} and \cref{sec:thresholding} shows this for the thresholding of values.
 
 \section{Dynamics}
 The final principle of the NEF addresses dynamics.
 In linear control theory a dynamical system is often described by state equations of the form
 \begin{align}
-    \dot{\vc x}(t) &= \mat A \vc x(t) + \mat B \vc u(t) \\
+    \od{\vc x}{t} &= \mat A \vc x(t) + \mat B \vc u(t) \\
     \vc y(t) &= \mat C \vc x(t) + \mat D \vc u(t)
 \end{align}
 where $\vc x(t)$ is the state vector, $\vc u(t)$ the input vector, and $\vc y(t)$ the output vector.
 The system behaviour is determined by the dynamics matrix $\mat A$, input matrix $\mat B$, output matrix $\mat C$, and the feedthrough matrix $\mat D$.
 TODO figure
 In the NEF, we want to map a given dynamical system onto neural components (TODO figure).
-The neuron dynamics are dominated by the synaptic filter (TODO ref appendix F.1) which becomes the transfer function and gives
+The neuron dynamics are dominated by the synaptic filter \parencite[Appendix~F.1]{eliasmith2003} which becomes the transfer function and gives
 \begin{equation}
     \vc x(t) = h(t) * \sbr{\mat A' \vc x(t) + \mat B' \vc u(t)} \text{.}
 \end{equation}
@@ -118,12 +120,12 @@ In addition, one needs to add a recurrent transformation implementing the functi
 
 
 \section{Simulating NEF networks}
-To simulate NEF style networks, I use the Python library Nengo (TODO ref).
+To simulate NEF style networks, I use the Python library Nengo~\parencite{bekolay2014,sharma}.
 It supports different backends, to run neural models on different hardware platforms.
 For example, Nengo OCL targets GPUs with an OpenCL implementation.
 While this allows better simulation performance, special case implementations are necessary for certain features.
-In particular, this applies to the association matrix learning rule (see Section TODO).
-Moreover, I utilized the Sharcnet and Compute Canada high-performance clusters (TODO ref) which typically provide more CPU resources than GPU resources.
+In particular, this applies to the association matrix learning rule (see \cref{sec:aml}).
+Moreover, I utilized the Sharcnet and Compute Canada high-performance clusters which typically provide more CPU resources than GPU resources.
 Thus, I mostly used the Nengo reference (CPU) backend.
 To still obtain sufficient simulation performance for the size of models constructed in this work, it was necessary to optimize memory organization of the internal data structures of the backend.
-While the exact details are out of the scope of this thesis, they can be found in TODO ref.
+While the exact details are out of the scope of this thesis, they are published in \textcite{gosmann2017}.

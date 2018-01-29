@@ -1,4 +1,51 @@
 
+@article{bekolay2014,
+  title = {Nengo: {{A Python}} Tool for Building Large-Scale Functional Brain Models},
+  volume = {7},
+  issn = {1662-5196},
+  doi = {10.3389/fninf.2013.00048},
+  shorttitle = {Nengo},
+  abstract = {Neuroscience currently lacks a comprehensive theory of how cognitive processes can be implemented in a biological substrate. The Neural Engineering Framework (NEF) proposes one such theory, but has not yet gathered significant empirical support, partly due to the technical challenge of building and simulating large-scale models with the NEF. Nengo is a software tool that can be used to build and simulate large-scale models based on the NEF; currently, it is the primary resource for both teaching how the NEF is used, and for doing research that generates specific NEF models to explain experimental data. Nengo 1.4, which was implemented in Java, was used to create Spaun, the world's largest functional brain model (Eliasmith et al., 2012). Simulating Spaun highlighted limitations in Nengo 1.4's ability to support model construction with simple syntax, to simulate large models quickly, and to collect large amounts of data for subsequent analysis. This paper describes Nengo 2.0, which is implemented in Python and overcomes these limitations. It uses simple and extendable syntax, simulates a benchmark model on the scale of Spaun 50 times faster than Nengo 1.4, and has a flexible mechanism for collecting simulation results.},
+  number = {48},
+  journaltitle = {Frontiers in Neuroinformatics},
+  shortjournal = {Front Neuroinform},
+  date = {2014-01-06},
+  author = {Bekolay, Trevor and Bergstra, James and Hunsberger, Eric and Dewolf, Travis and Stewart, Terrence C and Rasmussen, Daniel and Choo, Xuan and Voelker, Aaron Russell and Eliasmith, Chris},
+  file = {/home/jgosmann/.zotero/zotero/g4y0i8zx.default/zotero/storage/3C26IJUI/3880998.epub;/home/jgosmann/.zotero/zotero/g4y0i8zx.default/zotero/storage/VQVMQN5Z/fninf-07-00048.pdf},
+  eprinttype = {pmid},
+  eprint = {24431999},
+  pmcid = {PMC3880998}
+}
+
+@book{eliasmith2003,
+  location = {{Cambridge, MA}},
+  title = {Neural Engineering: Computation, Representation, and Dynamics in Neurobiological Systems},
+  isbn = {978-0-262-55060-4},
+  shorttitle = {Neural {{Engineering}}},
+  abstract = {A synthesis of current approaches to adapting engineering tools to the study of neurobiological systems.},
+  publisher = {{MIT Press}},
+  date = {2003},
+  keywords = {verified},
+  author = {Eliasmith, Chris and Anderson, Charles H.},
+  file = {/home/jgosmann/.zotero/zotero/g4y0i8zx.default/zotero/storage/FCD2HVIA/Neural Engineering - Eliasmith, Aug 1 2004.pdf}
+}
+
+@article{oreilly2006,
+  title = {Making {{Working Memory Work}}: {{A Computational Model}} of {{Learning}} in the {{Prefrontal Cortex}} and {{Basal Ganglia}}},
+  volume = {18},
+  issn = {0899-7667},
+  doi = {10.1162/089976606775093909},
+  shorttitle = {Making {{Working Memory Work}}},
+  abstract = {The prefrontal cortex has long been thought to subserve both working memory (the holding of information online for processing) and executive functions (deciding how to manipulate working memory and perform processing). Although many computational models of working memory have been developed, the mechanistic basis of executive function remains elusive, often amounting to a homunculus. This article presents an attempt to deconstruct this homunculus through powerful learning mechanisms that allow a computational model of the prefrontal cortex to control both itself and other brain areas in a strategic, task-appropriate manner. These learning mechanisms are based on subcortical structures in the midbrain, basal ganglia, and amygdala, which together form an actor-critic architecture. The critic system learns which prefrontal representations are task relevant and trains the actor, which in turn provides a dynamic gating mechanism for controlling working memory updating. Computationally, the learning mechanism is designed to simultaneously solve the temporal and structural credit assignment problems. The model's performance compares favorably with standard backpropagation-based temporal learning mechanisms on the challenging 1-2-AX working memory task and other benchmark working memory tasks.},
+  number = {2},
+  journaltitle = {Neural Computation},
+  shortjournal = {Neural Computation},
+  date = {2006-02-01},
+  pages = {283--328},
+  author = {O'Reilly, Randall C. and Frank, Michael J.},
+  file = {/home/jgosmann/.zotero/zotero/g4y0i8zx.default/zotero/storage/BNTA5D9P/O'Reilly_Frank_2006_Making Working Memory Work.pdf;/home/jgosmann/.zotero/zotero/g4y0i8zx.default/zotero/storage/G65FNRCZ/089976606775093909.html}
+}
+
 @article{bahl2012,
   title = {Automated Optimization of a Reduced Layer 5 Pyramidal Cell Model Based on Experimental Data},
   volume = {210},
@@ -64,6 +111,15 @@
   file = {/home/jgosmann/.zotero/zotero/g4y0i8zx.default/zotero/storage/83IC6V2X/Markram et al_2015_Reconstruction and Simulation of Neocortical Microcircuitry.pdf;/home/jgosmann/.zotero/zotero/g4y0i8zx.default/zotero/storage/W6GR329U/S0092-8674(15)01191-5.html}
 }
 
+@report{gosmann2015-1,
+  location = {{Waterloo, Ontario, Canada}},
+  title = {Precise Multiplications with the {{NEF}}},
+  abstract = {This report discusses how to implement the multiplication of two numbers in the NEF with a high accuracy. The main improvement will be achieved by using diagonal encoders instead of randomly distributed encoders. In the selection of the evaluation points a trade-off is found as they cannot give a uniform distribution when projected to the encoders while being limited to the input domain. That leads to an alternative multiplication network architecture improving the accuracy further.},
+  institution = {{University of Waterloo}},
+  date = {2015-12},
+  author = {Gosmann, Jan}
+}
+
 @inproceedings{gosmann2015,
   title = {A {{Spiking Neural Model}} of the N-{{Back Task}}},
   abstract = {We present a computational model performing the n-back task. This task requires a number of cognitive processes including rapid binding, updating, and retrieval of items in working memory. The model is implemented in spiking leaky-integrate-and-fire neurons with physiologically constrained parameters, and anatomically constrained organization. The methods of the Semantic Pointer Architecture (SPA) are used to construct the model. Accuracies and reaction times produced by the model are shown to match human data. Namely, characteristic decline in accuracy and response speed with increase of n is reproduced. Furthermore, the model provides evidence, contrary to some past proposals, that an active removal process of items in working memory is not necessary for an accurate performance on the n-back task.},
@@ -86,6 +142,18 @@
   pages = {4692--4707},
   author = {Howard, Marc W. and MacDonald, Christopher J. and Shankar, Karthik H. and Du, Qian and Hasselmo, Michael E. and Eichenbaum, Howard},
   file = {/home/jgosmann/.zotero/zotero/g4y0i8zx.default/zotero/storage/VGMJUMSR/A Unified Mathematical Framework for Coding Time, Space, and Sequences in the.pdf;/home/jgosmann/.zotero/zotero/g4y0i8zx.default/zotero/storage/AV7X5227/4692.html}
+}
+
+@article{sharma,
+  title = {Large-Scale Cognitive Model Design Using the {{Nengo}} Neural Simulator},
+  issn = {2212-683X},
+  doi = {10.1016/j.bica.2016.05.001},
+  abstract = {The Neural Engineering Framework (NEF) and Semantic Pointer Architecture (SPA) provide the theoretical underpinnings of the neural simulation environment Nengo. Nengo has recently been used to build Spaun, a state-of-the-art, large-scale neural model that performs motor, perceptual, and cognitive functions with spiking neurons (Eliasmith et al., 2012). In this tutorial we take the reader through the steps needed to create two simpler, illustrative cognitive models. The purpose of this tutorial is to simultaneously introduce the reader to the SPA and its implementation in Nengo.},
+  journaltitle = {Biologically Inspired Cognitive Architectures},
+  shortjournal = {Biologically Inspired Cognitive Architectures},
+  keywords = {neural engineering framework,biologically plausible spiking networks,semantic pointer architecture,Neural models},
+  author = {Sharma, Sugandha and Aubin, Sean and Eliasmith, Chris},
+  file = {/home/jgosmann/.zotero/zotero/g4y0i8zx.default/zotero/storage/GNUZ8TC7/Sharma et al_Large-scale cognitive model design using the Nengo neural simulator.pdf;/home/jgosmann/.zotero/zotero/g4y0i8zx.default/zotero/storage/N3G6TU5U/S2212683X16300317.html}
 }
 
 @article{gosmann216,
@@ -1005,6 +1073,59 @@ null},
   file = {/home/jgosmann/.zotero/zotero/g4y0i8zx.default/zotero/storage/FM6H9DM4/Human hippocampal theta oscillations and the formation of episodic memories -.pdf},
   eprinttype = {pmid},
   eprint = {21538660}
+}
+
+@article{eliasmith2016,
+  archivePrefix = {arXiv},
+  eprinttype = {arxiv},
+  eprint = {1602.05220},
+  primaryClass = {cs, q-bio},
+  title = {{{BioSpaun}}: {{A}} Large-Scale Behaving Brain Model with Complex Neurons},
+  url = {http://arxiv.org/abs/1602.05220},
+  shorttitle = {{{BioSpaun}}},
+  abstract = {We describe a large-scale functional brain model that includes detailed, conductance-based, compartmental models of individual neurons. We call the model BioSpaun, to indicate the increased biological plausibility of these neurons, and because it is a direct extension of the Spaun model $\backslash$cite\{Eliasmith2012b\}. We demonstrate that including these detailed compartmental models does not adversely affect performance across a variety of tasks, including digit recognition, serial working memory, and counting. We then explore the effects of applying TTX, a sodium channel blocking drug, to the model. We characterize the behavioral changes that result from this molecular level intervention. We believe this is the first demonstration of a large-scale brain model that clearly links low-level molecular interventions and high-level behavior.},
+  urldate = {2018-01-29},
+  date = {2016-02-16},
+  keywords = {Computer Science - Artificial Intelligence,Quantitative Biology - Neurons and Cognition},
+  author = {Eliasmith, Chris and Gosmann, Jan and Choo, Xuan},
+  file = {/home/jgosmann/.zotero/zotero/g4y0i8zx.default/zotero/storage/3WLTVRFF/Eliasmith et al_2016_BioSpaun.pdf;/home/jgosmann/.zotero/zotero/g4y0i8zx.default/zotero/storage/W3PCM864/1602.html}
+}
+
+@article{duggins2017c,
+  title = {Incorporating {{Biologically Realistic Neuron Models}} into the {{NEF}}},
+  url = {https://uwspace.uwaterloo.ca/handle/10012/12393},
+  abstract = {Theoretical neuroscience is fundamentally concerned with the relationship between biological mechanisms, information processing, and cognitive abilities, yet current models often lack either biophysical realism or cognitive functionality. This thesis aims to partially fill this gap by incorporating geometrically and electrophisologically accurate models of individual neurons into the Neural Engineering Framework (NEF). After discussing the relationship between biologically complex neurons and the core principles/assumptions of the NEF, a neural model of working memory is introduced to demonstrate the NEF's existing capacity to capture biological and cognitive features. This model successfully performs the delayed response task and provides a medium for simulating mental disorders (ADHD) and its pharmacological treatments. Two methods of integrating more biologically sophisticated NEURON models into the NEF are subsequently explored and their ability to implement networks of varying complexity are assessed: the trained synaptic weights do realize the core NEF principles, though several errors remain unresolved. Returning to the working memory model, it is shown that bioneurons can perform the requisite computations in context, and that simulating the biophysical effects of pharmacological compounds produces results consistent with electrophysiological and behavioral data from monkeys.},
+  journaltitle = {UWSpace},
+  date = {2017},
+  author = {Duggins, Peter},
+  file = {/home/jgosmann/.zotero/zotero/g4y0i8zx.default/zotero/storage/DQ7L8M7H/Duggins_2017_Incorporating Biologically Realistic Neuron Models into the NEF.pdf}
+}
+
+@inproceedings{voelker2017a,
+  location = {{Baltimore, MD}},
+  title = {Extending the {{Neural Engineering Framework}} for {{Nonideal Silicon Synapses}}},
+  url = {https://www.researchgate.net/publication/315614550_Extending_the_Neural_Engineering_Framework_for_Nonideal_Silicon_Synapses},
+  abstract = {The Neural Engineering Framework (NEF) is a theory for mapping computations onto biologically plausible networks of spiking neurons. This theory has been applied to a number of neuromorphic chips. However, within both silicon and real biological systems, synapses exhibit higher-order dynamics and heterogeneity. To date, the NEF has not explicitly addressed how to account for either feature. Here, we analytically extend the NEF to directly harness the dynamics provided by heterogeneous mixed-analog-digital synapses. This theory is successfully validated by simulating two fundamental dynamical systems in Nengo using circuit models validated in SPICE. Thus, our work reveals the potential to engineer robust neuromorphic systems with well-defined high-level behaviour that harness the low-level heterogeneous properties of their physical primitives with millisecond resolution.},
+  booktitle = {{{IEEE International Symposium}} on {{Circuits}} and {{Systems}} ({{ISCAS}})},
+  date = {2017-05},
+  author = {Voelker, Aaron R. and Benjamin, Ben V. and Stewart, Terrence C. and Boahen, Kwabena and Eliasmith, Chris},
+  organization = {IEEE},
+  poster = {/files/publications/voelker.2017a.poster.pdf}
+}
+
+@article{stockel2017,
+  archivePrefix = {arXiv},
+  eprinttype = {arxiv},
+  eprint = {1710.07659},
+  primaryClass = {cs, q-bio},
+  title = {Point {{Neurons}} with {{Conductance}}-{{Based Synapses}} in the {{Neural Engineering Framework}}},
+  url = {http://arxiv.org/abs/1710.07659},
+  abstract = {The mathematical model underlying the Neural Engineering Framework (NEF) expresses neuronal input as a linear combination of synaptic currents. However, in biology, synapses are not perfect current sources and are thus nonlinear. Detailed synapse models are based on channel conductances instead of currents, which require independent handling of excitatory and inhibitory synapses. This, in particular, significantly affects the influence of inhibitory signals on the neuronal dynamics. In this technical report we first summarize the relevant portions of the NEF and conductance-based synapse models. We then discuss a na$\backslash$"ive translation between populations of LIF neurons with current- and conductance-based synapses based on an estimation of an average membrane potential. Experiments show that this simple approach works relatively well for feed-forward communication channels, yet performance degrades for NEF networks describing more complex dynamics, such as integration.},
+  urldate = {2018-01-29},
+  date = {2017-10-20},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Neural and Evolutionary Computing,Quantitative Biology - Neurons and Cognition},
+  author = {Stöckel, Andreas and Voelker, Aaron R. and Eliasmith, Chris},
+  file = {/home/jgosmann/.zotero/zotero/g4y0i8zx.default/zotero/storage/43Y7XGJQ/Stöckel et al_2017_Point Neurons with Conductance-Based Synapses in the Neural Engineering.pdf;/home/jgosmann/.zotero/zotero/g4y0i8zx.default/zotero/storage/T9DMTXDI/1710.html}
 }
 
 
