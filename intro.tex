@@ -162,8 +162,8 @@ However, a single cell in CA3 is not recurrently innervated by more than 5\% of 
 
 Given these neuroanatomical properties, some of the hippocampal regions have been assumed to be involved in specific tasks.
 The sparse coding and large cell count of the dentate gyrus led to the belief that it is responsible for pattern separation~\parencite{Rolls2013}.
-The CA3 region with its recurrent connectivity could be involved in pattern completion or forward predictions~\parencite{Leutgeb2007,Rolls2013}.
-Additional evidence for this comes from context dependent firing of these neurons (TODO how so?) \parencite{Guzowski2004,Leutgeb2007} and unimpaired recognition memory after lesioning the CA3 to CA1 connections despite impairing selective recall~\parencite{Brun2002}. 
+The CA3 region with its recurrent connectivity could be involved in pattern completion or forward predictions~\parencite{Guzowski2004,Leutgeb2007,Rolls2013}.
+Additional evidence for this comes from unimpaired recognition memory after lesioning the CA3 to CA1 connections despite impairing selective recall~\parencite{Brun2002}. 
 
 A review of hippocampal structures would not be complete without mentioning hippocampal place cells and entorhinal grid cells~\parencite{hafting2005}, first discovered in rats, but existent also in other animals~\parencite{buzsaki2013}.
 A grid cell fires when the animal is a locations arranged in a regular hexagonal grid in an environment.
@@ -171,10 +171,11 @@ Place cells are similar, but fire only for one specific location in an environme
 While these cells are involved in navigational tasks, a connection to memory is possible~\parencite{buzsaki2013}.
 However, paying further attention to these cells is out of the scope of this thesis.
 
-Closely related to grid and place cells is the hippocampal theta oscillation found in rats.
-The spiking of place cells during a theta cycle is timed according to the distance from corresponding land marks, a phenomen termed \emph{phase precession}~\parencite{tsodyks1996}.
+Closely related to grid and place cells is the hippocampal theta oscillation of \SIrange{4}{8}{\hertz} found in rats.
+The spiking of place cells during a theta cycle is timed according to the distance from corresponding land marks, a phenomen termed \emph{phase precession}~\parencite{okeefe1993}.
 The coupling of the theta and gamma bands has also been shown to be important in the learning of item-context associations~\parencite{tort2009}.
-However, the theta rhythm is only rarely observed in primates~\parencite{ekstrom2005} and thus I do not consider it in this thesis.
+Despite some debate, there is evidence for similar, but slower ($<\SI{4}{\hertz}$), hippocampal oscillations in humans related to episodic memory encoding~\parencite{lega2012}.
+However, their functional relevance is not entirely clear at this point.
 
 Finally, most commonly during sleep, but also in immobile rats, sharp waves (SPWs) are observed in the rat hippocampus~\parencite{chrobak1994,girardeau2009}.
 These have been implicated to be involved in memory consolidation from hippocampus to the neocortex, a process not covered in this thesis.
@@ -264,9 +265,12 @@ This single-store assumption was criticized by \textcite{Davelaar2008} and is in
 Many of these models are also vague on the exact processes of recall.
 Though, the ACT-R model of serial recall by \textcite{Anderson1997}, in which items are associated with their serial positions, describes detailed steps necessary for recall, but is vague on the exact storage mechanism of items.
 
-\begin{itemize}
-    \item TODO fuzzy temporal memory
-\end{itemize}
+Recently, \textcite{shankar2013} proposed an \emph{optimally fuzzy temporal memory} that is less motivated by behavioural data, but more by a mathematical optimal and scale-free storage of a time-varying signal.
+Nevertheless, it has been proposed to model the coding in hippocampus~\parencite{howard2014-1}.
+In this framework, the input signal is stored by a bank of leaky accumulators with different time constants.
+This corresponds to a Laplace transform of the signal.
+To decode the history of the input signal, a linear operator approximating the inverse Laplace transform is used.
+I will discuss this model in more detail in Section TODO, and demonstrate that it is highly sensitive to noise which prohibitive to a neural implementation.
 
 
 \subsection{Connectionist models}
