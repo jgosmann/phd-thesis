@@ -11,7 +11,7 @@ Furthermore, it allows for manipulations to test known experimental results in t
 The NEF consists out of the three core principles for \emph{representation}, \emph{transformation}, and \emph{dynamics} in a neural network that I will introduce in this order.
 
 \section{Representation}
-Neurons within a (natural) neural network will have a preferred stimulus: they will fire most strongly for that stimulus and less strongly as the stimulus gets more dissimilar to the preferred stimulus. (TODO figure)
+Neurons within a neural network will have a preferred stimulus: they will fire most strongly for that stimulus and less strongly as the stimulus gets more dissimilar to the preferred stimulus (see \cref{fig:tuningcurve}).
 To capture this in a mathematical description, we can treat the stimulus as a vector $\vc x(t)$ that varies over time.
 The preferred stimulus vector, that is the vector a neuron $i$ fires most strongly for, will be denoted with $\enc_i$.
 The spiking activity $\act_i(t)$ of a neuron can then be described with
@@ -31,6 +31,11 @@ As it is rare to have detailed information about the tuning curves in many part 
 Instead a representational space $\repspace$ is defined, usually as the $\dims$-dimensional $\dims$-hyperball with radius $\radius$.
 Furthermore, for each neuron a maximum firing rate $\act_{\max}$ and an intercept point $p_i$ are sampled from random distributions.
 These values are used to calculate the gain and bias so that the neuron starts firing at $p_i \cdot \enc_i$ when $\vc x$ varies along the encoder $\enc_i$ and that the maximum $\act_{\max,i}$ is not exceeded across the representational space $\repspace$.
+\begin{figure}
+    \centering
+    \includegraphics{figures/tuningcurve}
+    \caption{A typical neuron tuning curve. The thick black line shows the mean firing rate in dependence of a stimulus parameter (e.g., rotation of a bar). The thin blue lines show the standard deviation. Figure reproduced from \textcite{butts2006} and reused under the Creative Commons Attribution license.}\label{fig:tuningcurve}
+\end{figure}
 
 Given a population of neurons, also called a neural \emph{ensemble} in NEF terms, how can the encoded vector $\vc x(t)$ be recovered?
 First the activity or spike trains $\act_i(t)$ are convolved with a synaptic filter $\syn$ to obtain the induced post-synaptic voltage change.
@@ -99,13 +104,19 @@ An example is the calculation of products and has been discussed in \textcite{go
 The final principle of the NEF addresses dynamics.
 In linear control theory a dynamical system is often described by state equations of the form
 \begin{align}
-    \od{\vc x}{t} &= \mat A \vc x(t) + \mat B \vc u(t) \\
-    \vc y(t) &= \mat C \vc x(t) + \mat D \vc u(t)
+    \od{\vc x}{t} &= \mat A \vc x(t) + \mat B \vc u(t) \label{eqn:statespace1} \\
+    \vc y(t) &= \mat C \vc x(t) + \mat D \vc u(t) \label{eqn:statespace2}
 \end{align}
 where $\vc x(t)$ is the state vector, $\vc u(t)$ the input vector, and $\vc y(t)$ the output vector.
 The system behaviour is determined by the dynamics matrix $\mat A$, input matrix $\mat B$, output matrix $\mat C$, and the feedthrough matrix $\mat D$.
-TODO figure
-In the NEF, we want to map a given dynamical system onto neural components (TODO figure).
+\cref{fig:statespace} shows a graphical representation.
+\begin{figure}
+    \centering
+    \includegraphics{tikz/statespace}
+    \caption{Visualization of \cref{eqn:statespace1,eqn:statespace2} as block diagram.}\label{fig:statespace}
+\end{figure}
+
+In the NEF, we want to map a given dynamical system onto neural components (\cref{fig:neural-lti}).
 The neuron dynamics are dominated by the synaptic filter \parencite[Appendix~F.1]{eliasmith2003} which becomes the transfer function and gives
 \begin{equation}
     \vc x(t) = h(t) * \sbr{\mat A' \vc x(t) + \mat B' \vc u(t)} \text{.}
@@ -117,6 +128,11 @@ With help of the Laplace transform one can obtain $\mat A'$ and $\mat B'$ from $
 \end{align}
 This implies that to implement a dynamical system with a neural ensemble, the input has to be multiplied by $\syntau$ to account for the synaptic filtering.
 In addition, one needs to add a recurrent transformation implementing the function $f(\vc x) = \syntau \mat A \vc x + \vc x$.
+\begin{figure}
+    \centering
+    \includegraphics{tikz/neural-lti}
+    \caption{Block diagram of the linear system of a neural population. $h(s)$ is the Laplace transformed synaptic filter $h(t)$.}\label{fig:neural-lti}
+\end{figure}
 
 
 \section{Simulating NEF networks}
