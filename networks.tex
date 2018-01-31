@@ -1,6 +1,39 @@
 \chapter{Basic NEF networks}
-When constructing neural models with the NEF, there are certain networks that are often used in multiple places and constitute some basic building blocks in a sense.
-In the following we will shortly discuss how to create an integrator, a gated memory buffer based on that integrator, an ensemble applying a threshold to a signal, and how to do multiplication in neurons.
+When constructing neural models with the NEF, there are certain networks that are often used in multiple places and constitute basic building blocks for larger scale networks.
+In the following, I will shortly discuss how to create a differentiator, an integrator, a gated memory buffer based on that integrator, an ensemble applying a threshold to a signal, and how to do multiplication in neurons.
+
+TODO explain network diagrams
+
+synaptic time constant
+
+
+\section{Differentiator}
+While a perfect differentiator is not physically realizable (it would require infinite gain), it is often sufficient to detect a sudden change in a signal.
+For this an approximation can be constructed out of two synaptic low pass filters $\syn_1(t) =  \tau_1^{-1} \exp(t/\tau_1)$ and $\syn_2(t) = \tau_2^{-1} \exp(t/\tau_2)$ with time constants $\tau_1 < \tau_2$ as
+\begin{equation}
+    \od{\vc x}{t} \approx \vc y(t) = \vc x * h_1 - \vc x * h_2 = \vc x * \del{h_1 - h_2} \text{.}
+\end{equation}
+\cref{fig:differentiator} shows the impulse and the magnitude response of a differentiator constructed this way.
+The attenuation of low frequency is desired as this corresponds to the differentiation.
+The attenuation of high-frequencies above the pass-band is undesired, but given appropriate $\tau_1$ and $\tau_2$ unproblematic in a neural network because signals will in general be subject to synaptic filtering of high frequencies.
+The implementation of such a differentiator is straight-forward with the NEF (\cref{fig:differentiator-net}) by feeding the same input with two different synaptic time constant into an ensemble.
+In this work $\tau_1 = \SI{5}{\milli\second}$ and $\tau_2 = \SI{50}{\milli\second}$ were used which is in the range of experimentally observed neurotransmitter decay constants~\parencite{sah1990-1,moreno-bote2005}.
+\begin{figure}
+    \centering
+    \includegraphics{figures/differentiator}
+    \caption{Differentiator with $\tau_1 = \SI{5}{\milli\second}$ and $\tau_2 = \SI{50}{\milli\second}$. (a) Response of the differentiator to a unit step input. The output has been normalized to the maximum. (b) Magnitude response for sinusoidal inputs with different frequencies.}\label{fig:differentiator}
+\end{figure}
+\begin{figure}
+    \centering
+    \begin{tikzpicture}[nef]
+        \graph {
+            x/"$\vc x$" [ens] -> ["$+1, \syntau=\tau_1$", bend left] y/"$\vc y$" [ens];
+            x -> ["$-1, \syntau=\tau_2$" below, bend right] y;
+        };
+    \end{tikzpicture}
+    \caption{Implementation of a differentiator with the NEF\@. The connection labels state the transform and synaptic time constants with $\tau_1 < \tau_2$.}\label{fig:differentiator-net}
+\end{figure}
+
 
 \section{Integrator}
 Integrators are important components in many NEF models because they allow to store values over some timespan in neural activity.
@@ -14,11 +47,17 @@ Furthermore, a recurrent connection feeding the output of the integrator back to
 To get a stable representations over a sufficient time window, it is best to use a long time constant like $\tausyn = \SI{0.1}{\second}$ which is the range measured for the TODO neurotransmitter.
 Due to neural noise and distortion error, the represented value can drift over time.
 Adding more neurons to the integrator will make it more stable.
+\begin{figure}
+    \centering
+    \begin{tikzpicture}[nef]
+        \graph {
+            u/"$\vc u$" -> ["$\syntau$" above] x/"$\vc x$" [ens];
+            x -> [out=300, in=60, distance=40pt] x;
+        };
+    \end{tikzpicture}
+    \caption{Implementation of an integrator with the NEF.}\label{fig:integrator-net}
+\end{figure}
 TODO figures
-
-
-\section{Differentiator}
-TODO
 
 
 \section{Gated memory buffer}

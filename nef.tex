@@ -39,7 +39,7 @@ These values are used to calculate the gain and bias so that the neuron starts f
 
 Given a population of neurons, also called a neural \emph{ensemble} in NEF terms, how can the encoded vector $\vc x(t)$ be recovered?
 First the activity or spike trains $\act_i(t)$ are convolved with a synaptic filter $\syn$ to obtain the induced post-synaptic voltage change.
-Usually this will be a decaying exponential $\syn(t) = \exp(-t / \syntau)$, but other filters can be used to more precisely model the dynamics of the synapse~\parencite{voelker2017a} and even extensions to conductance-based synapses are possible~\parencite{stockel2017}.
+Usually this will be a decaying exponential $\syn(t) = \syntau^{-1}\exp(-t / \syntau)$, but other filters can be used to more precisely model the dynamics of the synapse~\parencite{voelker2017a} and even extensions to conductance-based synapses are possible~\parencite{stockel2017}.
 From the filtered activity, the represented vector can be reconstructed with a linear, weighted decoding
 \begin{equation}
     \hat{\vc x}(t) = \sum_i \dec_i \cdot \sbr{a_i * h}\!(t)
@@ -119,7 +119,7 @@ The system behaviour is determined by the dynamics matrix $\mat A$, input matrix
 In the NEF, we want to map a given dynamical system onto neural components (\cref{fig:neural-lti}).
 The neuron dynamics are dominated by the synaptic filter \parencite[Appendix~F.1]{eliasmith2003} which becomes the transfer function and gives
 \begin{equation}
-    \vc x(t) = h(t) * \sbr{\mat A' \vc x(t) + \mat B' \vc u(t)} \text{.}
+    \vc x(t) = \syn(t) * \sbr{\mat A' \vc x(t) + \mat B' \vc u(t)} \text{.}
 \end{equation}
 With help of the Laplace transform one can obtain $\mat A'$ and $\mat B'$ from $\mat A$ and $\mat B$ as
 \begin{align}
@@ -131,7 +131,7 @@ In addition, one needs to add a recurrent transformation implementing the functi
 \begin{figure}
     \centering
     \includegraphics{tikz/neural-lti}
-    \caption{Block diagram of the linear system of a neural population. $h(s)$ is the Laplace transformed synaptic filter $h(t)$.}\label{fig:neural-lti}
+    \caption{Block diagram of the linear system of a neural population. $h(s)$ is the Laplace transformed synaptic filter $\syn(t)$.}\label{fig:neural-lti}
 \end{figure}
 
 
