@@ -7,7 +7,6 @@ The largest and most complex example of an SPA model is Spaun, the Semantic Poin
 The SPA is a specific instance of a Vector Symbolic Architecture~\parencite[VSA;][]{gayler_vector_2003}.
 In VSAs concepts are represented with vectors and linear and nonlinear operators are used to combine basic concepts in more complex structured representations.
 Three types of operators can be considered essential in a VSA\@.
-
 First, a measure of similarity
 \begin{equation}
     \simmeasure: \mathbb{R}^{\dims} \times \mathbb{R}^{\dims} \longrightarrow \mathbb{R}
@@ -21,24 +20,33 @@ Second, a superposition operator
 \begin{equation}
     \superpos: \mathbb{R}^{\dims} \times \mathbb{R}^{\dims} \longrightarrow \mathbb{R}^{\dims}
 \end{equation}
-that produces a vector similar to both inputs ($\vc x \sim \superpos(\vc x, \vc y) \sim \vc y$).
-This is usually, and will be for the remainder of this thesis, simple addition, i.e. $\superpos(\vc x, \vc y) := \vc x + \vc y$.
+that produces a vector similar to both inputs, i.e.\ $\simmeasure(\superpos(\vc x, \vc y), \vc x) \approx \simmeasure(\superpos(\vc x, \vc y), \vc y) \gtrapprox 1/\sqrt{2}$ for $\simmeasure(\vc x, \vc y) \gtrapprox 0$.
+This is usually, and will be for the remainder of this thesis, simple elementwise addition, i.e. $\superpos(\vc x, \vc y) := \vc x + \vc y$.
 Finally, a binding operator
 \begin{equation}
     \bind: \mathbb{R}^{\dims_1} \times \mathbb{R}^{\dims_2} \longrightarrow \mathbb{R}^{\dims}
 \end{equation}
 with an approximate inverse or unbinding operation
 \begin{equation}
-    \bind^+: \mathbb{R}^d \times \mathbb{R}^{\dims_2} \longrightarrow \mathbb{R}^{\dims_1}
+    \bind^+: \mathbb{R}^d \times \mathbb{R}^{\dims_2} \longrightarrow \mathbb{R}^{\dims_1} \text{.}
 \end{equation}
-that satisfies $\bind^+(\bind(\vc x, \vc y), \vc y) \approx \vc x$ and $\vc x \not \sim \bind(\vc x, \vc y) \not \sim \vc y$ (except identity FIXME better explanation/requirement).
-Note, that some proposed binding operations, like the tensor product (TODO ref), change the dimensionality of the vectors on binding.
-This allows for a general exact inverse $\bind^{-1}(\bind(\vc x, \vc y), y) = \vc x$ to the binding operation.
-However, this will increase the vector dimensionality with each binding and leads to scaling issues in a neural system (TODO ref).
-Thus, we will only consider binding operations that preserve the vector dimensionality, i.e. $\dims_1 = \dims_2 = \dims$.
-This implies, that in general such a binding cannot preserve all the information in both bound vectors.
-It leads to a compressed representation.
-To fully recover the stored information, clean-up memories will be necessary (TODO ref section).
+To be able to build up and retrieve information from representations, the binding and unbinding operation are required to be distributive, i.e.
+\begin{align}
+    \bind(\vc x + \vc y, \vc z) &= \bind(\vc x, \vc z) + \bind(\vc y, \vc z) \\
+    \bind^+(\vc x + \vc y, \vc z) &= \bind^+(\vc x, \vc z) + \bind^+(\vc y, \vc z) \text{.}
+\end{align}
+
+For some proposed binding operations, like Tensor products (TODO ref), the unbinding operation is the exact inverse $\bind^+ = \bind^{-1}$ with $\bind^{-1}(\bind(\vc x, \vc y), \vc y) = \vc x$.
+However, Tensor products increase the vector dimensionality with each successive binding which leads to biological implausible scaling problems (TODO ref).
+For that reason, I will only consider binding methods that keep the dimensionality $\dims = \dims_1 = \dims_2$ constant.
+
+In pure math, it is still possible to define binding operators with an exact inverse, but we need to keep the implementation in neurons in mind.
+This introduces additional constraints.
+First, the actual usable representational space $\repspace \subsetneq \mathbb{R}^{\dims}$ is limited constraining unlimited growth of bound vectors.
+Second, neural noise limits the representational accuracy preventing highly non-linear operators.
+It follows that for a binding operator in a neural system it is desired to maximize the set $\mathcal{V} \subseteq \repspace$ for which  $\simmeasure(\bind^+(\bind(\vc x, \vc y) + \vc\zeta, \vc y), \vc x) \approx 1$ for all $\vc x, \vc y \in \mathcal{V}$ and samples of noise $\vc\zeta$ in the neural system.
+Note that this condition would be satisfied by using the identity $\bind(\vc x, \vc y) = \bind^+(\vc x, \vc y) = \vc x$.
+Thus, simultaneously it needs to hold that $\simmeasure(\bind^+(\bind(\vc x, \vc y), \vc z), \vc x) \approx 0$ for all $\vc x, \vc y, \vc z \in \mathcal{V}$ with $\simmeasure(\vc y, \vc z) \approx 0$.
 
 At this point, it is useful to introduce three more definitions.
 \begin{defn}[identity vector]
@@ -59,7 +67,10 @@ It also implies that binding with a unitary vector preserves the length of the b
 
 
 \section{Binding operations}
-TODO some text
+I will introduce two concrete binding operations now.
+First, circular convolution is discussed which stems from the Holographic Reduced Representations (HRRs) by TODO ref and has been the binding operation of choice in the SPA so far.
+Second, I will introduce a new binding method, termed vector-derived transformation binding, with some other trade-offs.
+The two binding approaches and their suitability for different problems will be discussed.
 
 \subsection{Circular convolution}
 The binding operator classically used in the SPA is circular convolution and was suggested by TODO ref Plate for his Holographic Reduced Representations (HRRs).
@@ -147,6 +158,7 @@ One special unitary vector is the identity vector.
         $\mat V_{\bid_{\ped{V}}} = I\ \Rightarrow\ \bar{\mat V}_{\bid_{\ped{V}}} = \imat$
     \end{proof}
 \end{corollary}
+Example for $d = 9$: $\bid_{\ped{V}}^{(9)} = (1, 0, 0, 0, 1, 0, 0, 0, 1)\Tr$.
 
 \begin{corollary}[VTB distributivity]
     VTB is distributive: $\vtb(\vc x_1 + \vc x_2, \vc y) = \vtb(\vc x_1, \vc y) + \vtb(\vc x_2, \vc y)$ and $\vtb(\vc x, \vc y_1 + \vc y_2) = \vtb(\vc x, \vc y_1) + \vtb(\vc x, \vc y_2)$.
@@ -167,6 +179,22 @@ nor associative
     \vtb(\vc x, \vtb(\vc y, \vc z)) = \bar{\mat V}_{\bar{\mat V}_{\vc z} \vc y} \vc x \neq \bar{\mat V}_{\vc z} \bar{\mat V}_{\vc y} \vc x = \vtb(\vtb(\vc x, \vc y), \vc z) \text{.}
 \end{equation}
 This implies that unlike circular convolution multiple binding cannot be undone in a single step, but a separate unbinding step is required for each binding.
+Despite the non-commutativity, it is possible to flip the operands in bound state $\vtb(\vc x, \vc y) = \mat V_{\leftrightarrow} \vtb(\vc y, \vc x)$ with matrix
+\begin{equation}
+    \sbr{\mat V_{\leftrightarrow}}_{ij} = \left\{ \begin{array}{ll}
+            1 & j = 1 + \left\lfloor \frac{i - 1}{\dims'} \right\rfloor + \dims' \sbr{\del{i - 1} \bmod \dims'} \\
+            0 & \text{otherwise}
+        \end{array}\right. \text{.}
+\end{equation}
+Example for $d = 4$:
+\begin{equation*}
+    \mat V_{\leftrightarrow}^{(4)} = \sbr{\begin{array}{cccc}
+            1 & 0 & 0 & 0 \\
+            0 & 0 & 1 & 0 \\
+            0 & 1 & 0 & 0 \\
+            0 & 0 & 0 & 1
+        \end{array}}
+\end{equation*}
 
 \subsection{Comparison of circular convolution and vector-derived transformation binding}
 Both circular convolution and VTB are compressed binding operations.
