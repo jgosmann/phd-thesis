@@ -28,7 +28,7 @@ By means of priniciple 3 of the NEF, the prescribed dynamics can be exactly impl
 Here, one ensemble per state variable is used (TODO figure) and the gains and biases of the neurons are distributed as described in TODO to ensure the rectification of the state variables.
 
 
-\section{Independent accumulator model}
+\section{Independent accumulator model}\label{sec:ia}
 The dynamics of the independent accumulator (IA) model are given by
 \begin{align}
     \od{x_i}{t} &= \frac{1}{\tau_1} u_i(t) + \frac{1}{\tau_2} \del{\bar{x}_i - \bar{\lambda} \sum_{j \neq i} \bar{x}_j}, \quad x_i \geq 0 \\
