@@ -1,0 +1,22 @@
+\chapter{Derivation of the cosine similarity distribution}
+\begin{proof}
+The most straight-forward way to derive the cosine similarity distribution is to use a result by \textcite{cai2013}.
+Theorem~1 states that the probability density of the angles $\theta$ between independent $\dims$-dimensional vectors is given by
+\begin{equation}
+    h(\theta) = K \cdot \del{\sin \theta}^{\dims - 2},\quad \theta \in \sbr{0, \uppi}
+\end{equation}
+with
+\begin{equation}
+    K = \frac{1}{\sqrt{\uppi}} \frac{\Gamma\!\del{\frac{\dims}{2}}}{\Gamma\!\del{\frac{\dims - 1}{2}}} = \frac{\Gamma\!\del{\frac{\dims}{2}}}{\Gamma\!\del{\frac{1}{2}} \Gamma\!\del{\frac{\dims - 1}{2}}} = \frac{1}{B\!\del{\frac{1}{2}, \frac{\dims -1}{2}}} \text{.}
+\end{equation}
+To obtain the cosine similarity distribution a change of variables with $\theta = \arccos x$ has to be performed:
+\begin{align}
+    \pcs(x; \dims) &= \abs{\od{}{x} \del{\arccos x}} \cdot h(\arccos x) \\
+    &= \frac{1}{\sqrt{1 - x^2}} \cdot K \cdot \del{\sin \arccos x}^{\dims - 2} \\
+    &= \frac{1}{\sqrt{1 - x^2}} \cdot K \cdot \del{\sqrt{1 - x^2}}^{\dims - 2} \\
+    &= K \cdot \del{1 - x^2}^{\del{\dims - 3}/2} \text{.}
+\end{align}
+This matches \cref{eqn:pcs}.
+\end{proof}
+
+TODO derive from square root beta

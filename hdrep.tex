@@ -3,7 +3,7 @@ The implementation of a Semantic Pointer Architecture in a spiking neural networ
 While the standard NEF already provides us with a method to do this, it does not tell us the best way to do so.
 A good representation will try to minimize the error or noise in the representation.
 Alternatively, if the error is sufficiently small, it allows to reduce the number of neurons which reduces the simulation run time.
-I previously proposed an optimization method for the representation (TODO ref), which improved the accuracy of SPA operations by up to 25 times.
+I previously proposed an optimization method for the representation~\parencite{gosmann216}, which improved the accuracy of SPA operations by up to 25 times.
 Here, I will describe a more general applicable method that matches or exceeds the performance of the method among some other advantages.
 
 \section{Types of error in neural representations}
@@ -11,7 +11,7 @@ In the NEF the total representational error is given by
 \begin{equation}
     \errtotal^2 = \left\langle \errtotal^2(\vc x) \right\rangle_{\!\vc x \in \repspace} = \left\langle \norm{\vc x - \hat{\vc x}(t)}^2 \right\rangle_{\!t,\,\vc x \in \repspace} \text{.}
 \end{equation}
-As detailed in TODO ref NEF book the total error is constituted out of the error caused by spiking noise $\errnoise$ and the error due to the static distortion $\errdist$ from the non-perfect decoding:
+As detailed by \textcite[47--48]{eliasmith2003} the total error is constituted out of the error caused by spiking noise $\errnoise$ and the error due to the static distortion $\errdist$ from the non-perfect decoding:
 \begin{align}
     \errtotal^2(\vc x) &= \errnoise^2(\vc x) + \errdist^2(\vc x) \\
     \errnoise(\vc x) &= \left\langle \norm{\hat{\vc x}(t) - \langle \hat{\vc x}(t) \rangle_{\!t}}^2 \right\rangle_{\!t} \\
@@ -19,30 +19,30 @@ As detailed in TODO ref NEF book the total error is constituted out of the error
 \end{align}
 The relation of the error terms is explained by the partitioning of the sum of squares in ordinary least squares model (which is used to solve for decoders in the NEF).
 Note that the noise error will depend on the decoding synapse.
-As $\tausyn \longrightarrow \infty$, the noise error will approach zero ($\errnoise \infty 0$).
+As $\syntau \rightarrow \infty$, the noise error will approach zero ($\errnoise \rightarrow 0$).
 Because the synapse limits how fast the neural representation can be updated, we get a trade-off of the noise in the system and how fast it reacts to new inputs.
 
 Due to the neuron nonlinearities finding analytical solutions for the error terms is likely not possible (except for constrained special cases).
 However, we can estimate the error terms from computational experiments.
 To do so, we sample $\vc x \in \repspace$ or use a regular grid of $\vc x$.
-Each $\vc x$ is then presented for some duration $\Delta t_{\ped{ss}}$ to reach the steady state and then $\hat{\vc x}(t)$ is measured for some duration sample duration $\Delta t_{\ped{sample}}$.
+Each $\vc x$ is then presented for some duration $\Delta t_{\ped{ss}}$ to reach the steady state and then $\hat{\vc x}(t)$ is measured for some sample duration $\Delta t_{\ped{sample}}$.
 Appropriate durations will depend on the decoding synapse (longer synapses require more time to reach the steady state) and firing rate (a longer sampling duration is required for accurate estimates with low firing rates).
 
 As the dimensionality of the higher-dimensional space increases, it becomes increasingly difficult to cover the whole space with samples from $\repspace$.
 Most of the time, though, we can treat the space as an isotropic hyper-ball, i.e.\ it does not matter along which direction we move through the space.
-This requires that the NEF ensemble's encoders are uniformly sampled from the hyper-sphere surface which is usually the case (but there are some exceptions like certain implementations of a product network, TODO ref).
-Without loss of generality, we assume the representational radius of the hyper-ball to be $r = 1$ (as it is basically just a scaling factor).
+This requires that the NEF ensemble's encoders are uniformly sampled from the hyper-sphere surface which is usually the case (but there are some exceptions like certain implementations of a product network,~\cite{gosmann2015-1}, or thresholding ensembles, \cref{sec:thresholding}).
+Without loss of generality, we assume the representational radius of the hyper-ball to be $r = 1$ (as it is purely a scaling factor).
 The isotropy property allows us to cut through the center of the hyper-ball with a one-dimensional line.
-Measuring the error $\err(x) = \err(\vc x)$ at $m$ regular spaced points $\vc x_i = (x_i, 0, \dotsc, 0)\Tr$ with $x_i = i * \Delta x - \Delta x/2 - 1, \Delta x = 2/m$ along such a line, the mean error for the hyper-ball can be estimated as
+Measuring the error $\err(x) = \err(\vc x)$ at $m$ regular spaced points $\vc x_i = (x_i, 0, \dotsc, 0)\Tr$ with $x_i = i * \Delta x - \Delta x/2,\ \Delta x = 1/m,\ 1 \leq i \leq m$ along such a line, the mean error for the hyper-ball can be estimated as
 \begin{align}
-    \err &= \frac{\sa_{\dims}}{2\ballvol_{\dims}} \sum_{i=1}^{m} \err(x_i) \cdot \Delta x \cdot r(x_i) \\
+    \err &= \frac{\sa_{\dims}}{\ballvol_{\dims}} \sum_{i=1}^{m} \err(x_i) \cdot \Delta x \cdot r(x_i) \\
     \sa_{\dims} &= \frac{2 \pi^{\dims/2}}{\gammafn(\dims/2)} \\
     \ballvol_{\dims} &= \frac{\pi^{\dims/2}}{\gammafn\!\del{\frac{\dims}{2} + 1}} \\
-    r(x) &= \frac{1}{q} \sum_{i=1}^{q} \abs{x + i \frac{\Delta x}{q + 1}}^{\dims - 1}
+    r(x) &= \frac{1}{q} \sum_{i=1}^{q} \abs{x - \del{1 + \frac{1}{q}} \frac{\Delta x}{2} + i \frac{\Delta x}{q}}^{\dims - 1}
 \end{align}
 where $\sa_{\dims}$ is the $\dims$-dimensional solid angle, $\ballvol_{\dims}$ the volume of a $\dims$-ball with radius $\radius = 1$, and $r(x)$ estimates the radius to the power of $\dims-1$ for an $x$ with $q$ evaluation points.
 This later estimation of the radius across the $\Delta x$ interval is necessary to not under- or overestimate the integral by a large amount.
-This were to happen if only the radius at the exact evaluation point would be used. (TODO why is E divided by two)
+This were to happen if only the radius at the exact evaluation point would be used.
 
 
 \section{Properties of the error in neural representations}
@@ -57,7 +57,7 @@ The noise error will be slightly larger in the center of the ball than towards t
 This is caused by the uniform sampling of evaluation points from the hyper-ball (Figure TODO).
 When looking at the convex hull of the sample points, this hull will always be smaller than the hyper-ball (even if some evaluation points are exactly on the surface).
 Thus, parts of the hyper-ball near the surface are not covered by the evaluation points and will not be considered in the least squares optimization of the decoders.
-As the number of dimensions increases, this will become a bigger problem as the volume for a hyper-ball goes to zero as $\dims \longrightarrow \infty$ (all of the ball will be surface).
+As the number of dimensions increases, this will become a bigger problem as the volume for a hyper-ball goes to zero as $\dims \rightarrow \infty$ (all of the ball will be surface).
 To show that this distortion is indeed caused by the partial covering, we can increase the radius of the hyper-ball for sampling the evaluation points slightly to cover more of the unit-ball (Figure TODO).
 While this makes the distortion more even, it unfortunately also increases noise level and baseline distortion because evaluation points now have a larger spacing.
 
@@ -76,12 +76,13 @@ Here the firing rate will still vary a bit about the representational space, but
 That mapping of a small change in the represented value to a large change in firing rate allows for a less noisy decoding as a single spike will change the decoded value less.
 
 Thus, a better intercept distribution should have less neurons that are barely ever active, but should also distribute the intercepts so that there is an even distribution of the fraction of space a neuron is active for.
-The latter criterion can be achieved by distributing the intercepts according to $\csdist(\dims+2)$ (TODO ref proof) where $\csdist(d_{\csdist})$ is the cosine similarity distribution.
-This is the distribution of the cosine similarity of two random (uniformly distributed) $d_{\csdist}$ dimensional vectors.
+The latter criterion can be achieved by distributing the intercepts according to $\csdist(\dims+2)$ where $\csdist(d_{\csdist})$ is the distribution of cosine similarities between random uniformly distributed $d_{\csdist}$-dimensional unit-vectors.
 Its probability density function is given by (TODO ref derivation, TODO fig)
 \begin{equation}
-\pcs(x; d_{\csdist}) = \frac{1}{B\!\del{\frac{1}{2}, \frac{d_{\csdist} - 1}{2}}} \cdot \del{1 - x^2}^{\frac{d_{\csdist}}{2} - \frac{1}{2}} \text{.}
+\pcs(x; d_{\csdist}) = \frac{1}{B\!\del{\frac{1}{2}, \frac{d_{\csdist} - 1}{2}}} \cdot \del{1 - x^2}^{\del{d_{\csdist} - 3} / 2} \text{.}\label{eqn:pcs}
 \end{equation}
+$\csdist(\dims+2)$ is equivalent to the distribution of single coordinates of points uniformly sampled from the $\dims$-dimensional unit ball~\parencite{voelker2017}.
+Thus, by using this intercept distribution, the frequency of intercepts corresponds to the distribution $\langle \vc x, \enc \rangle,\ \vc x \in \repspace$, i.e.\ the projection of values in the representational space projected onto the (uniformly distributed) neuron encoders.
 
 Figure TODO shows compares the relative amount of neurons that do not fire for any of the evaluation points.
 For the standard uniform distribution, this fraction rises to about TODO, but is close to zero with the cosine similarity intercept distribution.
@@ -134,12 +135,12 @@ Splitting up the input space in this manner, however, introduces a slight compli
 While we can assume the full vectors $\vc x \in \repspace$ to be uniformly distributed, this is not the case for the $\dims_q$-dimensional subvectors.
 The distribution of the subvectors will cluster around shorter vectors.
 One way to account for that, is to reduce the representational radius $\radius$ of the ensembles which will improve the representation of the most common vectors, but worsen the representation of subvectors that fall outside of that radius (which might still occurs occasionally).
-TODO describes in detail how to find a good value for $\radius$.
+\Textcite{gosmann216} describes in detail how to find a good value for $\radius$.
 
 Here, I use a different method, where both the intercept distribution and evaluation point distribution are set to the cosine similarity distribution $\csdist(\dims + 2)$ (note that this uses the dimensionality of the complete vector, not $\dims_q$).
 In addition to before, the distribution of evaluation points accounts for the fact that the represented values are no longer uniformly distributed.
 
-To verify the performance, I repeated the benchmarks from TODO\@.
+To verify the performance, I repeated the benchmarks from \textcite{gosmann216}\@.
 A randomly moving unit-length semantic pointer is fed as input to the set of ensembles and the distribution of resulting error in the representation is measured (TODO fig).
 The new method of setting the intercept and evaluation point distributions performs almost as well as the previous radius adjustment method for $q = \dims$ and better if $q < \dims$.
 It thus generalizes to a wider range of cases.
