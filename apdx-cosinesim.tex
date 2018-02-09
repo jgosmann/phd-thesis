@@ -1,22 +1,37 @@
-\chapter{Derivation of the cosine similarity distribution}
+\chapter{Derivation of the cosine similarity distribution}\label{apdx:cosine-sim}
 \begin{proof}
-The most straight-forward way to derive the cosine similarity distribution is to use a result by \textcite{cai2013}.
+A straight-forward way to derive the cosine similarity distribution is to use a result by \textcite{cai2013}.
 Theorem~1 states that the probability density of the angles $\theta$ between independent $\dims$-dimensional vectors is given by
 \begin{equation}
-    h(\theta) = K \cdot \del{\sin \theta}^{\dims - 2},\quad \theta \in \sbr{0, \uppi}
+    h(\theta) = K_{\dims} \cdot \del{\sin \theta}^{\dims - 2},\quad \theta \in \sbr{0, \uppi}
 \end{equation}
 with
 \begin{equation}
-    K = \frac{1}{\sqrt{\uppi}} \frac{\Gamma\!\del{\frac{\dims}{2}}}{\Gamma\!\del{\frac{\dims - 1}{2}}} = \frac{\Gamma\!\del{\frac{\dims}{2}}}{\Gamma\!\del{\frac{1}{2}} \Gamma\!\del{\frac{\dims - 1}{2}}} = \frac{1}{B\!\del{\frac{1}{2}, \frac{\dims -1}{2}}} \text{.}
+    K_{\dims} = \frac{1}{\sqrt{\uppi}} \frac{\Gamma\!\del{\frac{\dims}{2}}}{\Gamma\!\del{\frac{\dims - 1}{2}}} = \frac{\Gamma\!\del{\frac{\dims}{2}}}{\Gamma\!\del{\frac{1}{2}} \Gamma\!\del{\frac{\dims - 1}{2}}} = \frac{1}{B\!\del{\frac{1}{2}, \frac{\dims -1}{2}}} \text{.}
 \end{equation}
-To obtain the cosine similarity distribution a change of variables with $\theta = \arccos x$ has to be performed:
+To obtain the cosine similarity distribution a change of variables with $\theta = \arccos x,\ x \in [-1, 1]$ has to be performed:
 \begin{align}
     \pcs(x; \dims) &= \abs{\od{}{x} \del{\arccos x}} \cdot h(\arccos x) \\
-    &= \frac{1}{\sqrt{1 - x^2}} \cdot K \cdot \del{\sin \arccos x}^{\dims - 2} \\
-    &= \frac{1}{\sqrt{1 - x^2}} \cdot K \cdot \del{\sqrt{1 - x^2}}^{\dims - 2} \\
-    &= K \cdot \del{1 - x^2}^{\del{\dims - 3}/2} \text{.}
+    &= \frac{1}{\sqrt{1 - x^2}} \cdot K_{\dims} \cdot \del{\sin \arccos x}^{\dims - 2} \\
+    &= \frac{1}{\sqrt{1 - x^2}} \cdot K_{\dims} \cdot \del{\sqrt{1 - x^2}}^{\dims - 2} \\
+    &= K_{\dims} \cdot \del{1 - x^2}^{\del{\dims - 3}/2} \text{.}
 \end{align}
 This matches \cref{eqn:pcs}.
 \end{proof}
 
-TODO derive from square root beta
+The cosine similarity distribution can also be obtained as a special case of a more general distribution of the $\ell^2$-norm of $m$ components of an $n+m$-dimensional unit vector.
+The PDF of this distribution is given by~\parencite{harman2010,gosmann216}
+\begin{equation}
+    p_{\mathcal{SB}}(x; n, m) = \frac{2}{B\!\del{\frac{n}{2}, \frac{m}{2}}} \del{x^2}^{(m-1)/2} \del{1 - x^2}^{n/2 - 1},\quad x \in [-1, 1] \text{.}\label{eqn:psb}
+\end{equation}
+When determining the cosine similarity of two uniformly distributed random vectors $\vc a$ and $\vc b$, we are free to chose any set of basis vectors without loss of generality.
+Let us chose the basis such that $\vc a = (a_1, 0, 0, \dots)\Tr$ is aligned with the first vector of the standard basis.
+The cosine similarity then becomes
+\begin{equation}
+    \cos(\vc a \angle \vc b) = \frac{\langle \vc a, \vc b \rangle}{\norm{\vc a} \cdot \norm{\vc b}} = \frac{a_1 \cdot b_1}{a_1 \cdot \norm{\vc b}} = \frac{b_1}{\norm{\vc b}} \text{.}
+\end{equation}
+The absolute value of this is equal to the length of a one-component subvector of the unit-vector $\vc b/\norm{\vc b}$.
+Thus, we can use \cref{eqn:psb} and divide it by two to account for the symmetry of the absolute value to determine the PDF of the cosine similarity as
+\begin{equation}
+    \pcs(x; \dims) = \frac{1}{2} p_{\amthcal{SB}}(x; \dims - 1, 1) = \frac{1}{B\!\del{\frac{1}{2}, \frac{\dims - 1}{2}}} \del{1 - x^2}^{\del{\dims - 3}/2}\text{.}
+\end{equation}
