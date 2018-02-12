@@ -1,17 +1,19 @@
 \chapter{Optimized high-dimensional representation in spiking neurons}
-The implementation of a Semantic Pointer Architecture in a spiking neural network requires the representation of high-dimensional vectors.
-While the standard NEF already provides us with a method to do this, it does not tell us the best way to do so.
-A good representation will try to minimize the error or noise in the representation.
-Alternatively, if the error is sufficiently small, it allows to reduce the number of neurons which reduces the simulation run time.
-I previously proposed an optimization method for the representation~\parencite{gosmann216}, which improved the accuracy of SPA operations by up to 25 times.
-Here, I will describe a more general applicable method that matches or exceeds the performance of the method among some other advantages.
+The implementation of a Semantic Pointer Architecture in a spiking neural network requires the representation of high-dimensional vectors with a certain accuracy.
+One of the main factors influencing the accuracy is the number of neurons.
+A higher number of neurons, unfortunately, increases simulation times.
+If the accuracy of the representation can be improved in a different way, it would allow to reduce the neuron number accordingly and reduce simulation times without sacrificing accuracy.
+I previously proposed one such optimization method~\parencite{gosmann216}, which improved the accuracy of SPA operations by up to 25 times.
+Here, I will describe a more general applicable method that supersedes the previous method by matching or exceeding the previously achieved performance.
+The new method also has a number of additional advantages.
+It does not require any prior simulation to obtain empirical noise estimates and is simpler in its implementation.
 
 \section{Types of error in neural representations}
-In the NEF the total representational error is given by
+In the NEF the total mean representational error is given by
 \begin{equation}
     \errtotal^2 = \left\langle \errtotal^2(\vc x) \right\rangle_{\!\vc x \in \repspace} = \left\langle \norm{\vc x - \hat{\vc x}(t)}^2 \right\rangle_{\!t,\,\vc x \in \repspace} \text{.}
 \end{equation}
-As detailed by \textcite[47--48]{eliasmith2003} the total error is constituted out of the error caused by spiking noise $\errnoise$ and the error due to the static distortion $\errdist$ from the non-perfect decoding:
+As detailed by \textcite[47--48]{eliasmith2003} the total error is constituted out of the error caused by spiking noise $\errnoise$ and the error due to the static distortion $\errdist$ from the imperfect decoding:
 \begin{align}
     \errtotal^2(\vc x) &= \errnoise^2(\vc x) + \errdist^2(\vc x) \\
     \errnoise(\vc x) &= \left\langle \norm{\hat{\vc x}(t) - \langle \hat{\vc x}(t) \rangle_{\!t}}^2 \right\rangle_{\!t} \\
@@ -47,9 +49,10 @@ This were to happen if only the radius at the exact evaluation point would be us
 
 \section{Properties of the error in neural representations}
 When looking at the representation of a spiking neural network, the noise error is the main factor to consider.
-It will go down by $\bO(1/\sqrt{n})$ where $n$ is the number of neurons (\cref{fig:noise-error}a), whereas the distortion error will decrease by $\bO(1/n)$ and is thus dominated by the noise error~\parencite[Fig.~2.6]{eliasmith2003}.
-In contrast, for rate neurons $\errnoise = 0$ and only the distortion error is relevant.
-Furthermore, with the Nengo defaults the noise error in the NEF the increase in the noise error with dimensions $\dims$ will be in $\bO(d)$ (\cref{fig:noise-error}b).
+It will go down by $\bO(1/\sqrt{n})$ where $n$ is the number of neurons (\cref{fig:noise-error}a), whereas the distortion error will decrease by $\bO(1/n)$.
+The total error is thus dominated by the noise error for a sufficient number of neurons~\parencite[Fig.~2.6]{eliasmith2003}.
+In contrast, for rate neurons without spiking noise ($\errnoise = 0$) and only the distortion error is relevant.
+Furthermore, with the Nengo default parameters the noise error in the NEF the increase in the noise error with dimensions $\dims$ will be in $\bO(d)$ (\cref{fig:noise-error}b).
 \begin{figure}
     \centering
     \includegraphics{figures/noise-error}
@@ -57,16 +60,19 @@ Furthermore, with the Nengo defaults the noise error in the NEF the increase in 
 \end{figure}
 
 When looking at the error along a line through the hyper-ball (\cref{fig:error-linecut}), it becomes apparent that the distortion is mostly flat, but increases near the surface.
-This becomes more pronounced as the dimensionality increases.
 The noise error will be slightly larger in the center of the ball than towards the surface with higher dimensionalities (it is a flat line for $\dims = 1$).
-This is caused by the uniform sampling of evaluation points from the hyper-ball (\cref{fig:circle-covering}).
+Both of these effects become more pronounced as the dimensionality increases.
+Moreover, the one-dimensional cut shows a distorted picture of the importance of different regions in the distortion.
+As the dimensionality increases, the most of the volume of the hyper-ball will be close to the surface.
+Thus, the distortion (and noise) close to $-1$ and $1$ of the cut will come to dominate the mean error.
+
+The main cause for these effects is the uniform sampling of evaluation points from the hyper-ball (\cref{fig:circle-covering}).
 When looking at the convex hull of the sample points, this hull will always be smaller than the hyper-ball (even if some evaluation points are exactly on the surface).
 Thus, parts of the hyper-ball near the surface are not covered by the evaluation points and will not be considered in the least squares optimization of the decoders.
 As the number of dimensions increases, this will become a bigger problem as the volume for a hyper-ball goes to zero as $\dims \rightarrow \infty$ (all of the ball will be surface).
-To show that this distortion is indeed caused by the partial covering, we can increase the radius of the hyper-ball for sampling the evaluation points slightly to cover more of the unit-ball (\cref{fig:error-radius-scale}).
-While this makes the distortion more even (mean distortion reduced by \num{0.011}), it unfortunately also increases noise level (by \num{0.019}) distortion because evaluation points now have a larger spacing.
-These and future values in this chapter are statistically significant with $p \approx 0$ as long as not otherwise noted.
-The $p$-value has been determined with bootstrapping.
+To show that this distortion is indeed caused by the partial covering, we can increase the radius of the hyper-ball for sampling the evaluation points slightly to cover more of the unit-ball.
+This is done in \cref{fig:error-radius-scale} for a 64-dimensional representation with \num{50}~neurons per dimension (\num{3200} in total).
+While this makes the distortion more even (mean distortion reduced by \num{0.011}), it unfortunately also increases noise level (by \num{0.019}) because evaluation points have a larger spacing now\footnote{Both values are statistically highly significant with $p \approx 0$ as determined by bootstrapping.}.
 \begin{figure}
     \centering
     \includegraphics{figures/error-linecut}
@@ -84,18 +90,19 @@ The $p$-value has been determined with bootstrapping.
 \end{figure}
 
 Vectors in the SPA are often of unit-length and thus a good, low-distortion representation of the hyper-ball surface is desirable.
-Unfortunately, I am not aware of any method to improve the current state.
+Unfortunately, I am not aware of any method to flatten out the distortion at the surface without a higher increase in noise error.
 To completely cover the ball in a convex hull of evaluation points, it is necessary to place some evaluation points outside of the ball which will cover space and optimize for space outside of the representational space.
 This will lead to a trade-off of flatness of the distortion and baseline of the distortion.
+Ultimately, the problem of distortion is minor as for spiking neurons the error is distorted by the noise component.
 
 
 \section{Effect of the intercept distribution on noise and distortion}
 The intercepts in Nengo are chosen to be uniformly distributed by default.
 In higher dimensions, this has the effect that most neurons are either almost never or almost always active for values in the representational space (\cref{fig:act-proportion}).
-These neurons contribute only minimally to the representation as a neuron that is always in-active does not provide any information about the actually represented value.
+Neurons that are always silent do not contribute to the representation as they provide no information about the represented value.
 But also always active neurons only contribute minimally to the representation.
-Here the firing rate will still vary a bit about the representational space, but for typical neuron models the response curve is steepest closest to the intercept.
-That mapping of a small change in the represented value to a large change in firing rate allows for a less noisy decoding as a single spike will change the decoded value less.
+Even though the firing rate will still vary a bit about the representational space, the response curve is steepest and carries the most information closest to the intercept for most neuron models.
+The mapping of a small change in the represented value to a large change in firing rate also allows for a less noisy decoding as a single spike will change the decoded value less.
 \begin{figure}
     \centering
     \includegraphics{figures/act-proportion}
@@ -104,31 +111,49 @@ That mapping of a small change in the represented value to a large change in fir
 
 Thus, a better intercept distribution should have less neurons that are barely ever active, but should also distribute the intercepts so that there is an even distribution of the fraction of space a neuron is active for.
 The latter criterion can be achieved by distributing the intercepts according to $\csdist(\dims+2)$ where $\csdist(d_{\csdist})$ is the distribution of cosine similarities between random uniformly distributed $d_{\csdist}$-dimensional unit-vectors.
-Its probability density function is given by (\cref{fig:cosine-sim}, derivation in \cref{apdx:cosine-sim})
+Its probability density function is given by (also see \cref{fig:cosine-sim}, derivation in \cref{apdx:cosine-sim})
 \begin{equation}
 \pcs(x; d_{\csdist}) = \frac{1}{B\!\del{\frac{1}{2}, \frac{d_{\csdist} - 1}{2}}} \cdot \del{1 - x^2}^{\del{d_{\csdist} - 3} / 2},\quad x \in [-1, 1] \text{.}\label{eqn:pcs}
 \end{equation}
 $\csdist(\dims+2)$ is equivalent to the distribution of single coordinates of points uniformly sampled from the $\dims$-dimensional unit ball~\parencite{voelker2017}.
-Thus, by using this intercept distribution, the frequency of intercepts corresponds to the distribution $\langle \vc x, \enc \rangle,\ \vc x \in \repspace$, i.e.\ the projection of values in the representational space projected onto the (uniformly distributed) neuron encoders.
+Thus, by using this intercept distribution, the frequency of intercepts corresponds to the distribution of $\langle \vc x, \enc \rangle,\ \vc x \in \repspace$, i.e.\ values in the representational space projected onto the (uniformly distributed) neuron encoders.
+Note that for $\dims = 1$, $\csdist(\dims + 2)$ will be the uniform distribution.
+\Cref{fig:act-cs} shows compares the relative amount of neurons that do not fire for any of the evaluation points.
+For the standard uniform distribution, this fraction rises to above \num{0.35}, but is close to zero with the cosine similarity intercept distribution.
 \begin{figure}
     \centering
     \includegraphics{figures/cosine-sim}
     \caption{PDF $\pcs(x; d_{\csdist})$ of the cosine similarity distribution.}\label{fig:cosine-sim}
 \end{figure}
-
-\Cref{fig:act-cs} shows compares the relative amount of neurons that do not fire for any of the evaluation points.
-For the standard uniform distribution, this fraction rises to above \num{0.35}, but is close to zero with the cosine similarity intercept distribution.
-When we look at the actual error (\cref{fig:error-cs-intercepts}), we see that it is reduced (\num{-0.130}).
-This is mainly due to a reduction in the noise error.
-The distortion seemingly increases, but because most of the volume of the space is near the surface and the distortion there ends up a little bit lower, the total distortion will also decrease (\num{-0.020}).
-However, where the space is distorted changes.
-While the uniform distribution leads to an even distortion except towards the hyper-sphere surface, the cosine similarity distribution gives a distortion that varies more across the space.
-In particular, there is a ring of higher distortion between the center and the surface of the hyper-ball and another such ring around the surface.
 \begin{figure}
     \centering
     \includegraphics{figures/act-cs}
     \caption{(a) Proportion of neurons inactive for all \num{10000} uniformly sampled $\dims$-dimensional vectors. The proportion is plotted for neural ensembles with a uniform intercept distribution (blue) and intercepts distributed according to $\csdist(\dims + 2)$ (orange). The shaded areas denote 95\% confidence intervals. (b) Histogram (shaded bar plot) and kernel-density estimate (line) of the proportion of neurons active for uniformly sampled 64-dimensional vectors when distributing intercepts according to $\csdist(\dims + 2)$.}\label{fig:act-cs}
 \end{figure}
+
+While this gives a mathematical motivation to choose this intercept distribution, it must be shown empirically that it performs better than a uniform intercept distribution.
+In the following I will present a number of experiments to make this case and give an intuition about the effect of this particular intercept distribution.
+Further evidence is presented in TODO appendix.
+All experiments have been performed with $\dims = 64$ dimensional representations, $50 \dims = 3200$ neurons, and spiking LIF neurons as long as not otherwise noted.
+For each experiment 15 samples using different random number seeds were obtaned.
+The benefit of choosing the $\csdist(\dims + 2)$ intercept distribution will larger for increasing dimensionality, but 64 dimensions is sufficient to see a clear effect.
+For fewer dimension the benefit will be less, but not worse than the uniform intercept distribution.
+This is consistent with the $\csdist(\dims + 2)$ distribution approaching a uniform distribution for $\dims \rightarrow 1$.
+The scaling of the noise error component with the number of neurons does not change for the given choices of the intercept distribution.
+In so far any neuron number that is large enough for the noise error to dominate is fine and noise error values for other neuron numbers can be extrapolated.
+This might invalidate the results for small neuron numbers, but such cases should be considered as special with any intercept distribution.
+Finally, spiking LIF neurons are of primary interest as most commonly used neuron model in NEF models.
+But I will give some consideration to other neuron types later.
+Any stated differences in error will be based on these parameters.
+Furthermore, all stated differences have been found to be statistically highly significant with $p \approx 0$ using bootstrapping where not otherwise noted.
+
+The basic effects of the $\csdist(\dims + 2)$ intercept distribution can be seen in \cref{fig:error-cs-intercepts}.
+The total mean error is reduced by \num{-0.130}.
+This is mainly due to a reduction in the noise error.
+The distortion seemingly increases, but because most of the volume of the space is near the surface and the distortion there ends up a little bit lower, the total distortion will also decrease (\num{-0.020}).
+However, where the space is distorted changes.
+While the uniform distribution leads to an even distortion except towards the hyper-sphere surface, the cosine similarity distribution gives a distortion that varies more across the space.
+In particular, there is a ring of higher distortion between the center and the surface of the hyper-ball and another such ring around the surface.
 \begin{figure}
     \centering
     \includegraphics{figures/error-cs-intercepts}
@@ -139,9 +164,9 @@ In general, there will be a noise-distortion trade-off.
 Reducing the noise error by changing the intercept distribution, will lead to a more uneven distortion and can potentially increase the total distortion.
 For spiking neurons with short synaptic time constants, the noise error is usually much higher and thus the change in the distortion will often be negligible.
 Longer synaptic time constants will shift this trade-off as the noise error will be lower.
-Still, for biological realistic time constants of up to \SI{0.1}{\second}, the cosine similarity intercept distribution will perform better (by \num{0.021}).
+Still, for biological realistic time constants of up to \SI{0.1}{\second}, the cosine similarity intercept distribution will perform better.
 It is also worth noting that this trade-off will be slightly affected by the regularization term when solving for the decoders.
-A will decrease the noise as the decoders get less sensitive to small fluctuations, but increases the distortion towards the hyper-sphere surface.
+A higher regularization will decrease the noise as the decoders get less sensitive to small fluctuations, but increases the distortion towards the hyper-sphere surface.
 The opposite effects are observed with less regularization.
 
 Interestingly, the cosine intercept distribution does not only reduce the noise by a constant factor compared to the uniform distribution.
@@ -150,12 +175,13 @@ Rather it improves the scaling of the noise error from $\bO(d/\sqrt{n})$ to $\bO
 So far we only considered spiking neurons, but the NEF also allows the usage of rate neuron models.
 In that case, the noise error will be zero because the firing rate can be represented with arbitrary precision.
 With the default parameters, the cosine similarity distribution still gives a slightly lower total distortion (TODO figure).
-However, due to the non-existent noise, the default regularization of $\gamma = 0.1$ too large and a lower error can be obtained by reducing the regularization to $\gamma = 0.01$.
+However, due to the non-existent noise, the default regularization of $\gamma = 0.1$ is too large and a lower error can be obtained by reducing the regularization to $\gamma = 0.01$.
 Then the uniform distribution will perform better (TODO figure), while the cosine similarity intercept distribution increases the distortion.
 
-Here I focused on the cosine similarity intercept distribution because it works well over a wide range of neuron types and parameters as well as reducing to the uniform distribution when $\dims = 1$.
-Despite that, other intercept distributions can be used and might produce even better results for a fixed set of parameters (or for the approximation of a specific non-linear function).
-TODO takes a more exhaustive look at different choices and compares them.
+These results demonstrate the benefit of the $\csdist(\dims + 2)$ intercept distribution for the most commonly used neuron types and parameters in the NEF.
+Technically, the optimal intercept distribution depends on the exact parameters set and can differ depending on it.
+It is not possible to do an exhaustive comparison due to the multitude of parameters and valid parameter choices.
+Nevertheless, TODO appendix demonstrates the benefit of distributing spiking neuron intercepts according to $\csdist(\dims + 2)$ for a wide range of parameter manipulations including varied neuron numbers, dimensionalities, neuron models, and nonlinear function decoding.
 
 It is also worth to note that the present analysis assumes that all values in the representational space $\repspace$ are uniformly distributed.
 If certain values appear more frequently than others, the optimal intercept distribution might change.
