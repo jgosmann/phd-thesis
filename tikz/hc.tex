@@ -10,8 +10,10 @@
 \usetikzlibrary{fit}
 \usetikzlibrary{shapes.multipart}
 
+\newfontfamily\lato{Lato Light}
+
 \begin{document}
-\begin{tikzpicture}[every path/.style={-Latex}]
+\begin{tikzpicture}[every path/.style={-Latex},font=\lato]
     \node (ec) [rectangle split, rectangle split parts=3, at={(0, 0)}] {EC\nodepart{two}layer II\nodepart{three}layer III};
     \node (ec-outer) [draw, rounded corners=0.5em, gray, fit=(ec)] {};
     \node (dg) [at={(4, 2)}] {DG};
@@ -26,9 +28,9 @@
     \draw [gray, dashed] (ec.two split -| ec-outer.east) to [out=0, in=180] (ca3);
     \draw (ca3) to [out=300, in=60, distance=40] (ca3);
 
-    \draw [decorate, decoration={text along path, text={|\footnotesize|trisynaptic pathway}, text align={center}, raise=4pt}, -{}] (ec.two east) to [out=0, in=180] (dg);
-    \draw [decorate, decoration={text along path, text={|\footnotesize|mossy fiber pathway}, text align={center}, raise=4pt}, -{}] (dg) to [out=0, in=90] (ca3);
-    \draw [decorate, decoration={text along path, text={|\footnotesize|Schaffer collateral pathway}, text align={center}, raise=4pt}, -{}] (ca1.two east) to [out=0, in=270] (ca3);
-    \draw [decorate, decoration={text along path, text={|\footnotesize|direct pathway}, text align={center}, raise=4pt}, -{}] (ec.three east) to [out=0, in=180] (ca1.three west);
+    \draw [decorate, decoration={text along path, text={|\lato\footnotesize|trisynaptic pathway}, text align={center}, raise=4pt}, -{}] (ec.two east) to [out=0, in=180] (dg);
+    \draw [decorate, decoration={text along path, text={|\lato\footnotesize|mossy fiber pathway}, text align={center}, raise=4pt}, -{}] (dg) to [out=0, in=90] (ca3);
+    \draw [decorate, decoration={text along path, text={|\lato\footnotesize|Schaffer collateral pathway}, text align={center}, raise=4pt}, -{}] (ca1.two east) to [out=0, in=270] (ca3);
+    \draw [decorate, decoration={text along path, text={|\lato\footnotesize|direct pathway}, text align={center}, raise=4pt}, -{}] (ec.three east) to [out=0, in=180] (ca1.three west);
 \end{tikzpicture}
 \end{document}

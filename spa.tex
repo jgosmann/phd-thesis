@@ -215,7 +215,7 @@ After repeated binding with itself and then the same number of unbindings, the r
 \begin{figure}
     \centering
     \includegraphics{figures/bindings-autoconv}
-    \caption{Repeatedly binding a 256-dimensional vector with itself. (a) Length of the resulting vector. (b) Similarity of the original vector to the vector obtained when undoing all bindings. The shaded areas represent 95\% confidence intervals.}\label{fig:bindings-autoconv}
+    \caption[Repeatedly binding a 256-dimensional vector with itself]{Repeatedly binding a 256-dimensional vector with itself. (a) Length of the resulting vector. (b) Similarity of the original vector to the vector obtained when undoing all bindings. The shaded areas represent 95\% confidence intervals.}\label{fig:bindings-autoconv}
 \end{figure}
 
 While binding vectors with themselves can sometimes be useful (e.g., for generating Semantic Pointers with a successive relationship like position indices), it is much more common to bind randomly sampled vectors.
@@ -225,7 +225,7 @@ Again, this decrease is much quicker for circular convolution binding than for V
 \begin{figure}
     \centering
     \includegraphics{figures/bindings-random}
-    \caption{Repeatedly binding a 256-dimensional vector with random vectors. (a) Length of the resulting vector. (b) Similarity of the original vector to the vector obtained when undoing all bindings. The shaded areas represent 95\% confidence intervals.}\label{fig:bindings-random}
+    \caption[Repeatedly binding a 256-dimensional vector with random vectors]{Repeatedly binding a 256-dimensional vector with random vectors. (a) Length of the resulting vector. (b) Similarity of the original vector to the vector obtained when undoing all bindings. The shaded areas represent 95\% confidence intervals.}\label{fig:bindings-random}
 \end{figure}
 
 It is conceivable that the problems with scaling of the vector length can be fixed by normalizing after each binding.
@@ -237,7 +237,7 @@ But this only affects vectors exceeding a certain length and can lead to other d
 \begin{figure}
     \centering
     \includegraphics{figures/bindings-normalized}
-    \caption{Repeatedly binding a 256-dimensional vector with (a) itself or (b) random vectors and normalizing in each step. The similarity to the original vector after undoing all bindings is shown. The shaded areas represent 95\% confidence intervals.}\label{fig:bindings-normalized}
+    \caption[Repeatedly binding a 256-dimensional vector with normalization]{Repeatedly binding a 256-dimensional vector with (a) itself or (b) random vectors and normalizing in each step. The similarity to the original vector after undoing all bindings is shown. The shaded areas represent 95\% confidence intervals.}\label{fig:bindings-normalized}
 \end{figure}
 
 Another approach to prevent the growth or decay of the vector length and even prevent the information loss, is the usage of unitary vectors.
@@ -338,7 +338,7 @@ The relations of these different matrix choices is shown in the Venn diagram in 
 \begin{figure}
     \centering
     \includegraphics{figures/tagging-matrices}
-    \caption{Venn diagram of the relations between different classes of matrices $\mat M$ that can be used for encoding with tagging.}\label{fig:tagging-matrices}
+    \caption[Venn diagram of matrices for encoding with tagging]{Venn diagram of the relations between different classes of matrices $\mat M$ that can be used for encoding with tagging.}\label{fig:tagging-matrices}
 \end{figure}
 
 Either encoding method allows to recover encoded vectors, but the encoding vector itself is (in general) not similar to those encoded vectors.
@@ -363,7 +363,7 @@ It is not clear whether they omitted an essential detail from their description 
 \begin{figure}
     \centering
     \includegraphics{figures/encoding}
-    \caption{Retrieval accuracy for (a) encoding with binding and (b) encoding with unitary tagging matrices. Solid lines show results for VTB\@. The dashed lines in (a) show results for binding with circular convolution, in (b) results for unitary circular convolution matrices, shift matrices, and orthogonal matrices without further indication as the results are almost identical. Error bars denote 95\% confidence intervals.}\label{fig:encoding}
+    \caption[Retrieval accuracy of encoding methods]{Retrieval accuracy for (a) encoding with binding and (b) encoding with unitary tagging matrices. Solid lines show results for VTB\@. The dashed lines in (a) show results for binding with circular convolution, in (b) results for unitary circular convolution matrices, shift matrices, and orthogonal matrices without further indication as the results are almost identical. Error bars denote 95\% confidence intervals.}\label{fig:encoding}
 \end{figure}
 
 The results for encoding with tagging by a shift of one are shown in \cref{fig:encoding}b and closely match the results presented in \textcite{recchia2015}.
@@ -379,7 +379,7 @@ That causes one pair (or even one vector of that pair) to be much stronger than 
 \begin{figure}
     \centering
     \includegraphics{figures/encoding-nonunitary-tagging}
-    \caption{Retrieval accuracy for encoding with non-unitary tagging matrices. Solid lines show results for VTB matrics, while dashed lines show results for circular convolution matrices. Error bars denote 95\% confidence intervals.}\label{fig:encoding-nonunitary-tagging}
+    \caption[Retrieval accuracy of encoding with non-unitary tagging matrices]{Retrieval accuracy for encoding with non-unitary tagging matrices. Solid lines show results for VTB matrics, while dashed lines show results for circular convolution matrices. Error bars denote 95\% confidence intervals.}\label{fig:encoding-nonunitary-tagging}
 \end{figure}
 
 These experiments clearly show that encoding with binding is preferable.

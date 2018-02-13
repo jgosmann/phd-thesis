@@ -39,7 +39,7 @@ Finally, modulatory connections do not influence the representation in an ensemb
         };
     \end{tikzpicture}
     \hfill
-    \caption{Graphical elements in NEF network diagrams. See text for further explanation.}\label{fig:tikz-nef}
+    \caption[Graphical elements in NEF network diagrams]{Graphical elements in NEF network diagrams. See text for further explanation.}\label{fig:tikz-nef}
 \end{figure}
 
 
@@ -57,17 +57,17 @@ In this work $\tau_1 = \SI{5}{\milli\second}$ and $\tau_2 = \SI{50}{\milli\secon
 \begin{figure}
     \centering
     \includegraphics{figures/differentiator}
-    \caption{Differentiator with $\tau_1 = \SI{5}{\milli\second}$ and $\tau_2 = \SI{50}{\milli\second}$. (a) Response of the differentiator to a unit step input. The output has been normalized to the maximum. (b) Magnitude response for sinusoidal inputs with different frequencies.}\label{fig:differentiator}
+    \caption[Differentiator]{Differentiator with $\tau_1 = \SI{5}{\milli\second}$ and $\tau_2 = \SI{50}{\milli\second}$. (a) Response of the differentiator to a unit step input. The output has been normalized to the maximum. (b) Magnitude response for sinusoidal inputs with different frequencies.}\label{fig:differentiator}
 \end{figure}
 \begin{figure}
-    \centering
-    \begin{tikzpicture}[nef]
-        \graph {
-            x/"$\vc x$" [ens] -> ["$+1, \syntau=\tau_1$", bend left] y/"$\vc y$" [ens];
-            x -> ["$-1, \syntau=\tau_2$" below, bend right] y;
-        };
-    \end{tikzpicture}
-    \caption{Implementation of a differentiator with the NEF\@. The connection labels state the transform and synaptic time constants with $\tau_1 < \tau_2$.}\label{fig:differentiator-net}
+    \begin{captionbeside}[Implementation of a differentiator with the NEF]{Implementation of a differentiator with the NEF\@. The connection labels state the transform and synaptic time constants with $\tau_1 < \tau_2$.}[i]
+        \begin{tikzpicture}[nef]
+            \graph {
+                x/"$\vc x$" [ens] -> ["$+1, \syntau=\tau_1$", bend left] y/"$\vc y$" [ens];
+                x -> ["$-1, \syntau=\tau_2$" below, bend right] y;
+            };
+        \end{tikzpicture}
+    \end{captionbeside}\label{fig:differentiator-net}
 \end{figure}
 
 
@@ -88,19 +88,20 @@ Adding more neurons to an integrator will make it more stable as the spiking noi
 Similarly, a longer recurrent synaptic time constant makes the integrator also more stable.
 Increasing the number of represented dimensions will make the integrator less stable because there will be less fixed points.
 \begin{figure}
-    \centering
-    \begin{tikzpicture}[nef]
-        \graph {
-            u/"$\vc u$" -> ["$\syntau$" above] x/"$\vc x$" [ens];
-            x -> [out=300, in=60, distance=40pt] x;
-        };
-    \end{tikzpicture}
-    \caption{Implementation of an integrator with the NEF.}\label{fig:integrator-net}
+    \begin{captionbeside}{Implementation of an integrator with the NEF}[i]
+        \begin{tikzpicture}[nef]
+            \path[use as bounding box] (-0.25, -0.6) rectangle (3, 0.6);
+            \graph {
+                u/"$\vc u$" -> ["$\syntau$" above] x/"$\vc x$" [ens];
+                x -> [out=300, in=60, distance=40pt] x;
+            };
+        \end{tikzpicture}
+    \end{captionbeside}\label{fig:integrator-net}
 \end{figure}
 \begin{figure}
     \centering
     \includegraphics{figures/integrator}
-    \caption{Neural integrator with 100 neurons and a recurrent synaptic time constant of $\syntau = \SI{100}{\milli\second}$. (a) Example input $u(t)$ and output $x(t)$ of the neural integrator. (b) Distortion error (blue curve) and fixed points. Stable fixed points are marked by filled circles, unstable fixed points by unfilled circles.}\label{fig:integrator}
+    \caption[Neural integrator]{Neural integrator with 100 neurons and a recurrent synaptic time constant of $\syntau = \SI{100}{\milli\second}$. (a) Example input $u(t)$ and output $x(t)$ of the neural integrator. (b) Distortion error (blue curve) and fixed points. Stable fixed points are marked by filled circles, unstable fixed points by unfilled circles.}\label{fig:integrator}
 \end{figure}
 
 
@@ -113,16 +114,16 @@ Note that in this case feeding a null vector to the difference ensemble will cle
 Thus, the input the integrator needs to be gated.
 This can be done by inhibiting the neurons of the difference ensemble to keep the current value in the integrator.
 \begin{figure}
-    \centering
+    \begin{captionbeside}[Gated memory buffer network]{Gated memory buffer network. The \pop{store} input controls whether the input $\vc u(t)$ is allowed to overwrite the stored value $\vc x(t)$.}[i]
     \begin{tikzpicture}[nef]
         \graph [branch down=40pt] {
             u/"$\vc u$" -> diff/"$\vc u - \vc x$" [ens] -> ["$g \syntau$" above, bend left] x/"$\vc x$" [ens];
             x -> ["-1" below, bend left] diff;
             x -> [out=300, in=60, distance=40pt] x;
-            store -> [inhibit] diff;
+            store [ext] -> [inhibit] diff;
         };
     \end{tikzpicture}
-    \caption{Gated memory buffer network. The \pop{store} input controls whether the input $\vc u(t)$ is allowed to overwrite the stored value $\vc x(t)$.}\label{fig:gated-mem}
+\end{captionbeside}\label{fig:gated-mem}
 \end{figure}
 
 \section{Thresholding ensembles}\label{sec:thresholding}
@@ -155,7 +156,7 @@ The uniform distribution often does not produce intercepts close enough to the t
 \begin{figure}
     \centering
     \includegraphics{figures/thresholding}
-    \caption{Thresholding ensemble with 25 neurons. (a) Decoded rectified and Heaviside output.  (b) Tuning curves in the upper part; probability density function of the exponential intercept distribution with inverted y-axis (i.e.\ probability density increases downward).}\label{fig:thresholding}
+    \caption[Thresholding ensemble]{Thresholding ensemble with 25 neurons. (a) Decoded rectified and Heaviside output.  (b) Tuning curves in the upper part; probability density function of the exponential intercept distribution with inverted y-axis (i.e.\ probability density increases downward).}\label{fig:thresholding}
 \end{figure}
 
 
@@ -167,17 +168,17 @@ A \SI{37}{\percent} more accurate implementation (with the same number of neuron
 \end{equation}
 The neural implementation of this equation is straight-forward (\cref{fig:product-net}).
 \begin{figure}
-    \centering
-    \begin{tikzpicture}[nef, x=2cm, y=2cm]
-        \graph [no placement] {
-            x/"$x$" [at={(0, 1)}] -> sum/"$a$" [ens, at={(1, 1)}] -> ["$a^2/4$"] prod/"" [pnode, at={(2, 0.5)}] -> out/"$xy$" [at={(3, 0.5)}];
-            y [at={(0, 0)}] -> ["-1" below] diff/"$b$" [ens, at={(1, 0)}];
-            y/"$y$" -> sum;
-            x -> diff;
-            diff -> ["$b^2/4$" below] prod;
-        };
-    \end{tikzpicture}
-    \caption{Implementation of an accurate product with the NEF.}\label{fig:product-net}
+    \begin{captionbeside}{Implementation of an accurate product with the NEF}[i]
+        \begin{tikzpicture}[nef, x=2cm, y=2cm]
+            \graph [no placement] {
+                x/"$x$" [at={(0, 1)}] -> sum/"$a$" [ens, at={(1, 1)}] -> ["$a^2/4$"] prod/"" [pnode, at={(2, 0.5)}] -> out/"$xy$" [at={(3, 0.5)}];
+                y [at={(0, 0)}] -> ["-1" below] diff/"$b$" [ens, at={(1, 0)}];
+                y/"$y$" -> sum;
+                x -> diff;
+                diff -> ["$b^2/4$" below] prod;
+            };
+        \end{tikzpicture}
+    \end{captionbeside}\label{fig:product-net}
 \end{figure}
 
 Multiple scalar product networks can be combined to compute element-wise vector products.
