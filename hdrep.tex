@@ -230,6 +230,15 @@ Overall, setting the intercepts and evaluation points gives a significant improv
     \caption[Distribution of the RMSE in the representation of unit-vectors]{Distribution of the RMSE in the representation of 64-dimensional unit-vectors. The violinplots visualize the distribution with a kernel-density estimate mirrored horizontally. The midline of shows a box plot with mean (white) and quartiles (thick black). Results obtained with the Nengo default parameters are blue, with the radius adjustment method from \textcite{gosmann216} are orange, and using the $\csdist(\dims + 2)$ distribution for intercepts and evaluation points are green. Along the y-axis the number of subdimensions $\dims_q$ represented in a single ensemble are arranged.}\label{fig:spaopt-repr}
 \end{figure}
 
+Besides pure representation it is common to compute dot products and circular convolutions in the context of the SPA\@.
+For the dot product the element-wise products are computed in separate product networks and summed afterwards.
+In these product networks the sum (and difference) of the two input elements needs to be represented (see \cref{sec:product}) which means that the represented value is distributed according to the sum of two cosine similarity distributions in the general case.
+However, the dot product is often used to check the similarity of two unit-vectors and a result of 1 should be obtained for identical vectors.
+For identical vectors, the two inputs to the element-wise products will be the same and the sum will follow the distribution of a single input stretched out by a factor of 2.
+Thus, it is appropriate to use the $\csdist(\dims + 2)$ distribution for intercepts and evaluation points in the product networks used for dot products.
+In the general case of non-identical inputs, this might not be fully optimal, but still performs well.
+TODO fig
+
 Besides the representation of a vector, the choice of intercept and evaluation point distribution improves the accuracy of the dot product to the level of the radius adjustment method (\cref{fig:spaopt-dot}).
 Note that 
 

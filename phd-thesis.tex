@@ -18,6 +18,7 @@
 \usepackage{siunitx}
 \usepackage{subcaption}
 \usepackage{tikz}
+\usepackage{unicode-math}
 \usepackage{upgreek}
 
 \usepackage[pagebackref=false]{hyperref}
@@ -32,7 +33,7 @@
     hidelinks,
 }
 \usepackage[capitalise]{cleveref}
-\usepackage[automake,toc,nomain,nogroupskip,nonumberlist]{glossaries} % Exception to the rule of hyperref being the last add-on package
+\usepackage[automake,toc,nomain,nogroupskip,nonumberlist,nopostdot]{glossaries} % Exception to the rule of hyperref being the last add-on package
 \usepackage{glossary-mcols}
 \glssetwidest{$\mat M^{\ped{epis}}$}
 \setglossarystyle{mcolalttree}
@@ -42,33 +43,33 @@
 \usetikzlibrary{nef}
 \usetikzlibrary{quotes}
 
-\defaultfontfeatures[Garamond]{
-    UprightFont={EB Garamond},
-    FontFace={bx}{n}{Font={EB Garamond},Color=red}
-}
 \defaultfontfeatures[Lato]{
     UprightFont={Lato Regular},
     BoldFont={Lato Bold},
     Scale=MatchLowercase
 }
 \newfontfamily\lato{Lato}
-\newfontfamily\gmdlin{Garamond}[Numbers=Lining]
+\newfontfamily\lining{TeX Gyre Pagella}[Scale=MatchLowercase,Numbers=Lining]
 
-\setmainfont{Garamond}
+\setmainfont{TeX Gyre Pagella}[Scale=MatchLowercase,Numbers=OldStyle]
+\setmathfont{TeX Gyre Pagella Math}
+\DeclareMathAlphabet{\mathcal}{OMS}{cmsy}{m}{n}
+%\setmathfont{XITS Math}[range=cal]
 \setsansfont{Lato}
 \setkomafont{chapterentry}{\normalfont}
-\sisetup{mode=math,number-math-rm=\gmdlin}
+\sisetup{mode=math,number-math-rm=\lining}
 
 \addbibresource{references.bib}
 \addbibresource{proposal-references.bib}
 
-\newcommand{\mat}[1]{\bm{#1}}
-\newcommand{\vc}[1]{\bm{#1}}
+\newcommand{\mat}[1]{\symbfit{#1}}
+\newcommand{\vc}[1]{\symbfit{#1}}
 \newcommand{\ped}[1]{{\mathrm{#1}}}
 \newcommand{\Tr}{^{\top}}
 \newcommand{\spc}[1]{\textsc{#1}}
-\newcommand{\spv}[1]{\ensuremath{\bm{#1}}}
+\newcommand{\spv}[1]{\ensuremath{\mathbf{#1}}}
 
+\allowdisplaybreaks
 \DeclareMathOperator*{\argmax}{arg\,max}
 
 \newcommand{\pop}[1]{{\lato #1}}
