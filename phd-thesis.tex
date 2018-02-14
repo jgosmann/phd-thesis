@@ -10,8 +10,10 @@
 
 \usepackage{fontspec}
 \usepackage{microtype}
+\usepackage[dvipsnames]{xcolor}
 \usepackage{amsmath,amssymb,amstext,amsthm}
 \usepackage{bm}
+\usepackage{booktabs}
 \usepackage{commath}
 \usepackage[backend=biber,style=authoryear]{biblatex}
 \usepackage{graphicx}
@@ -57,7 +59,15 @@
 %\setmathfont{XITS Math}[range=cal]
 \setsansfont{Lato}
 \setkomafont{chapterentry}{\normalfont}
-\sisetup{mode=math,number-math-rm=\lining}
+\sisetup{
+    mode=math,number-math-rm=\lining,
+    table-figures-integer=1,
+    table-figures-decimal=4,
+    table-sign-mantissa,
+    table-number-alignment=left,
+}
+
+\renewcommand*{\partpagestyle}{empty}
 
 \addbibresource{references.bib}
 \addbibresource{proposal-references.bib}
@@ -114,5 +124,6 @@ Nengo development team and opportunities
 \appendix
 \addpart{Appendices}
 \include{apdx-cosinesim}
+\include{apdx-hdrep}
 
 \end{document}

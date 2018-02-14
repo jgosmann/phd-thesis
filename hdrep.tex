@@ -118,7 +118,7 @@ Its probability density function is given by (also see \cref{fig:cosine-sim}, de
 $\csdist(\dims+2)$ is equivalent to the distribution of single coordinates of points uniformly sampled from the $\dims$-dimensional unit ball~\parencite{voelker2017}.
 Thus, by using this intercept distribution, the frequency of intercepts corresponds to the distribution of $\langle \vc x, \enc \rangle,\ \vc x \in \repspace$, i.e.\ values in the representational space projected onto the (uniformly distributed) neuron encoders.
 Note that for $\dims = 1$, $\csdist(\dims + 2)$ will be the uniform distribution.
-\Cref{fig:act-cs} shows compares the relative amount of neurons that do not fire for any of the evaluation points.
+\Cref{fig:act-cs} compares the relative amount of neurons that do not fire for any of the evaluation points.
 For the standard uniform distribution, this fraction rises to above \num{0.35}, but is close to zero with the cosine similarity intercept distribution.
 \begin{figure}
     \centering
@@ -133,17 +133,17 @@ For the standard uniform distribution, this fraction rises to above \num{0.35}, 
 
 While this gives a mathematical motivation to choose this intercept distribution, it must be shown empirically that it performs better than a uniform intercept distribution.
 In the following I will present a number of experiments to make this case and give an intuition about the effect of this particular intercept distribution.
-Further evidence is presented in TODO appendix.
-All experiments have been performed with $\dims = 64$ dimensional representations, $50 \dims = 3200$ neurons, and spiking LIF neurons as long as not otherwise noted.
-For each experiment 15 samples using different random number seeds were obtaned.
+Further evidence is presented in \cref{apdx:hdrep}.
+All experiments have been performed with $\dims = 64$ dimensional representations, $50 \dims = 3200$ spiking LIF neurons as long as not otherwise noted.
+For each experiment 15 samples using different random number seeds were obtained.
 The benefit of choosing the $\csdist(\dims + 2)$ intercept distribution will larger for increasing dimensionality, but 64 dimensions is sufficient to see a clear effect.
-For fewer dimension the benefit will be less, but not worse than the uniform intercept distribution.
+For fewer dimension the benefit will be less, but not worse than the uniform intercept distribution (\cref{apdx:hdrep}).
 This is consistent with the $\csdist(\dims + 2)$ distribution approaching a uniform distribution for $\dims \rightarrow 1$.
 The scaling of the noise error component with the number of neurons does not change for the given choices of the intercept distribution.
 In so far any neuron number that is large enough for the noise error to dominate is fine and noise error values for other neuron numbers can be extrapolated.
 This might invalidate the results for small neuron numbers, but such cases should be considered as special with any intercept distribution.
 Finally, spiking LIF neurons are of primary interest as most commonly used neuron model in NEF models.
-But I will give some consideration to other neuron types later.
+But I will give some consideration to other neuron types in \cref{apdx:hdrep}.
 Any stated differences in error will be based on these parameters.
 Furthermore, all stated differences have been found to be statistically highly significant with $p \approx 0$ using bootstrapping where not otherwise noted.
 
@@ -157,7 +157,7 @@ In particular, there is a ring of higher distortion between the center and the s
 \begin{figure}
     \centering
     \includegraphics{figures/error-cs-intercepts}
-    \caption[Mean error along line cut with $\csdist(\dims + 2)$ distributed intercepts]{Mean error along a line cut through the 64-dimensional hyper-ball with 3200 neurons and different intercept distributions. The shaded regions indicate 95\% confidence intervals.}\label{fig:error-cs-intercepts}
+    \caption[Mean error along line cut with different intercept distributions]{Mean error along a line cut through the 64-dimensional hyper-ball with 3200 neurons, different intercept distributions (pink vs turquoise) and different synaptic time constants (solid vs dotted line). The shaded regions indicate 95\% confidence intervals.}\label{fig:error-cs-intercepts}
 \end{figure}
 
 In general, there will be a noise-distortion trade-off.
@@ -165,23 +165,33 @@ Reducing the noise error by changing the intercept distribution, will lead to a 
 For spiking neurons with short synaptic time constants, the noise error is usually much higher and thus the change in the distortion will often be negligible.
 Longer synaptic time constants will shift this trade-off as the noise error will be lower.
 Still, for biological realistic time constants of up to \SI{0.1}{\second}, the cosine similarity intercept distribution will perform better.
-It is also worth noting that this trade-off will be slightly affected by the regularization term when solving for the decoders.
+It is also worth noting that this trade-off will be slightly affected by the regularization term when solving for the decoders (\cref{fig:error-cs-intercepts-reg}).
 A higher regularization will decrease the noise as the decoders get less sensitive to small fluctuations, but increases the distortion towards the hyper-sphere surface.
 The opposite effects are observed with less regularization.
+\begin{figure}
+    \centering
+    \includegraphics{figures/error-cs-intercepts-reg}
+    \caption[Mean error along line cut with different regularization]{Mean error along a line cut through the 64-dimensional hyper-ball with 3200 neurons and different regularization $\gamma$. The shaded regions indicate 95\% confidence intervals.}\label{fig:error-cs-intercepts-reg}
+\end{figure}
 
 Interestingly, the cosine intercept distribution does not only reduce the noise by a constant factor compared to the uniform distribution.
-Rather it improves the scaling of the noise error from $\bO(d/\sqrt{n})$ to $\bO(d^{3/4}/\sqrt{n})$ (TODO figure).
+Rather it improves the scaling of the noise error from $\bO(d/\sqrt{n})$ to $\bO(d^{3/4}/\sqrt{n})$ (\cref{fig:cs-error-scaling}).
+\begin{figure}
+    \centering
+    \includegraphics{figures/cs-error-scaling}
+    \caption[Mean noise error]{The mean noise error $\errnoise$ with $\csdist(\dims + 2)$ distributed intercepts in dependence of the number of dimensions. Scatter points show empirically determined values with 95\% confidence intervals smaller than the marker size. The solid gray line in is a linear regression fitted to $\dims^{3/4}$.}\label{fig:cs-error-scaling}
+\end{figure}
 
 So far we only considered spiking neurons, but the NEF also allows the usage of rate neuron models.
 In that case, the noise error will be zero because the firing rate can be represented with arbitrary precision.
-With the default parameters, the cosine similarity distribution still gives a slightly lower total distortion (TODO figure).
+With the default parameters, the cosine similarity distribution still gives a slightly lower total distortion (\num{-0.020}).
 However, due to the non-existent noise, the default regularization of $\gamma = 0.1$ is too large and a lower error can be obtained by reducing the regularization to $\gamma = 0.01$.
-Then the uniform distribution will perform better (TODO figure), while the cosine similarity intercept distribution increases the distortion.
+Then the uniform distribution will then perform better (\num{+0.0262}), while the cosine similarity intercept distribution increases the distortion.
 
 These results demonstrate the benefit of the $\csdist(\dims + 2)$ intercept distribution for the most commonly used neuron types and parameters in the NEF\@.
 Technically, the optimal intercept distribution depends on the exact parameters set and can differ depending on it.
 It is not possible to do an exhaustive comparison due to the multitude of parameters and valid parameter choices.
-Nevertheless, TODO appendix demonstrates the benefit of distributing spiking neuron intercepts according to $\csdist(\dims + 2)$ for a wide range of parameter manipulations including varied neuron numbers, dimensionalities, neuron models, and nonlinear function decoding.
+Nevertheless, \cref{apdx:hdrep} demonstrates the benefit of distributing spiking neuron intercepts according to $\csdist(\dims + 2)$ for a wide range of parameter manipulations including varied neuron numbers, dimensionalities, neuron models, and nonlinear function decoding.
 
 It is also worth to note that the present analysis assumes that all values in the representational space $\repspace$ are uniformly distributed.
 If certain values appear more frequently than others, the optimal intercept distribution might change.
@@ -230,21 +240,30 @@ Overall, setting the intercepts and evaluation points gives a significant improv
     \caption[Distribution of the RMSE in the representation of unit-vectors]{Distribution of the RMSE in the representation of 64-dimensional unit-vectors. The violinplots visualize the distribution with a kernel-density estimate mirrored horizontally. The midline of shows a box plot with mean (white) and quartiles (thick black). Results obtained with the Nengo default parameters are blue, with the radius adjustment method from \textcite{gosmann216} are orange, and using the $\csdist(\dims + 2)$ distribution for intercepts and evaluation points are green. Along the y-axis the number of subdimensions $\dims_q$ represented in a single ensemble are arranged.}\label{fig:spaopt-repr}
 \end{figure}
 
-Besides pure representation it is common to compute dot products and circular convolutions in the context of the SPA\@.
+Besides pure representation it is common to compute dot products in the context of the SPA\@.
 For the dot product the element-wise products are computed in separate product networks and summed afterwards.
 In these product networks the sum (and difference) of the two input elements needs to be represented (see \cref{sec:product}) which means that the represented value is distributed according to the sum of two cosine similarity distributions in the general case.
 However, the dot product is often used to check the similarity of two unit-vectors and a result of 1 should be obtained for identical vectors.
 For identical vectors, the two inputs to the element-wise products will be the same and the sum will follow the distribution of a single input stretched out by a factor of 2.
 Thus, it is appropriate to use the $\csdist(\dims + 2)$ distribution for intercepts and evaluation points in the product networks used for dot products.
-In the general case of non-identical inputs, this might not be fully optimal, but still performs well.
-TODO fig
+In the general case of non-identical inputs, this might not be fully optimal, but still performs well (\cref{fig:spaopt-dot}).
+It is also only minimally worse than the previous radius adjustment method.
+\begin{figure}
+    \centering
+    \includegraphics{figures/spaopt-dot}
+    \caption[Distribution of the RMSE in dot product calculations]{Distribution of the RMSE in the calculation of dot products and vector lengths. The violinplots visualize the distribution with a kernel-density estimate. The midline of shows a box plot with mean (white) and quartiles (thick black).}\label{fig:spaopt-dot}
+\end{figure}
 
-Besides the representation of a vector, the choice of intercept and evaluation point distribution improves the accuracy of the dot product to the level of the radius adjustment method (\cref{fig:spaopt-dot}).
-Note that 
-
-Similar results can be expected for more than 
-
-Besides the representation of a vector, the choice of intercept and evaluation point distribution improves the accuracy of the dot product to the level of the radius adjustment method (TODO figure) and surpasses it for the circular convolution operation (TODO figure).
+Finally, one might ask whether the cosine similarity distribution can also improve the calculation of circular convolutions.
+Unfortunately, the Fourier coefficients will have a different distribution.
+There is one important special case, with unitary vectors, where the absolute value of each coefficient is 1.
+Thus, the real and imaginary values will be distributed according to $\csdist(2)$ and the sum of two such random variables created in the product network (\cref{sec:product}) will then be distributed according to
+\begin{align}
+    p_{\csdist+\csdist}(z) &= \int_{z-1}^{z+1} \pcs(z; 2) \pcs(z - x; 2) \dif x \\
+    &= \uppi^2 \int_{z-1}^{z+1} \del{x^2 z^2 - x^2 - 2 x z^3 + 2 x z + z^4 - 2 z^2 + 1}^{-\frac{1}{2}} \dif x \text{.}
+\end{align}
+If vectors are known to be both unitary, this could allow for a more accurate neural calculation, but it is more common to have only one of the two vectors unitary.
+In the general case, no assumption about any vectors being unitary or non-unitary should be made and a uniform intercept distribution should be used with an appropriately scaled radius.
 
 Furthermore, the benchmark was only run for 64 dimensions with \num{200} neurons per dimension.
 But the same conclusions as in \textcite{gosmann216} can be expected to hold.
