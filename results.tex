@@ -42,7 +42,7 @@ A list length of 12 items was used in all conditions.
 A number of resulting metrics from the model and experimental data is shown in Figure TODO\@.
 First, the distribution of the total number of successful recalls is shown.
 To my knowledge, this data has not been analyzed for the original TCM model, even though it is arguably the most fundamental comparison.
-In all conditions, the 95\% confidence intervals of the mean, standard deviation, and kurtosis overlap with the exception of the kurtosis in the immediate recall condition.
+In all conditions, the \SI{95}{\percent} confidence intervals of the mean, standard deviation, and kurtosis overlap with the exception of the kurtosis in the immediate recall condition.
 Thus, no significant difference for the most essential moments could be shown which indicates that the model approximates the experimental distributions well, even though an equality of the distributions cannot be inferred.
 TODO KL-divergence?
 
@@ -63,10 +63,10 @@ In delayed free recall, the model predicts a stronger forward bias than the expe
 \section{Scopolamine}
 A spiking neural network model allows to investigate the effects of drugs more readily than a pure mathematical model.
 I demonstrate this here with the acetylcholine antagonist scopolamine.
-Administered before presentation phase in an immediate recall experiment, it will be detrimental to the recall performance~\parencite{ghoneim1975}.
+Administered before presentation phase in an immediate recall experiment, it will be detrimental to the recall performance \parencite{ghoneim1975}.
 However, scopolamine administered inbetween the presentation and recall phase does not influence performance.
 This indicates that scopolamine prevents encoding of new memories in LTM, but does not prevent recall of already encoded memories.
-More precisely, scopolamine has been shown to attenuate long-term potentiation in hippocampus~\parencite{leung2003,ito1988,hirotsu1989}.
+More precisely, scopolamine has been shown to attenuate long-term potentiation in hippocampus \parencite{leung2003,ito1988,hirotsu1989}.
 
 To model the effect of scopolamine on LTP, the AML learning rate for learning the $\mtf$ and $\mft$ matrices can be adjusted.
 By reducing it to TODO, the experimental results by \textcite{ghoneim1975} can be reproduced (see Figure TODO).

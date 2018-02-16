@@ -1,13 +1,12 @@
 \chapter{The Neural Engineering Framework}\label{sec:nef}
 
 To construct a large-scale spiking neural network with a certain behaviour, some method for obtaining that behaviour is required.
-In most cases this method will be a learning algorithm~\parencite[e.g.,][]{oreilly2006}.
+In most cases this method will be a learning algorithm \parencite[e.g.,][]{oreilly2006}.
 However, this requires time-intensive training of the model and is often not viable for large models, complex behaviours, or models combining different behaviours.
-In this work I opt to use the Neural Engineering Framework~\parencite[NEF;][]{eliasmith2003} which allows the direct construction of a spiking neural network from the mathematical equations describing the desired dynamics without the time-intensive training.
+In this work I opt to use the Neural Engineering Framework \parencite[NEF;][]{eliasmith2003} which allows the direct construction of a spiking neural network from the mathematical equations describing the desired dynamics without the time-intensive training.
 As such the final model does not provide an developmental account of how the neural network became organized or learned to perform its task.
 But it provides a biological plausible explanation of how the developed brain might perform that task.
 Furthermore, it allows for manipulations to test known experimental results in the model or obtain new predictions.
-
 The NEF consists out of the three core principles for \emph{representation}, \emph{transformation}, and \emph{dynamics} in a neural network that I will introduce in this order.
 
 \section{Representation}
@@ -25,21 +24,21 @@ But simpler neuron models (e.g., a rate-based LIF model, or rectified linear uni
 The input current to the neuron is obtained from how well the stimulus aligns with the preferred stimulus as measured by the dot product.
 As this alignment with the preferred stimulus ``encodes'' the stimulus into the neural representational space, $\enc_i$ is usually referred to as \emph{encoder} in the context of the NEF\@.
 Furthermore, the gain factor $\gain_i$ and bias term $\jbias_i$ allow to adjust the neuron's tuning curve to experimentally observed firing rates.
-However, it is also common to use higher maximal firing rates as to use fewer neurons in simulations to achieve an equal accuracy.
-While this is not entirely adhering to biological constraints, in most cases NEF models behave the same when lowering the firing rates and increasing neuron numbers accordingly~\parencite[e.g.,][]{gosmann2015}.
-As it is rare to have detailed information about the tuning curves in many part of the brain, those values are usually not directly set in the NEF\@.
+However, it is also common to use higher maximal firing rates to use fewer neurons in simulations to achieve an equal accuracy.
+While this is not entirely adhering to biological constraints, in most cases NEF models behave the same when lowering the firing rates and increasing neuron numbers accordingly \parencite[e.g.,][]{gosmann2015}.
+As it is rare to have detailed information about the tuning curves in many parts of the brain, those values are usually not directly set in the NEF\@.
 Instead a representational space $\repspace$ is defined, usually as the $\dims$-dimensional $\dims$-hyperball with radius $\radius$.
-Furthermore, for each neuron a maximum firing rate $\act_{\max}$ and an intercept point $p_i$ are sampled from random distributions.
-These values are used to calculate the gain and bias so that the neuron starts firing at $p_i \cdot \enc_i$ when $\vc x$ varies along the encoder $\enc_i$ and that the maximum $\act_{\max,i}$ is not exceeded across the representational space $\repspace$.
+Furthermore, for each neuron a maximum firing rate $\act_{\max, i}$ and an intercept point $p_i$ are sampled from random distributions.
+These values are used to calculate the gain and bias so that the neuron starts firing at $p_i \enc_i$ when $\vc x$ varies along the encoder $\enc_i$ and that the maximum $\act_{\max,i}$ is not exceeded across the representational space $\repspace$.
 \begin{figure}
-    \begin{captionbeside}[A typical neuron tuning curve]{A typical neuron tuning curve. The thick black line shows the mean firing rate in dependence of a stimulus parameter (e.g., rotation of a bar). The thin blue lines show the standard deviation. Figure reproduced from \textcite{butts2006} and reused under the Creative Commons Attribution license.}[l]
+    \begin{captionbeside}[A typical neuron tuning curve]{A typical neuron tuning curve. The thick black line shows the mean firing rate in dependence of a stimulus parameter (e.g., rotation of a bar). The thin blue lines show the standard deviation. Figure reproduced from \textcite{butts2006} and reused under the Creative Commons Attribution license.\label{fig:tuningcurve}}[l]
         \includegraphics{figures/tuningcurve}
-    \end{captionbeside}\label{fig:tuningcurve}
+    \end{captionbeside}
 \end{figure}
 
 Given a population of neurons, also called a neural \emph{ensemble} in NEF terms, how can the encoded vector $\vc x(t)$ be recovered?
 First the activity or spike trains $\act_i(t)$ are convolved with a synaptic filter $\syn$ to obtain the induced post-synaptic voltage change.
-Usually this will be a decaying exponential $\syn(t) = \syntau^{-1}\exp(-t / \syntau)$, but other filters can be used to more precisely model the dynamics of the synapse~\parencite{voelker2017a} and even extensions to conductance-based synapses are possible~\parencite{stockel2017}.
+Usually this will be a decaying exponential $\syn(t) = \syntau^{-1}\exp(-t / \syntau)$, but other filters can be used to more precisely model the dynamics of the synapse \parencite{voelker2017a} and even extensions to conductance-based synapses are possible \parencite{stockel2017}.
 From the filtered activity, the represented vector can be reconstructed with a linear, weighted decoding
 \begin{equation}
     \hat{\vc x}(t) = \sum_i \dec_i \cdot \sbr{a_i * h}\!(t)
@@ -72,15 +71,17 @@ Given these two matrices the decoding weights can be obtained with the regulariz
 \begin{equation}
     \sbr{\begin{array}{c}
             \dec_1\Tr \\ \dec_2\Tr \\ \vdots \\ \dec_N\Tr
-        \end{array}} = \del{\actmat \actmat\Tr + M \gamma^2 {\max(\actmat)}^2 \imat}^{-1} \actmat \evalpmat
+        \end{array}} = \del{\actmat \actmat\Tr + M \reg^2 {\max(\actmat)}^2 \imat}^{-1} \actmat \evalpmat
 \end{equation}
-where $\gamma$ is the regularization scale (usually $\gamma = 0.1$).
+where $\reg$ is the regularization scale (usually $\reg = 0.1$).
 
 The encoders and decoders do not only allow us to encode information into a neural ensembles and decode it back out, but also to transmit that information from one neural population to another.
 By decoding from the pre-synaptic ensemble and encoding into the post-synaptic ensemble, the connection weights required between the two populations can be obtained as
 \begin{equation}
-    W_{ij} = \enc_i\Tr \dec_j \text{.}
+    \weights_{ij} = \enc_i\Tr \mat T \dec_j
 \end{equation}
+where $\mat T$ can describe a linear transform to implement across the neural connections.
+If $\mat T$ is the identity matrix the connection will be a pure communication channel.
 
 
 \section{Transformation}
@@ -136,7 +137,7 @@ In addition, one needs to add a recurrent transformation implementing the functi
 
 
 \section{Simulating NEF networks}
-To simulate NEF style networks, I use the Python library Nengo~\parencite{bekolay2014,sharma}.
+To simulate NEF style networks, I use the Python library Nengo \parencite{bekolay2014,sharma2016}.
 It supports different backends, to run neural models on different hardware platforms.
 For example, Nengo OCL targets GPUs with an OpenCL implementation.
 While this allows better simulation performance, special case implementations are necessary for certain features.

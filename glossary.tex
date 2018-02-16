@@ -9,41 +9,40 @@
 \addsym{\tcmitemin}{fin}{\vc{f}^{\ped{iN}}}{recalled TCM item vector}
 \addsym{\ctx}{c}{\vc{c}}{TCM context vector}
 \addsym{\ctxin}{cin}{\vc{c}^\ped{IN}}{TCM input context vector}
-\addsym{\mft}{Mft}{\mat{M}_{\ped{FT}}}{TCM item to context matrix}
-\addsym{\mtf}{Mtf}{\mat{M}_{\ped{TF}}}{TCM context to item matrix}
-\addsym{\ltwo}{ltwo}{l^2}{Euclidean norm} 
+\addsym{\mft}{Mfc}{\mat{M}_{\ped{FC}}}{TCM item to context matrix}
+\addsym{\mtf}{Mcf}{\mat{M}_{\ped{CF}}}{TCM context to item matrix}
 \addsym{\tcmbeta}{beta}{\beta}{TCM beta parameter}
 \addsym{\Heavi}{heavi}{\Theta}{Heaviside function}
-\addsym{\krond}{kronecker delta}{\delta}{Kronecker delta?}
-\addsym{\enc}{e}{\vc e}{NEF encoding vector}
-\addsym{\dec}{dec}{\vc d}{NEF decoding vector}
-\addsym{\menc}{Enc}{\mat E}{NEF encoder matrix}
-\addsym{\mdec}{D}{\mat D}{NEF decoder matrix}
-\addsym{\weights}{W}{\mat W}{Synaptic weight matrix}
-\addsym{\act}{activity}{a}{Neural spiking activity}
+\addsym{\krond}{kronecker delta}{\updelta}{Kronecker delta}
+\addsym{\enc}{e}{\vc{e}}{NEF encoding vector}
+\addsym{\dec}{dec}{\vc{d}}{NEF decoding vector}
+\addsym{\menc}{Enc}{\mat{E}}{NEF encoder matrix}
+\addsym{\mdec}{D}{\mat{D}}{NEF decoder matrix}
+\addsym{\weights}{W}{\mat{W}}{synaptic weight matrix}
+\addsym{\act}{activity}{a}{neural spiking activity}
 \addsym{\gain}{alpha}{\alpha}{NEF neuron gain}
 \addsym{\jbias}{jbias}{J^{\mathrm{bias}}}{NEF bias input current}
-\addsym{\nl}{G}{G}{Neuron nonlinearity}
+\addsym{\nl}{G}{G}{neuron nonlinearity}
 \addsym{\repspace}{Xc}{\mathcal{X}}{NEF representational space}
 \addsym{\dims}{dim}{d}{dimensionality}
 \addsym{\radius}{r}{r}{NEF representational radius}
-\addsym{\syn}{h}{h}{Synaptic filter}
-\addsym{\syntau}{tausyn}{\tau_\ped{syn}}{Synaptic time constant}
-\addsym{\evalp}{x}{\vc x}{Evaluation point}
-\addsym{\actmat}{A}{\mat A}{Activity matrix}
-\addsym{\evalpmat}{X}{X}{Evaluation point matrix}
-\addsym{\imat}{I}{\mat I}{Identity matrix}
-\addsym{\superpos}{S}{\mathcal{S}}{Superposition operator}
-\addsym{\simmeasure}{s}{s}{Similarity measure}
-\addsym{\bind}{B}{\mathcal{B}}{Binding operator}
-\addsym{\bid}{i}{\vc i}{Identity under binding}
-\addsym{\fourier}{F}{\mathcal{F}}{Discrete Fourier transform}
-\addsym{\fouriermat}{TF}{T_{\mathcal{F}}}{Discrete Fourier transform matrix}
-\addsym{\bzero}{n}{\vc n}{Absorbing element}
-\addsym{\iu}{iu}{\mathrm{i}}{Imaginary unit}
+\addsym{\syn}{h}{h}{synaptic filter}
+\addsym{\syntau}{tausyn}{\tau_\ped{syn}}{synaptic time constant}
+\addsym{\evalp}{x}{\vc{x}}{evaluation point}
+\addsym{\actmat}{A}{\mat{A}}{activity matrix}
+\addsym{\evalpmat}{X}{\mat{X}}{evaluation point matrix}
+\addsym{\imat}{I}{\mat{I}}{identity matrix}
+\addsym{\superpos}{S}{\mathcal{S}}{superposition operator}
+\addsym{\simmeasure}{s}{s}{similarity measure}
+\addsym{\bind}{B}{\mathcal{B}}{binding operator}
+\addsym{\bid}{i}{\vc{i}}{identity under binding}
+\addsym{\fourier}{F}{\mathcal{F}}{discrete Fourier transform}
+\addsym{\fouriermat}{TF}{\mat{T}_{\mathcal{F}}}{discrete Fourier transform matrix}
+\addsym{\bzero}{n}{\vc{n}}{absorbing element}
+\addsym{\iu}{iu}{\symup{i}}{imaginary unit}
 \addsym{\vtb}{BV}{\mathcal{B}_{\mathrm{V}}}{vector-derived transformation binding operator}
 \addsym{\ndist}{N}{\mathcal{N}}{normal distribution}
-\addsym{\expected}{Ex}{\mathbb{E}}{expected value}
+\addsym{\expected}{Ex}{\symbb{E}}{expected value}
 \addsym{\err}{Err}{E}{error}
 \addsym{\errtotal}{Etot}{E_\ped{tot}}{total error}
 \addsym{\errnoise}{En}{E_\ped{n}}{noise error}
@@ -51,15 +50,16 @@
 \addsym{\bO}{O}{O}{big O notation}
 \addsym{\sa}{Omega}{\Omega}{solid angle}
 \addsym{\gammafn}{Gamma}{\Gamma}{gamma function}
-\addsym{\betafn}{Beta}{B}{beta function}
-\addsym{\ballvol}{V}{V}{ball volume}
-\addsym{\csdist}{CS}{\mathcal{CS}}{cosine similarity distribution}
+\addsym{\betafn}{Beta}{\symup{B}}{beta function}
+\addsym{\ballvol}{V}{V_{\!d}}{volume $d$-dimensional hyperball}
+\addsym{\csdist}{CS}{\mathcal{CS}}{PDF of cosine similarity}
 \addsym{\pcs}{pCS}{p_{\csdist}}{cosine similarity distribution pdf}
-\addsym{\osestm}{mstm}{\vc m^{\ped{stm}}}{OSE short-term memory trace}
-\addsym{\oseepis}{mepis}{\vc m^{\ped{epis}}}{OSE episodic memory trace}
+\addsym{\osestm}{mstm}{\vc{m^{\ped{stm}}}}{OSE short-term memory trace}
+    \addsym{\oseepis}{mepis}{\vc{m^{\ped{epis}}}}{OSE episodic memory trace}
 \addsym{\osestmdecay}{gamma}{\gamma}{OSE short term decay}
 \addsym{\oseepisscale}{rho}{\rho}{OSE episodic decay}
 \addsym{\tauref}{tauref}{\tau_{\ped{ref}}}{refractory period}
 \addsym{\taurc}{taurc}{\tau_{RC}}{membrane time constant}
-\addsym{\drate}{R}{R}{distractor rate}
-% TODO dot product notation, element-wise product, sp, mean
+\addsym{\drate}{phi}{\phi}{distractor rate}
+\addsym{\reg}{lambda}{\lambda}{regularization scale}
+\addsym{\posnum}{natural numbers}{\mathbb{N}_{>0}}{positive (excluding zero) natural numbers}
