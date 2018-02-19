@@ -1,7 +1,7 @@
 \chapter{The Ordinal Serial Encoding Model}
-The Ordinal Serial Encoding (OSE) model (TODO ref) is an NEF and SPA based model of serial recall.
-It was able to reproduce the various effects found in human recall data such as the primacy effect, recency effect, and transposition gradients in serial and delayed forward recall.
-Within the integrated memory model it provides the basis for the short-term memory component.
+The Ordinal Serial Encoding (OSE) model \parencite{Choo2010} is an NEF and SPA based model of serial recall.
+It was able to reproduce various effects found in human recall data such as the primacy effect, recency effect, and transposition gradients in serial and delayed forward recall.
+Within the context-unified encoding (CUE) memory model it provides the basis for the short-term memory component.
 
 In the OSE $m$ presented items $\vc v_i$ are bound to fixed position vectors $\vc p_i$ and stored in two memory traces
 \begin{align}
@@ -18,34 +18,103 @@ The recall of an item is given by unbinding the corresponding position vector as
 These encoding equations produce the primacy and recency effect due to the differential effect of the decay and scaling factors $\osestmdecay$ and $\oseepisscale$.
 
 For the neural implementation each memory trace can be stored in an integrator with some additional processes for updating and unbinding the recalled item.
-For the integration with the integrated memory model, the episodic memory trace will be replaced by a version of the temporal context model presented in the next chapter.
-This introduces a more plausible episodic memory storing experiences in actual synaptic weight changes than the activities of a neural population.
-In addition the recall process will need to be adjusted.
+For the integration within the CUE memory model, the episodic memory trace will be replaced by a version of the temporal context model presented in the next chapter.
+This introduces a more plausible episodic memory, storing experiences in actual synaptic weight changes rather than in the activities of a neural population.
+In addition the recall process will need to be adjusted to integrate information from the exchanged episodic memory component (\cref{sec:recall}).
 
 
 \section{Neural STM implementation}
-In the CUE model the short-term memory buffer of the OSE model is implemented as depicted in Figure TODO\@.
+In the CUE model the short-term memory buffer of the OSE model is implemented as depicted in \cref{fig:ose-flip-flop}.
 The network gets an item and position Semantic Pointer as input which are bound together.
-The bound result is added into the memory trace stored in \pop{combine} as long as it does not receive the \nin{input\_store} signal.
-Once the \nin{input\_store} signal is received, the contents from \pop{combine} are transferred to \pop{mem}.
-Items are decoded from the memory via the \pop{recall} inverse circular convolution.
-The decay factor of $\osestmdecay = 0.9775$ is taken from the original OSE implementation (TODO ref) and is implemented on the connection from \pop{mem} to \pop{combine}.
+The bound result is added into the memory trace stored in \pop{combined} as long as it does not receive the \nin{input\_store} signal.
+Once the \nin{input\_store} signal is received, the contents from \pop{combined} are transferred to the $\osestm$ populations.
+Items are decoded from the memory via the inverse circular convolution.
+The decay factor of $\osestmdecay = 0.9775$ is taken from the original OSE implementation \parencite{Choo2010} and is implemented on the connection from $\osestm$ to \pop{combined}.
+\begin{figure}
+    \centering
+    \begin{tikzpicture}[nef]
+        \graph [no placement] {
+            item/"item $\vc v$" [x=-0.5, y=0, ext];
+            pos/"position $\vc p$" [x=-0.5, y=-1, ext];
+            bind/"$\circledast$" [x=2, y=-0.5, net];
+            diff1/"" [x=4, y=-0.5, ea];
+            combined/"" [x=7, y=-0.5, ea];
+            combinedlbl/"{\lato combined}" [x=7, y=0.1];
+            diff2/"" [x=7, y=-3, ea];
+            mem/"$\osestm$" [x=4, y=-3, ea];
+            recall/"$\circledast^{-1}$" [x=2, y=-3, net];
+            out/"recalled $\hat{\vc{v}}$" [x=-0.5, y=-3, ext];
+            store/"input\_store" [x=-0.5, y=-2, ext];
+            invstore/"" [x=6, y=-1.5, pnode];
+
+            item -> [out=0, in=170] bind;
+            pos -> [out=0, in=190] bind;
+            bind -> diff1 -> combined -> diff2 -> mem -> ["\osestmdecay" auto] diff1;
+            combined -> [bend right, "$-1$"] diff1;
+            mem -> [bend right, "$-1$" below] diff2;
+            mem -> recall;
+            pos -> [out=0, in=90] recall;
+            recall -> out;
+
+            store -> [out=0, in=225, inhibit] diff1;
+            store -> [out=0, in=200, "$-1$" {below, very near end}] invstore -> [inhibit] diff2;
+            bias/"$1$" [x=5, y=-1.25, ext] -> invstore;
+        };
+    \end{tikzpicture}
+    \caption{Implementation of the OSE short-term memory trace $\osestm$ with the NEF\@. See text for additional details.}\label{fig:ose-flip-flop}
+\end{figure}
 
 
 \section{Neural position counting}
 For the OSE it is necessary to keep track of the ordinal position of the current item.
-Figure TODO shows the network implementing this functionality.
-All ensembles in this networks are implementing a threshold at 0 so that represented values are always positive.
+\Cref{fig:posnet} shows the network implementing this functionality.
+All ensembles in this networks are implementing a threshold at zero so that represented values are always positive.
 The \pop{state} ensemble array has one ensemble for each possible position and only the ensemble for the current position will be active.
 This is ensured by providing a small negative bias ($-0.2$) to all ensembles to prevent spontaneous activity.
 Furthermore, a recurrent connection with $\syntau = \SI{0.1}{\second}$ decoding a constant of $1.2$ keeps the current position in a state of stable activity.
+\begin{figure}
+    \centering
+    \begin{tikzpicture}[nef]
+        \graph [no placement] {
+            inputinc/"increment" [x=-2, y=0, ext] -> ["\small $\syntau = \SI{0.05}{\second}$" below]
+            red/"" [x=2, y=0, rect] ->
+            reg/"" [x=4, y=0, rect];
 
-To advance to the next position a signal with a rising edge as to be provided to the \nin{input\_inc} input.
-To detect the rising edge a differentiator ensemble is used that receives its input via two connections where one connection has a fast synaptic time constant ($\syntau = \SI{5}{\milli\second}$) and the other connection has a slow synaptic time constant ($\syntau = \SI{50}{\milli\second}$) and a transform of $-1$.
+            inputinc -> [bend left, "\small $\syntau = \SI{0.5}{\second}$"] red;
+            adv/"" [x=6, y=-1, ea, inner sep=0.25ex];
+            advrect/"" [x=6, y=-1, rect];
+            advlbl/"{\lato advance threshold}" [anchor=west, x=6.4, y=-1];
+
+            state/"" [x=3.5, y=-3, ea, inner sep=0.25ex];
+            staterect/"" [x=3.5, y=-3, rect];
+            statelbl/"{\lato state}" [x=2.9, y=-3.3];
+
+            inhibit/"" [x=6, y=-5, ea, inner sep=0.25ex];
+            inhibitrect/"" [x=6, y=-5, rect];
+            inhibitlbl/"{\lato inhibit threshold}" [anchor=west, x=6.4, y=-5];
+
+            reg -> ["\small $0.8 \Heavi(x) \imat$" auto] adv;
+            adv -> [bend left, "\small $\mat T_2,\ \syntau = \SI{0.1}{\second}$" {below, align=left, very near start, xshift=1.3cm}] state;
+            state -> [bend left, "\small $\mat T_1$" above] adv;
+            state -> output [x=7, y=-3, ext];
+            state -> [bend left] inhibit;
+            inhibit -> [bend left, "\small $\mat T_3 \Heavi(\vc x)$" {below, xshift=-5mm, near end}] state;
+            bias1/"$-0.6$" [x=3.5, y=-5, ext] -> inhibit;
+            bias2/"$-0.2$" [x=2, y=-3, ext] -> state;
+            state -> [out=90, in=160, distance=2cm, "\small $1.2 \Heavi(\vc x)$" above] state;
+
+            gating/"gate signal" [x=4, y=1, ext] -> reg;
+        };
+    \end{tikzpicture}
+    \caption{Implementation of position counting with the NEF. See text for details.}\label{fig:posnet}
+\end{figure}
+
+To advance to the next position a signal with a rising edge as to be provided to the \nin{increment} input.
+To detect the rising edge a differentiator ensemble is used that receives its input via two connections where one connection has a fast synaptic time constant ($\syntau = \SI{5}{\milli\second}$) and the other connection has a slow synaptic time constant ($\syntau = \SI{50}{\milli\second}$) and a transform of $-1$ (\cref{sec:differentiator}.
 The output is fed through a gate ensemble that can be inhibited to prevent position increments.
 
-Then the Heaviside step function is decoded from the \pop{rising\_edge\_gate} and fed into the \pop{advance\_threshold} ensemble array scaled by a factor of \num{0.8}.
-The output of \pop{state} is also fed into \pop{advance\_threshold} with the transform
+Then the Heaviside step function is decoded from the \pop{rising\_edge\_gate} and fed into the \pop{advance threshold} ensemble array scaled by a factor of \num{0.8}.
+The output of \pop{state} is also fed into \pop{advance threshold} with the transform
 \begin{equation}
     \mat T_1 = \sbr{\begin{array}{cccc}
         0 & -1 & -1 & \cdots \\
@@ -56,7 +125,7 @@ The output of \pop{state} is also fed into \pop{advance\_threshold} with the tra
 \end{equation}
 which will inhibit all ensembles except the one corresponding to the current position.
 This ensemble will only become active when a rising edge is detected.
-The \pop{advance\_threshold} ensemble project back to the \pop{state} ensembles with a transform of
+The \pop{advance threshold} ensemble projects back to the \pop{state} ensembles with a transform of
 \begin{equation}
     \mat T_2 = \sbr{\begin{array}{ccccc}
         0 & 0 & \cdots & 0 & 0 \\
@@ -69,7 +138,7 @@ The \pop{advance\_threshold} ensemble project back to the \pop{state} ensembles 
 to excite the population representing the next position.
 
 When the next position gets active, the old position needs to be inhibited at some point to prevent two position from being active at the same time.
-This is done via the \pop{inhibit\_threshold} ensemble array.
+This is done via the \pop{inhibit threshold} ensemble array.
 It receives a bias input of \num{-0.6} and input from the decoded constant from \pop{state}.
 Once the threshold (decoded as Heaviside step function) is exceeded, the previous and next item are inhibited with the transform given by
 \begin{equation}

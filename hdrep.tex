@@ -202,10 +202,10 @@ The experimental procedure used here to compare intercept distributions might st
 The NEF only requires multiple vector dimensions to be represented in a single ensemble if functions with a nonlinear interaction of the individual dimensions is decoded.
 Such interactions are rarely needed in the Semantic Pointer Architecture and there is a number of reasons to split up the $\dims$-dimensional vector into $q$ vectors of $\dims_q = \dims / q$ dimensions.
 
-First of all, solving for decoders requires the inversion of an $n \times n$ matrix with a runtime complexity of $\bO\!\del{n^3}$ where $n$ is the total number of neurons in the ensemble.
-When instead using $q$ ensembles with $n/q$ neurons each to represent $\dims_q$ segments of the vector, only $q$ inversions of $n/q \times n/q$ matrices are required, which give a runtime complexity of only $\bO\!\del{n^3/q^2}$.
+First of all, solving for decoders requires the inversion of an $n \times n$ matrix with a runtime complexity of $\bO\bigl(n^3\bigr)$ where $n$ is the total number of neurons in the ensemble.
+When instead using $q$ ensembles with $n/q$ neurons each to represent $\dims_q$ segments of the vector, only $q$ inversions of $n/q \times n/q$ matrices are required, which give a runtime complexity of only $\bO\bigl(n^3/q^2\bigr)$.
 Thus, solving for the decoders can be a lot more efficient when splitting up a vector into multiple ensembles for the representation.
-Second, the noise error grows only in $\bO\!\del{\!\sqrt{q/n}}$ if $\dims_q$ is kept constant.
+Second, the noise error grows only in $\bO\bigl(\!\sqrt{q/n}\bigr)$ if $\dims_q$ is kept constant.
 In other words, adding $\dims_q$ more dimensions, requires only $n/q$ additional neurons to keep the noise error constant.
 
 Splitting up the input space in this manner, however, introduces a slight complication.

@@ -1,46 +1,46 @@
 \chapter{The Temporal Context Model}\label{sec:tcm}
-The temporal context model (TCM) was proposed by TODO as a model of free recall.
+The temporal context model (TCM) was proposed by \textcite{Howard2002} as a model of free recall.
 It matched data of immediate, delayed, and continuous distractor recall tasks.
 As the distractor task used in the delayed and continuous distractor condition is designed to prevent active rehearsal, this model is likely to address more long-term, synaptic storage as opposed to the short-term OSE model.
-Similar to a number of other memory model, the TCM assumes a time varying context signal that items are associated with.
+Similar to a number of other memory models, the TCM assumes a time varying context signal that items are associated with.
 But unlike those other models, this context is based on the items itself rather than being randomly generated.
 
 In particular, items in the TCM are represented as orthogonal vectors $\tcmitem_i$ and the context signal is also a vector $\ctx$.
 When we relax the orthogonality constrained on the items to almost orthogonal, we can use Semantic Pointers for these vectors.
-To associate items and contexts to transformation matrices are used.
+To associate items and contexts, two transformation matrices are used.
 The $\mtf$ matrix represents the associations from a context to an item and is constructed as an outer product matrix as
 \begin{equation}
-    \mtf = \sum_i \tcmitem_i \ctx\Tr \text{.}
+    \mtf = \sum_i \tcmitem_i \ctx_i\Tr \text{.}
 \end{equation}
 Note that the $\mtf$ matrix can easily be updated by adding another item/context outer product.
 The $\mft$ matrix is used to retrieve a mixture $\ctxin_i = \mft \tcmitem_i$ of contexts that have been previously associated with an item $\tcmitem_i$.
 This is the so-called \emph{pre-experimental context}.
 It is used to update the current context according to
 \begin{equation}
-    \ctx_i = \rho_i \ctx_{i-1} + \tcmbeta \ctxin_i \text{.}
+    \ctx_i = \rho_i \ctx_{i-1} + \tcmbeta \ctxin_i \text{.}\label{eqn:ctx-update}
 \end{equation}
 (TODO rho, gamma)
 The updated context is then used to update the $\mtf$ matrix by adding $\ctx_i \tcmitem_i\Tr$.
 
 Given a context $\ctx$ a mixture of associated items can be recalled as $\tcmitemin = \mtf \ctx$.
 To retrieve a single item some form of cleanup as to performed.
-Once such a single item has been recalled, the item can be used to recall the associated context as $\mft \tcmitemin$ which in turn can be used to update the current context according to Equation TODO\@.
+Once such a single item has been recalled, the item can be used to recall the associated context as $\mft \tcmitemin$ which in turn can be used to update the current context according to \cref{eqn:ctx-update}.
 The updated context allows than to recall further item.
 
 Different cleanup strategies for the recalled item vector can be used.
 In the original TCM model, a set of activities $a_i = \tcmitem_i\Tr \tcmitemin$ was obtained and used to make a probabilistic decision according to Luce's choice rule.
 The probability of retrieving item $\tcmitem_i$ is given as
 \begin{equation}
-    P(\tcmitem_i | \tcmitemin) = \frac{\exp\!\del{\frac{2a_i}{\tau}}}{\sum_j \exp\!\del{\frac{2a_j}{\tau}}}
+    P\bigl(\tcmitem_i \bigl|\,\tcmitemin\bigr) = \frac{\exp\!\del{\frac{2a_i}{\tau}}}{\sum_j \exp\!\del{\frac{2a_j}{\tau}}}
 \end{equation}
 with a parameter $\tau$ that specifies the sensitivity to the activities.
 
-The version of the TCM model presented in TODO, uses a winner-take-all process based on the leaky, competing accumulator model (TODO ref).
+The version of the TCM model presented by \textcite{Sederberg2008}, uses a winner-take-all process based on the leaky, competing accumulator model \parencite{Usher2001}.
 In this model, for each possible item a leaky integrator integrates evidence over time.
 At the same time, the integrators inhibit each other laterally.
 The dynamics can be described by TODO\@.
 This is a more detailed description of how the brain might actually decide for a single item.
 
-Finally, in this thesis I am using a different winner-take-all process as described in Chapter TODO\@.
+Finally, in this thesis I am using a different winner-take-all process as described in \cref{sec:recall}.
 
 TODO describe original TCM
