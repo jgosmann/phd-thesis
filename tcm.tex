@@ -99,3 +99,126 @@ where $\vc u$ is the scaled vector of inputs determined from $\mtf \ctx$ from th
 This is a more detailed description of how the brain might actually decide for a single item.
 However, it is problematic to integrate within a larger scale neural model under noisy conditions as detailed in \cref{sec:recall}.
 For this reason, a different winner-take-all all process described in the same chapter will be used.
+
+
+\section{Neural context update}
+
+A neural implementation of the TCM needs to implement the updating of $\mft$ and $\mtf$ matrices discussed in \cref{sec:aml}, the recall of items discussed in \cref{sec:recall}, and updating of the context given by \cref{eqn:ctx-update}.
+I will discuss this latter part in this section.
+Despite being a simple equation, a number of different implementation approaches are potentially viable.
+However, only one of these methods was successful in matching the human data when incorporated into the complete model.
+It is still instructive to compare these different approaches and consider why they fail.
+
+\subsection{Boundend integrator}
+\Cref{eqn:ctx-update} assumes discrete steps, but for a neural implementation a continuous formulation is more natural and given by
+\begin{equation}
+    \od{\ctx}{t} = (\bar{\rho} - 1) \ctx + \bar{\tcmbeta} \ctxin\,\text{.}
+\end{equation}
+This equation is easily implemented with a neural integrator for a constant $\bar{\theta}$ and $\bar{\tcmbeta}$.
+However, there is no limit on the integration of $\ctxin$ anymore so that the proportion of $\ctxin$ added into $\ctx$ can exceed $\tcmbeta$.
+To add at most $\tcmbeta \ctxin$ to the context $\ctx$, we can gate the input to the integrator and add a network computing the dot product between $\ctx$ and $\ctxin$.
+After thresholding it at $\tcmbeta$, it can be used to suppress the input by inhibiting the gate (see \cref{fig:ctx-bounded-integrator}).
+Furthermore, in the original TCM $\ctx$ was kept at unit length while the integration has no such bound.
+To keep the unit length, we can project $\ctx$ to another population $\ctx_{\downarrow}$ which projects back to the integrator with a transform of $\zeta = -0.1$.
+Picking a $\zeta$ closer to zero will allow the $\vc c$ vector exceed unit length by a larger amount while the integrator receives input and will increase the time required to settle back to unit length, whereas a large magnitude of $\zeta$ can lead to oscillatory behaviour.
+The $\ctx_{\downarrow}$ population needs to be controlled to only provide the inhibitory input to the integrator as long as $\lVert\ctx\rVert > 1$.
+This is achieved by decoding the length of $\vc c$ from the integrator and thresholding it at $1$.
+As long as the threshold is not exceeded $\ctx_{\downarrow}$ will be inhibited.
+\begin{figure}
+    \centering
+    \begin{tikzpicture}[nef]
+        \graph {
+            in/\ctxin [ext] -!- {
+                gate/ [ea] -> ["$\bar{\tcmbeta}$"] integrator/\ctx [ea] -> out/ [ext],
+                threshold/ [rect] -!- downscale/$\ctx_{\downarrow}$ [ea] -!- length/ [rect],
+                dot [net]
+            },
+            in -> gate,
+            in -> dot -> threshold -> [inhibit, "$\Heavi(x - \tcmbeta)$" {rotate=90}] gate,
+            integrator -> dot,
+            integrator -> [recurrent, "$\bar{\rho}$" above] integrator,
+            integrator -> [bend right] downscale -> [bend right, "$\zeta$" {below, rotate=270}] integrator,
+            integrator -> ["$1 - \norm{\ctx}$" {anchor=south west}] length -> [inhibit] downscale
+        };
+    \end{tikzpicture}
+    \caption{Bounded integrator network}\label{fig:ctx-bounded-integrator}
+\end{figure}
+
+To investigate the behaviour of the network, I fed it with new context vectors $\ctxin$ at at rate of one vector per second.
+This vectors were either orthogonal or had a cosine similarity of \num{0.6} between successive pairs.
+\Cref{fig:bounded-integrator} shows the mean similarity of the context vector to itself with given time lag.
+For (almost) orthogonal vectors $\ctxin$, the similarity between the context vectors is close under the target.
+For non-orthogonal vectors with $\langle\ctxin_i, \ctxin_{i+1}\rangle \approx 0.6$, however, the similarity of the context vectors is by far larger than the target.
+This can be attributed to stopping the updating once the effective $\tcmbeta$ reaches $\tcmbeta$ even though in the case of similar input vectors this is not sufficient.
+Note that it is not sufficient to simply adjust $\tcmbeta$ as depending on the similarity of the inputs it needs to either be incremented or decremented.
+\begin{figure}
+    \centering
+    \includegraphics{figures/context-analysis/bounded-integrator}
+    \caption[Decay in context similarity with the bounded integrator network]{
+        Decay in context similarity with the bounded integrator network given almost orthogonal inputs and inputs with a similarity of approximately \num{0.6}.
+        The desired similarity is given by the gray line. Shaded regions indicate \SI{95}{\percent} confidence intervals.}\label{fig:bounded-integrator}
+\end{figure}
+
+\subsection{Alternating update of two memories}
+With a single integrator we have to rely on the dot product between the input vector and current context as a measure of $\tcmbeta$.
+This dot product will be biased in different directions if the input vectors have differing similarities.
+To circumvent this we need to use to gated memory populations that are updated in alternating fashion.
+Then the output of the old context and input vector can be combined according to $\theta \ctx + \tcmbeta \ctxin$ and fed into to the memory buffer for the current context.
+The completion of that memory update can be detected by the dot product of the updated context and the current context crossing a threshold of one.
+Such a network is shown in \cref{fig:ctx-alt-update}.
+\begin{figure}
+    \centering
+    \begin{tikzpicture}[nef, x=2cm, y=2cm]
+        \graph [no placement] {
+            in/\ctxin [ext, at={(0,0)}] -> ["$\tcmbeta$"] new/ [pnode, at={(1,0)}] -> cgate/ [ea, at={(2, 1)}] -> current/\ctx [ea, at={(3, 1)}] -> oldgate/ [ea, at={(3, -1)}] -> old/$\ctx'$ [ea, at={(2, -1)}] -> ["$\rho$"] new,
+            current -> [bend right, "$-1$"] cgate,
+            new -> [out=0, in=225] dot [net, at={(4, 1)}], current -> dot [net],
+            dot -> rectification/ [rect, at={(4.5, 0.5)}] -> ["$\Heavi(x)$" anchor=west] heavi/ [pnode, at={(4.5, -0.5)}] -> [inhibit, bend left] cgate,
+            heavi -> [inhibit] invert/ [ens, at={(4, -1)}] -> [inhibit] oldgate,
+            bias/"$1$" [ext, at={(4.5, -1)}] -> invert,
+            old -> [bend right, "$-1$" below] oldgate
+        };
+    \end{tikzpicture}
+    \caption{Alternating update of memory buffers}\label{fig:ctx-alt-update}
+\end{figure}
+
+Unfortunately, this still does not work for non-orthogonal input vectors (\cref{fig:amb}).
+In that case the dot product of the updated context and current context will already be quite high and the updated context is not completely loaded into the current memory buffer.
+\begin{figure}
+    \centering
+    \includegraphics{figures/context-analysis/amb}
+    \caption[Decay in context similarity with the alternating update of two memories]{
+        Decay in context similarity with the alternating update of two memories given almost orthogonal inputs and inputs with a similarity of approximately \num{0.6}.
+        The desired similarity is given by the gray line. Shaded regions indicate \SI{95}{\percent} confidence intervals.}\label{fig:amb}
+\end{figure}
+
+
+\subsection{Externally controlled alternating memory buffers}
+All approaches to determine required context updates based on vector similarity will fail because the similarity of $\ctxin_i$ and $\ctx_{i-1}$ is not known beforehand and can vary widely depending on what contexts are recalled.
+Thus, for a properly working context update in the TCM model, the update process has to be controlled by an external control signal (see \cref{sec:control}).
+If we take the alternating memory buffer network, it works for both orthogonal and similar input vectors.
+\begin{figure}
+    \centering
+    \begin{tikzpicture}[nef, x=2cm, y=2cm]
+        \graph [no placement] {
+            in/\ctxin [ext, at={(0,0.5)}] -> ["$\tcmbeta$"] new/ [pnode, at={(1,0.5)}] -> cgate/ [ea, at={(2, 1)}] -> current/\ctx [ea, at={(3,1)}] -> oldgate/ [ea, at={(3, -1)}] -> old/$\ctx'$ [ea, at={(2, -1)}] -> ["$\rho$" {very near start, below}] new,
+            current -> [bend right, "$-1$"] cgate,
+            TODO [ext, at={(0,-.5)}] -> ctrl/ [pnode, at={(1,-.5)}] -> [inhibit] cgate,
+            ctrl -> ["$-1$" near end] invert/ [pnode, at={(2.5, -0.5)}] -> [inhibit] oldgate,
+            bias/$1$ [ext, at={(2.5, 0)}] -> invert,
+            old -> [bend right, "$-1$" below] oldgate
+        };
+    \end{tikzpicture}
+    \caption{Alternating update of memory buffers with external control}\label{fig:ctx-ext-ctrl}
+\end{figure}
+\begin{figure}
+    \centering
+    \includegraphics{figures/context-analysis/ext-amb}
+    \caption[Decay in context similarity with the alternating update of two memories and external control]{
+        Decay in context similarity with the alternating update of two memories and external control given almost orthogonal inputs and inputs with a similarity of approximately \num{0.6}.
+        The desired similarity is given by the gray line. Shaded regions indicate \SI{95}{\percent} confidence intervals.}\label{fig:ext-amb}
+\end{figure}
+
+This leads to a number of predictions.
+First, the update of the context signal is not directly regulated by the input, but externally controlled.
+Second, there are neural populations that will start representing the current context in succession.
