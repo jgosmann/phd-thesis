@@ -3,14 +3,14 @@
 The TCM requires two association matrices, $\mtf$ and $\mft$, to be updated.
 To translate this into neurons, an appropriate learning rule, the association matrix learning rule (AML), has to be derived.
 The TCM gives the update of such an association matrix as
-\begin{eqnarray}
+\begin{align}
     \mat M_{i+1} &= \mat M_i + \Delta \mat M_i \\
     \Delta \mat M_i &= \vc v_i \vc u_i\Tr
-\end{eqnarray}
+\end{align}
 for adding an association from $\vc u_i$ to $\vc v_i$.
 The association matrix after $n$ updates can be expressed as
 \begin{equation}
-    \mat M_n = M_0 + \sum_{i=1}^{n} \Delta \mat M_i = M_0 + \sum_{i=1}^n \vc v_i \vc u_i\Tr \text{.}
+    \mat M_n = \mat M_0 + \sum_{i=1}^{n} \Delta \mat M_i = \mat M_0 + \sum_{i=1}^n \vc v_i \vc u_i\Tr \text{.}
 \end{equation}
 This allows us to express the neural connection weights after learning $n$ associations as
 \begin{equation}
@@ -21,14 +21,15 @@ This equation gives us some important information on how the learning of such as
 First, preexisting weights can be implemented as a transform on a normal neural connection that is kept constant.
 Second, all the weight changes can be collapsed into decoder changes.
 Thus, we need the AML to implement the decoder change given by
-\begin{equation}
-    \Delta \tilde{\mdec} = \vc v_i \vc u_i\Tr \mdec
-\end{equation}
+\begin{align}
+    \tilde{\mdec}_{i+1} &= \tilde{\mdec}_i + \Delta \tilde{\mdec}_i \\
+    \Delta \tilde{\mdec}_i &= \vc v_i \vc u_i\Tr \mdec
+\end{align}
 where $\tilde{\mdec}$ is the matrix of learned decoders.
 
 To implement this within a neural network, the discrete equation has to be converted into continuous form:
 \begin{equation}
-    \od{\tilde{\mat D}}{t} = \eta \vc v(t) \vc u(t)\Tr \mat D \label{eqn:aml}
+    \od{\tilde{\mat D}}{t} = \eta \vc v(t) \vc u(t)\!\Tr \mat D \label{eqn:aml}
 \end{equation}
 with learning rate $\eta$.
 Note that while in the discrete formulation all associations are added in with the same strength, in the continuous formulation the associative strength depends on the learning rate and presentation time.
@@ -40,9 +41,9 @@ In the following these different ways are discussed.
 
 \section{Explicit calculation of weight change}
 Both the cue $\vc u(t)$ and target $\vc v(t)$ are available as neural signals.
-That allows to implement the calculation of the outer product $\vc v(t) \vc u(t)\Tr$ in a set of neural ensembles.
-The multiplication of each pair of scalars can be accurately implemented in spiking neurons as demonstrated in TODO ref.
-Those ensembles can than be connected up to modulate the synaptic strengths from the pre to the post populations (see \cref{fig:aml-explicit}) by forming the transpose of the outer product, applying a transform of $\mdec\Tr$, and transposing back.
+That allows to implement the calculation of the outer product $\vc v(t) \vc u(t)\!\Tr$ in a set of neural ensembles.
+The multiplication of each pair of scalars can be accurately implemented in spiking neurons as demonstrated by \textcite{gosmann2015-1}.
+Those ensembles can than be connected up to modulate the synaptic strengths from the pre to the post populations (see \cref{fig:aml-explicit}) by forming the transpose of the outer product, applying a transform of $\mdec\Tr\!$, and transposing back.
 \begin{figure}
     \centering
     \begin{tikzpicture}[nef]
@@ -55,26 +56,26 @@ Those ensembles can than be connected up to modulate the synaptic strengths from
             uv -> [modulatory, "$\mdec\Tr$" right] mod,
         };
     \end{tikzpicture}
-    \caption{TODO explicit calculation of weight change}\label{fig:aml-explicit}
+    \caption{Explicit neural calculation of the AML weight change}\label{fig:aml-explicit}
 \end{figure}
 
 It might be surprising that the change in the connection weights between the pre and post ensemble does not depend on their own activity, but is controlled externally.
-While this is different from many other common learning rules, there is some evidence of such learning in the brain (? TODO references).
+While this is different from many other common learning rules, there is evidence of such learning in the brain and specifically the hippocampus \parencite{huilme2014,rebola2017,uchida2012}.
 Furthermore, this learning rule requires some preexisting structure and connection weights to calculate the signal for the weight modulation.
-But as in most NEF models do not give a developmental account of how such structures come about, I put this question aside and leave it at something that has to be answered in the future and concerns any type of NEF model, not just this learning rule.
+But as most NEF models do not give a developmental account of how such structures come about, I put this question aside and leave it at something that has to be answered in the future and concerns any type of NEF model, not just this learning rule.
 However, there is one thing that can be criticized as being biologically implausible: the connections from the outer product calculation depend on the decoders of the pre population.
-It is not clear how the pre population could transmit this information to this other place.
+It is not clear how the pre-population could transmit this information to this other place.
 
 A similar problem of biological plausibility occurs in classical neural networks and deep learning with back propagation where the weights for the transmission of the error signal need to be symmetric to the forward weights.
 Recently, this concern of biological plausibility in deep learning has been slightly alleviated that the weight symmetry is not strictly required.
-It is possible for the network to adjust it forward weights to account for existing, non-symmetric backward weights, a process known as feedback alignment (TODO refs.)
+It is possible for the network to adjust it forward weights to account for existing, non-symmetric backward weights, a process known as feedback alignment \parencite{lillicrap2016}.
 Unfortunately, it is not clear whether this can be applied to the situation here.
 
 
 \section{Explicit calculation of weight change without weight symmetry}
 By reformulating $\vc v(t) \vc u(t)\Tr \mdec$ as $\vc v(t)[\mdec\Tr \vc u(t)]\Tr$ it is possible to implement the learning rule without the need for a connection to be based on decoders of a neural ensemble it is not related to.
 Again there is a set of neural ensembles calculating an outer product (see \cref{fig:aml-explicit-no-sym}).
-But in contrast to the previous approach, if the pre ensemble is also used as the cue input $\vc u(t)$, the transform $\mdec\Tr$ applied to $\vc u(t)$ is based on that ensemble's encoders decoding $\vc u(t)$.
+But in contrast to the previous approach, if the pre-ensemble is also used as the cue input $\vc u(t)$, the transform $\mdec\Tr$ applied to $\vc u(t)$ is based on that ensemble's encoders decoding $\vc u(t)$.
 The transform could even be rolled into the decoder matrix
 \begin{equation}
     \mdec_{*} = \mdec\Tr \mdec \text{.}
@@ -85,7 +86,7 @@ As we generally assume in the context of the NEF that there is some mechanism in
     \begin{tikzpicture}[nef]
         \graph[no placement] {
             v/$\vc v$ [ext, at={(2, 0)}],
-            uv/$\vc v (\mdec\Tr \vc u)\Tr$ [net, at={(1, -1)}],
+            uv/$\vc v (\mdec\Tr \vc u)\!\Tr$ [net, at={(1, -1)}],
             v -> uv,
             pre [ens, at={(-1, -3)}, minimum size=30] -- mod/"" [minimum size=0, inner sep=0, at={(1, -3)}] -> post [ens, at={(3, -3)}, minimum size=30],
             pre -> ["$\mdec\Tr$"] uv,
@@ -93,10 +94,10 @@ As we generally assume in the context of the NEF that there is some mechanism in
             u/$\vc u$ [ext, at={(-3, -3)}] -> pre,
         };
     \end{tikzpicture}
-    \caption{TODO explicit calculation of weight change, no weigh symmetry}\label{fig:aml-explicit-no-sym}
+    \caption{Explicit neural calculation of the AML weight change avoiding weight symmetry}\label{fig:aml-explicit-no-sym}
 \end{figure}
 
-However, there it is not possible (? TODO too strong?) to state the function to obtain the decoders $\mdec_*$ because they depend the default decoders.
+However, there it is not possible to state the function to obtain the decoders $\mdec_*$ because the function itself depends on the encoding by the neurons.
 Moreover, $\mdec_*$ is a symmetric matrix which is a constrained not respected by the normal decoder optimization process.
 But in the context of the NEF, it can be assumed that the neural network can decode the identity function, i.e.\ there is a connection with decoders $\mdec$.
 This can be used to learn a connection with decoders $\mdec_*$.
@@ -107,37 +108,33 @@ Given the vector of neural activities $\vc \act$ at time $t$, we have $\vc x = \
 \end{equation}
 This gives us an error expression as
 \begin{equation}
-    \err(\vc\act) = \abs{\vc x\Tr \vc x - \vc\act\Tr \mdec_* \vc\act}^2 \overset{!}{=} 0
+    \err(\vc\act) = \left\lvert\vc x\Tr \vc x - \vc\act\Tr \mdec_* \vc\act\right\rvert^2 \overset{!}{=} 0
 \end{equation}
 with the gradient defined as
 \begin{equation}
-    \od{\err(\vc\act)}{\mdec_*} = 2 \del{\vc\act\Tr \mdec_* \vc\act - \vc x\Tr \vc x} \del{\vc\act \vc\act\Tr} \text{.}
+    \pd{\err^2(\vc\act)}{\mdec_*} = 2 \del{\vc\act\Tr \mdec_* \vc\act - \vc x\Tr \vc x} \del{\vc\act \vc\act\Tr} \text{.}
 \end{equation}
 The gradient can be used for a weight update rule
 \begin{equation}
-    \od{\mdec_*}{t} = -\eta_* \od{E(\vc\act)}{\mdec_*}
+    \od{\mdec_*}{t} = -\eta_* \pd{\err^2(\vc\act)}{\mdec_*}
 \end{equation}
 in a (spiking) neural network to perform stochastic gradient descent.
-This is demonstrated in \crefrange{aml:weights}{aml:grad-decode} where this learning rule was applied to a connection and the pre-synaptic ensemble was fed with randomly varying vector signal.
-The vector was generated from bandwidth limited Gaussian white noise (upper limit TODO) for each component, normalized, and then multiplied by a bandwidth limited white noise scalar.
-TODO more details/description of results.
+
+To demonstrate that this learning rule allows to learn the desired symmetric matrix, it was applied to a connection where the pre-synaptic ensemble was fed with randomly varying vector signal.
+The vector was generated from bandwidth limited Gaussian white noise (upper limit \SI{40}{\hertz}) for each component, normalized, and then multiplied by a bandwidth limited white noise scalar.
+The learning rate was set to $\eta_* = \SI{1e-13}{\second^{-1}}$.
+We can see that the Frobenius norm of the difference between the learned matrix $\mdec_*$ and the desired matrix $\mdec\Tr\mdec$ continuously decreases (\cref{fig:aml:grad-err}).
+The decoded output for some dimensions quickly aligns with the target output (\cref{fig:aml:grad-decode}), but does not happen for all dimensions.
+This might be due to the random input not sufficiently covering the representational space.
 \begin{figure}
     \centering
-    \includegraphics[scale=0.5]{figures/aml-grad-err}
-    \caption{TODO Error}\label{aml:grad-err}
+    \includegraphics{figures/aml-grad-err}
+    \caption{Error $\lVert \mdec\Tr\mdec - \mdec_*\rVert$}\label{fig:aml:grad-err}
 \end{figure}
 \begin{figure}
     \centering
-    \includegraphics[scale=0.4]{figures/aml-target-weights}
-    \includegraphics[scale=0.4]{figures/aml-learned-weights}
-    \includegraphics[scale=0.4]{figures/aml-weight-diff}
-    \caption{TODO left to right: target weights, learned weights, difference}\label{aml:weights}
-\end{figure}
-\begin{figure}
-    \centering
-    \includegraphics[scale=0.6]{figures/aml-matching-decode}
-    \includegraphics[scale=0.6]{figures/aml-nonmatching-decode}
-    \caption{TODO two output dimensions over time (matching and non-matching)}\label{aml:grad-decode}
+    \includegraphics{figures/aml-decode}
+    \caption[Example of two outputs decoded with the symmetric weights being learned]{Example of two outputs decoded with the symmetric weights being learned. The output dimensions on the left quickly aligns with the target, while this does not happen for the output dimension on the right within the shown time frame.}\label{fig:aml:grad-decode}
 \end{figure}
 
 Again, the pure derivation of a learning rule does not ensure its biological plausibility.
@@ -147,33 +144,40 @@ The decoded value is then correlated with the ensemble's activity.
 The plausibility of this is somewhat unclear, but to my knowledge there is no data excluding this possibility.
 In particular, the decoded value and activities could be projected to another neural ensembles (see \cref{fig:aml-grad-desc}) that calculates the inner product.
 The same, a projection to neural ensemble calculating the inner product, could happen with the decoded value $\vc x$.
-The existence of these standard decoders can be assumed as generally done in the NEF\@.
+The existence of these standard decoders is generally assumed in the NEF\@.
 Alternatively, $\vc x\Tr \vc x$ could directly be decoded (as a square of the individual components all projecting into the same dimension).
+\Cref{fig:aml:neural-grad-err} shows the development of the error when learning $\mdec_*$ with such a neural gradient computations.
+The observed decrease demonstrates the basic viability of this approach, but the learning is slower due to the spiking noise.
 \begin{figure}
     \centering
     \begin{tikzpicture}[nef]
         \graph[no placement] {
-            pre [ens, at={(0, 0)}, minimum size=30] -- mod/"" [inner sep=0, minimum size=0, at={(1.5, 0)}] -> post [ens, at={(3, 0)}, minimum size=30],
+            pre [ens, at={(0, 0)}, minimum size=30] -- mod/"" [inner sep=0, minimum size=0, at={(2.5, 0)}] -> post [ens, at={(4, 0)}, minimum size=30],
             pre -> [bend left] act/"$\vc\act\Tr \mdec_* \vc\act$" [net, at={(0, 3)}],
-            pre -> [bend right, "$\mdec_*$"] act,
-            pre -> targetact/"$\vc x\Tr \vc x$" [net, at={(2, 3)}],
-            act -> combine/"" [pnode, at={(1.5, 1)}],
-            targetact -> ["-1"] combine,
-            combine -> [modulatory] mod,
+            pre -> [bend right, "$\mdec_*$" xshift=-3mm] act,
+            pre -> targetact/"$\vc x\Tr \vc x$" [net, at={(1.5, 1.5)}],
+            act -> combine/"" [pnode, at={(3, 3)}],
+            targetact -> ["$-1$"] combine,
+            combine -> [modulatory, out=270, in=90] mod,
         };
     \end{tikzpicture}
-    \caption{TODO}\label{fig:aml-grad-desc}
+    \caption{Neural computation of the error signal necessary for learning symmetric decoders with gradient descent}\label{fig:aml-grad-desc}
+\end{figure}
+\begin{figure}
+    \centering
+    \includegraphics{figures/aml-neural-grad-err}
+    \caption{Error $\lVert \mdec\Tr\mdec - \mdec_*\rVert$ with neural gradient calculation}\label{fig:aml:neural-grad-err}
 \end{figure}
 
-The whole term $(\vc\act\Tr \mdec_* \vc\act - \vc x\Tr \vc x)$ is a scalar that influence all synapses.
+
+The whole term $\vc\act\Tr \mdec_* \vc\act - \vc x\Tr \vc x$ is a scalar that influence all synapses.
 This could be realized by a broadly acting neuro-modulator or by extensive connectivity of the neural ensembles calculating this error term.
 Neither option is implausible.
 The role of this gradient term seems to play a role weight normalization as it acts equally on all weights and the magnitude depends on the magnitude of the values of $\mdec_*$.
 Also, without it all weight changes would always be negative.
-Note that in many learning rules (TODO example) normalization factors are often criticized as implausible for requiring knowledge of the whole weight matrix at the level of a single synapse.
+Note that in many learning rules normalization factors are often criticized as implausible for requiring knowledge of the whole weight matrix at the level of a single synapse.
 This critique does not apply to this learning rule.
 The decoding matrix is only used to decode from the activities which require only local knowledge of the weights.
-Furthermore, even considering this gradient term as implausible, there might be other ways in which the brain achieves a weight balance (TODO refs).
 
 Finally, the term $\vc\act \vc\act\Tr$ correlates neuron activities and appears somewhat Hebbian-like.
 Hebbian learning is one of the best studied ways biological systems learn.
@@ -185,18 +189,19 @@ Again, the biological plausibility of this is somewhat uncertain, but cannot be 
 \section{Implicit error calculation}
 The previous two implementations of the AML use minimal assumptions about the computational power of synapses.
 All that is needed are additive weight changes proportional to some error signal.
-However, it is not uncommon to assume that non-linearities in the synapses allow for multiplication (TODO ref).
-That allows to roll the explicit outer product required in the previous two approaches into the synapses itself.
+However, it has been proposed that synapses could not simply transmit information, but also perform computations \parencite{abbott2004}.
+In particular, \textcite{andreasstockel2018} showed that conductance-based synapses can be used in the NEF to compute nonlinear functions like mulitplication.
+That should allow to roll the explicit outer product required in the previous two approaches into the synapses itself.
 This requires the considerably less neurons as no neural populations are required for each product.
 
-In this thesis, I am using an implementation that corresponds to this implicit error calculation.
+In this thesis, I am using an implementation that corresponds to this implicit error calculation, but implements the required synaptic computation in pure math rather than implementing it with actual synaptic models.
 This is mainly to reduce simulation times and is not meant as a statement that this is likely to correspond to the brain's implementation as there is not enough evidence to make such a strong claim.
 
 
 \section{Normative interpretation}
 While the AML cannot be outright rejected as biologically implausible, there are definitely some open questions concerning it.
 Nevertheless, it should not be evaluated purely on this fact.
-Many models in cognitive science, psychology, and computational neuroscience (TODO refs) assume the encoding of associations in an outer product matrix.
+Many models in cognitive science, psychology, and computational neuroscience assume the encoding of associations in an outer product matrix \parencite[e.g.,][]{kajic2017,nowak2001}.
 Ultimately, the validity of all those models depends on the possibility that the brain can learn such a matrix.
 As such, the AML makes it explicit which operations have to be implemented to enable such learning.
 If these turn out as either not being implemented in the brain or as not being implementable at all, it would follow that the brain has to use some other mechanism to represent associations.
@@ -214,8 +219,15 @@ Hence, it might be possible that the hippocampus learns associations with a form
 
 \section{Properties of the AML}
 So far the considerations about the AML were purely theoretical.
-Figure TODO demonstrates that an implementation of the AML can indeed learn associations in a spiking neural network.
-TODO more description results
+\Cref{fig:aml} demonstrates that an implementation of the AML can indeed learn associations in a spiking neural network.
+Five different cue-target pairs were presented for one second each before testing the recall with the same cues, but no target vectors.
+The initially presented target vectors are almost perfectly recalled.
+Note that no catastrophic forgetting occurred and each association was learned with a single presentation of the cue-target pair (one-shot learning).
+\begin{figure}
+    \centering
+    \includegraphics{figures/aml}
+    \caption[Learning and recall testing of five cue-target pairs with the AML]{Learning and recall testing of five cue-target pairs with the AML\@. Each colored trace is the dot product with one of the vectors used.}\label{fig:aml}
+\end{figure}
 
 It is worth highlighting, that this learning rule allows one-shot learning, i.e.\ a single presentation of an association allows to recall it perfectly even after several other associations have been learned.
 Most other learning rules exhibit destructive interference between the items in this scenario.
