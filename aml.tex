@@ -226,12 +226,12 @@ Note that no catastrophic forgetting occurred and each association was learned w
 \begin{figure}
     \centering
     \includegraphics{figures/aml}
-    \caption[Learning and recall testing of five cue-target pairs with the AML]{Learning and recall testing of five cue-target pairs with the AML\@. Each colored trace is the dot product with one of the vectors used.}\label{fig:aml}
+    \caption[Learning and recall testing of five cue-target pairs with the AML and PES]{Learning and recall testing of five cue-target pairs with the AML and PES\@. Each colored trace is the dot product with one of the vectors used. The cue vectors $\vc u(t)$ and target vectors $\vc v(t)$ differ.}\label{fig:aml}
 \end{figure}
 
 It is worth highlighting, that this learning rule allows one-shot learning, i.e.\ a single presentation of an association allows to recall it perfectly even after several other associations have been learned.
 Most other learning rules exhibit destructive interference between the items in this scenario.
-As an example, Figure TODO shows the same experiment using the Prescribed Error Sensitivity (PES) learning rule \parencite{bekolay2013} which is commonly used in NEF models \parencite[e.g.,][]{komer2015,Rasmussen2017}.
+As an example, \cref{fig:aml} shows the same experiment also using the Prescribed Error Sensitivity (PES) learning rule \parencite{bekolay2013} which is commonly used in NEF models \parencite[e.g.,][]{komer2015,Rasmussen2017}.
 Here all associations except for the last get destroyed.
 It is still possible to learn associations with PES, but it requires to present each item multiple times in interleaved fashion, i.e.\ one-shot learning cannot be done to learn associations in a reliable way.
 
@@ -252,6 +252,14 @@ The learning rule is restricted to learn transformations that can be expressed a
 Moreover, the learning rule is essentially trying to learn a look-up table, mapping items to other items.
 Thus, one should not expect the AML to generalize to unseen mappings.
 
+This might be another reason, besides the stability-plasticity dilemma, why a two-stage memory system is needed.
+The first stage would learn simple associations with the AML and only in the second step of consolidation with a different learning rule, commonalities get extracted for generalization.
+This is consistent with data that shows that generalization improves with sleep.
+For example, sleep improves transitive inference improves \parencite{stickgold2013-2} and gives insight into implicit rules \parencite{wagner2004}.
+Experience replay in hippocampus might be responsible for the necessary interleaving of memory traces when using a learning rule that allows for more generalization, but exhibits destructive interference such as PES \parencite{kumaran2016}.
+Overall, it is likely that AML only represents a first step in the association learning process and multiple learning rules are at play here.
+That the brain uses no a single general purpose learning rule, but combines different learning rules was also argued by \textcite{gallistel2009}.
+
 
 \section{AML accounts for neural changes during association learning}
 \Textcite{ison2015} reported that individual neurons in hippocampus (and parahippocampal cortex) change their firing rapidly to encode newly learned associations.
@@ -260,32 +268,64 @@ They identified neurons that responded to specific visual stimuli of pictures of
 Then the participants learned associations between pairs of a person and a landmark.
 Besides multiple tasks to assess the learning, the neuron responses to the different stimuli were recorded again after learning.
 
-Pair-coding units could be identified that showed an elevated firing rate only to the preferred stimulus before learning (BL), and after learning (AL) an elevated firing rate only to the preferred and associated stimuli.
-
+Pair-coding units could be identified that showed an elevated firing rate only to the preferred stimulus before learning (BL), and after learning (AL) an elevated firing rate only to the preferred and associated non-preferred stimulus.
+This can also be observed qualitatively for associations learned with the AML\@.
+\Cref{fig:aml-net} shows a NEF network that implements the learning of associations between persons and landmarks to reproduce the experiment by \textcite{ison2015}.
+The connections weights from both pre-ensembles $\vc l$ and $\vc p$ are initialized with the identity transform.
+To achieve firing rates closer to the recorded data, the maximum firing rates of the ensembles were sampled uniformly for \SIrange{10}{20}{\second^{-1}} and intercepts were sampled uniformly from \numrange{0.3}{1}.
+The dimensionality of the ensembles and semantic pointers was set to \num{32}.
 \begin{figure}
     \centering
-    \includegraphics{figures/aml-population-response}
-    \caption{TODO}\label{fig:aml-population-response}
+    \begin{tikzpicture}[nef]
+        \graph [no placement] {
+            landmark [x=-2, y=0, ext] -> L/"$\vc l$" [x=0, y=0, ens] -- c1/"" [inner sep=0, minimum size=0, x=2, y=-0.5] -> post [x=4, y=-1, ens];
+            person [x=-2, y=-2, ext] -> P/"$\vc p$" [x=0, y=-2, ens] -- c2/"" [inner sep=0, minimum size=0, x=2, y=-1.5] -> post;
+            L -> err/"" [x=1, y=-1, pnode] -> [bend right, modulatory] c1;
+            P -> err -> [bend left, modulatory] c2;
+            post -> output/"" [x=6, y=-1, ext];
+        };
+    \end{tikzpicture}
+    \caption{NEF network for associating two stimuli (persons with landmarks here) with the AML}\label{fig:aml-net}
+\end{figure}
+
+This NEF network is isolated and does not have random unrelated background firing as occurred in the original experiment.
+Thus, it is not necessary to run multiple trials to pick out the actual firing rate change from the background noise.
+Any change in firing rate is caused deterministically by the inputs.
+Based on this, visually active units were defined as neurons that had a firing rate of more than \SI{2}{\second^{-1}} for the preferred stimulus and less than \SI{2}{\second^{-1}} for all other stimuli.
+The cutoff value corresponds to the value used in analysis of the data recorded from the human subjects.
+
+The main results obtained from the experimental and model data are shown in \crefrange{fig:aml-spikes}{fig:aml-population-response}.
+Based on the selection criteria for pairwise coding units, they show increased firing for the preferred stimulus, but no other stimuli.
+The response to the preferred stimulus stays about the same after learning, but is increased for the non-preferred stimulus.
+The response to non-associated stimuli, i.e.\ non-preferred stimuli that are not associated to the preferred stimulus, did not show a significant change in the experimentally recorded data.
+For the model data, no increase in firing in response to the stimulus is observed, but in contrast to the experimental data a general increase in firing rate is observed.
+This might be caused by a mechanism normalizing the synaptic weights or neural firing rates that is not modelled with the pure AML\@.
+Approaches to weight normalization are further discussed in the next section.
+Apart from that, AML qualitatively reproduces the experimentally observed data.
+A better quantitative fit might be achievable with more careful parameter selection in the model.
+\begin{figure}
+    \centering
+    \subcaptionbox{Experimental data}{\includegraphics[width=10cm]{figures/ison2015-spikes}}
+
+    \vspace*{0.5cm}
+    \subcaptionbox{Model data}{\includegraphics{figures/aml-spikes}}
+    \caption[Change in spiking behaviour when learning associations]{Change in spiking behaviour when learning associations. (a) Exemplary spikes recorded from human hippocampus for the preferred (P) and non-preferred (NP) stimulus. Task 1 (blue) is before, task 2 (red) after learning the P-NP association. The black line marks the stimulus onset. Figure adopted from \textcite{ison2015} under the Creative Commons Attribution 4.0 International license. (b) Spikes recorded from the NEF model learning the P-NP association with the AML\@.}\label{fig:aml-spikes}
 \end{figure}
 \begin{figure}
     \centering
-    \includegraphics{figures/aml-spikes}
-    \caption{TODO}\label{fig:aml-spikes}
+    \subcaptionbox{Experimental data}{\includegraphics[width=12cm]{figures/ison2015-pop}}
+
+    \vspace*{.75cm}
+    \subcaptionbox{Model data}{\includegraphics{figures/aml-population-response}}
+    \caption[Population response for pair-coding units]{Population response for pair-coding units to the preferred (P), non-preferred (NP), and non-associated (NA) stimuli before and after learning. Times are relative to stimulus onset. Shaded regions indicate the standard error of mean. (a) Normalized population activity from experimental data. Adopted from \textcite{ison2015} under the Creative Commons Attribution 4.0 International license. (b) Mean firing rates from model data.}\label{fig:aml-population-response}
 \end{figure}
 
 
 \section{Weight normalization}
 Note that the AML allows weights to grow without bound.
-By introducing a factor of $1 - \vc v(t)\Tr \hat{\vc v}(t)$ this can be prevented, but similar to other weight normalizations it introduces the need for each weight to have access to the global population activity and weights as $\hat{\vc v}(t) = \tilde{\mdec} \vc\act_{\vc u}(t)$.
+By introducing a factor of $1 - \vc v(t)\!\Tr \hat{\vc v}(t)$ this can be prevented where $\hat{\vc v}(t)$ is the retrieved, learned association.
+But similar to other weight normalizations it introduces the need for each weight to have access to the global population activity and weights as $\hat{\vc v}(t) = \tilde{\mdec} \vc\act_{\vc u}(t)$.
 Such global dependencies are ofter criticized for not being biological plausible.
 As such, I decided to take a slightly different approach with an equivalent effect.
 Instead of including the dot product $\vc v(t)\Tr \hat{\vc v}(t)$ in the learning rule, it can be computed by another neural population and the result can be used to inhibit the population providing $\vc v$.
-Once fully inhibited $\vc\act_{\vc v}(t)$ will be all-zero and thus prevent further weight changes.
-
-
-Things to mention:
-\begin{itemize}
-    \item Different learning rules for different things seem plausible. For example, motor learning requires many repetitions (no one-shot learning), but seems to somewhat generalize (and is continuous). So this might be done with something PES like. Fact learning (a form of associations) can be one-shot, but generalizing from multiple facts is a conscious process/does not happen automatically. This might be done with something AML like.
-    \item Maybe that explains the need for consolidation? First, one shot learning that doesn't allow generalization, then in consolidation commonalities get extracted? Replay in sleep/resting might produce the interleaving/multiple presentations required to learn associations with PES\@.
-    \item Gallistel argues there is no general purpose learning rule, which is in line with the more pupose specific learning rules in this chapter
-\end{itemize}
+Once fully inhibited, $\vc\act_{\vc v}(t)$ will be all-zero and thus prevent further weight changes.
