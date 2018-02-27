@@ -80,7 +80,7 @@ An integrator is described by the differential equation
 where $\vc u(t)$ is the external input to the integrator.
 Applying principle 3 of the NEF tells us that the input has to be scaled by the synaptic time constant $\syntau$.
 Furthermore, a recurrent connection feeding the output of the integrator back to itself is needed (\cref{fig:integrator-net}).
-To get a stable representations over a sufficient time window, it is best to use a long time constant like $\tausyn = \SI{0.1}{\second}$ which is the range measured for the NMDA neurotransmitter \parencite{sah1990-1,moreno-bote2005}.
+To get a stable representations over a sufficient time window, it is best to use a long time constant like $\syntau = \SI{0.1}{\second}$ which is the range measured for the NMDA neurotransmitter \parencite{sah1990-1,moreno-bote2005}.
 Due to neural noise and distortion error, the represented value can drift over time (\cref{fig:integrator}).
 The distortion in the decoded representation leads to a finite number of fixed points and the represented value will shift to one of the stable fixed points.
 The neural noise will prevent the representation to stay in an unstable fixed point and can make the representation to move out of the basin of attraction of current stable fixed point.
