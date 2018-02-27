@@ -267,3 +267,55 @@ Here the problem is, that if the IA output for a failed recall is directly used 
 This will not reliably reset the network as the reset signal is disabling itself.
 Thus, the signal will be fed to an integrator until a threshold is reached and then the signal of the integrator is used to provide an inhibitory pulse to the IA network.
 The slower decay of the integrator ensures a sufficient length of the pulse to restart the recall process.
+
+\begin{figure}
+    \centering
+    \begin{tikzpicture}[nef]
+        \graph [no placement] {
+            noise [ext, x=-.5, y=1.5] -> xi/"$x_i$" [ea, x=0, y=0] <-> xib/"$\bar{x}_i$" [ea, x=1.5, y=0];
+            oserectshadow/"" [ea, x=-1.5, y=0.5, inner sep=0.25ex];
+            tcmrectshadow/"" [ea, x=-1.5, y=-0.5, inner sep=0.25ex];
+            OSE [ext, x=-3, y=0.5] -> ["$\mat V$"] oserect/"" [rect, x=-1.5, y=0.5] -> xi;
+            b1/"$-0.1$" [ext, x=-2, y=1.5] -> oserect;
+            TCM [ext, x=-3, y=-0.5] -> ["$\mat V$"] tcmrect/"" [rect, x=-1.5, y=-0.5] -> xi;
+
+            i1/"" [ens, x=3, y=1];
+            xib -> ["$\mat V\Tr$"] g1/"" [ea, x=4, y=0] -> m1/"" [ea, x=5.5, y=0] -> recalled [ext, x=8, y=0];
+            m1 -> [bend right, "$-1$"] g1;
+            m1 -> [recurrent] m1;
+
+            b2/"$1$" [ext, x=3, y=2] -> i1;
+
+            xib -> ["$x_{\ped{null}}$" {very near end, xshift=3mm}] m2/"" [ens, x=2.5, y=-2] -> r2/"" [rect, x=1.5, y=-2] -> [inhibit, "$\Heavi(x - 0.3)$" {fill=white, inner sep=0cm, yshift=-2mm}] xi;
+            r2 -> [recurrent] r2;
+
+            m1 -> g3/"" [ea, x=5.5, y=-2] -> m3/"" [ea, x=5.5, y=-3.5] -> [bend right] dot [net, x=8, y=-2.5] -> gs3/"" [rect, x=6.5, y=-2.5] -> [inhibit] g3;
+            m1 -> [bend left] dot;
+            m3 -> [recurrent] m3;
+            b3/"$-0.5$" [ext, x=6.5, y=-1.5] -> gs3;
+
+            r4shadow/"" [ea, x=0, y=-4.5, inner sep=0.25ex];
+            m3 -> g4/"" [ea, x=3.5, y=-4.5] -> m4/"" [ea, x=2, y=-4.5] -> r4/"" [rect, x=0, y=-4.5] -> ["$-6$" xshift=-3mm, bend left] xi;
+            m4 -> [recurrent] m4;
+            m4 -> ["$-1$", bend left] g4;
+        };
+        \draw [inhibit] (xib) |- node [above] {\small $\sum$} (i1);
+        \draw [-{Latex}] (i1) -| (g1);
+
+        \node (ia) [fit=(xi) (xib), draw, dashed, gray, rounded corners=0.5em, inner sep=0.5em] {};
+        \node [above=0cm of ia.north, anchor=south, gray, font={\lato}] {IA};
+        
+        \node (gm1) [fit={(g1) (m1) (5.5, 0.75)}, draw, dashed, gray, rounded corners=0.5em, inner sep=0.5em] {};
+        \node [above=0cm of gm1.north, anchor=south, gray, font={\lato}] {output};
+
+        \node (freset) [fit=(m2) (r2), draw, dashed, gray, rounded corners=0.5em, inner sep=0.5em] {};
+        \node [below=0cm of freset.south west, anchor=north west, gray, font={\lato}] {failed recall reset};
+
+        \node (stage1) [fit=(g3) (m3) (dot) (gs3) (g3) (b3), draw, dashed, gray, rounded corners=0.5em, inner sep=0.5em] {};
+        \node [below=0cm of stage1.south west, anchor=north west, gray, font={\lato}] {recall inhibition stage 1};
+
+        \node (stage2) [fit={(m4) (g4) (2, -3.75)}, draw, dashed, gray, rounded corners=0.5em, inner sep=0.5em] {};
+        \node [below=0cm of stage2.south west, anchor=north west, gray, font={\lato}] {recall inhibition stage 2};
+    \end{tikzpicture}    
+    \caption{TODO}\label{fig:recall}
+\end{figure}
