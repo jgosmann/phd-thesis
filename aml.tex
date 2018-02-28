@@ -327,5 +327,7 @@ By introducing a factor of $1 - \vc v(t)\!\Tr \hat{\vc v}(t)$ this can be preven
 But similar to other weight normalizations it introduces the need for each weight to have access to the global population activity and weights as $\hat{\vc v}(t) = \tilde{\mdec} \vc\act_{\vc u}(t)$.
 Such global dependencies are ofter criticized for not being biological plausible.
 As such, I decided to take a slightly different approach with an equivalent effect.
-Instead of including the dot product $\vc v(t)\Tr \hat{\vc v}(t)$ in the learning rule, it can be computed by another neural population and the result can be used to inhibit the population providing $\vc v$.
+Instead of including the dot product $\vc v(t)\Tr \hat{\vc v}(t)$ in the learning rule, it can be computed by another neural population and the thresholded result can be used to inhibit the population providing $\vc v$.
 Once fully inhibited, $\vc\act_{\vc v}(t)$ will be all-zero and thus prevent further weight changes.
+In the CUE model, the inhibition threshold is adjusted to follow $1 + \exp(-t)$ for learning the $\mtf$ matrix where $t$ is the time since the trial started.
+This is intended to account for rehearsal effects that are not explicitly modelled and in analogous to the extended TCM model by \textcite{Sederberg2008}.
