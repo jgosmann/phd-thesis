@@ -1,21 +1,99 @@
 \chapter{Discussion}
+In this thesis, I presented the context-unified encoding (CUE) model.
+To my knowledge, it is the first spiking neural network model of human memory that integrates activity-based short-term memory and weight-based long-term memory.
+The same model matches a variety of behavioural data from serial and free recall experiments, but in contrast to previous models provides a neural mechanistic explanation.
+
+The CUE model exhibits many of the hallmark findings in memory research.
+It shows the primacy and recency effect in immediate serial and free recall.
+These effects get attenuated in delayed free recall, but in continuous distractor free recall the recency effect reappears.
+Furthermore, the model was found to make very view transposition errors in serial recall and if it does so nearby items will be transposed.
+In the free recall conditions, the model tends to start with items at the end of the list, recall nearby items together, and favour recall in forward direction.
+Introducing delays and distractors attenuates these effects.
+All of this matches the findings from experiments with human subjects.
+
+Not only the qualitative effects are reproduced, but also the quantitative match to the data is good.
+Only very few significant differences close to the number of differences expected by chance were found.
+One of these differences is worth to be considered in more detail: the model predicts a too strong forward bias in delayed free recall with both the lag \num{1} and \num{2} values of the CRP curve being significantly above the experimentally found values.
+Interestingly, this is also highlighted as the least well matched aspect in the original TCM \parencite{Howard2002}.
+While in that publication the TCM prediction is closer to the experimental data, the TCM prediction from a more recent paper \parencite{Sederberg2008} is closer to the CUE model prediction.
+This makes it likely that the difference is not based on pure statistical chance, but that both the TCM and CUE model do not capture an essential aspect of memory, potentially related to the evolution of the context signal, that leads to reduced forward bias in delayed free recall.
+It remains for future work, to precisely identify the reason for this mismatch and extend the model.
+
+Opposed to pure math models, the implementation as a spiking neural network allows to compare and validate the model against data from neural recordings in addition to the behavioural in the future.
+In \cref{sec:aml-neural}, it was already demonstrated that the isolated mechanism of association learning is able to explain neural data.
+Unfortunately, neural data recorded from human in memory experiments is still scarce because invasive recordings can only be done when such recordings are required for medical reasons.
+Nevertheless, implementing models with spiking neurons is worthwhile for several other reasons, despite the more complicated model construction and increased simulations times.
+Drug effects, like scopolamine, can be more readily modelled as was done with CUE model.
+Also a higher degree of biological plausibility is achieved as one is forced to consider, for example, spiking noise and synaptic time constants.
+This prevents common assumptions like arbitrary precision or perfectly orthogonal vectors made in many math models.
+
+The spiking neural implementation also helps constraining many parameter values.
+Synaptic time constants, membrane time constants, and similar cellular physical quantities can be set to biological plausible values constrained by experimental findings.
+These are fixed parameters that have not been adjusted for matching the data.
+Similarly, as in the NEF most connection weights are directly determined by least-squares minimization to implement a given function determined by the prescribed model architecture, the connection weights are fixed as well.
+This leaves the model with very few free parameters.
+
+To match the immediate serial recall, only two parameters were adjusted: the bias of the null choice $\minev$ and the input noise standard deviation $\recnoise$ in recall.
+Both account for the fact that the recall network was restricted to recalling the items used within the memory experiment, while in reality a number of other items might interfere with the recall process.
+For free recall experiments, one additional parameter $\psi$ is added that determines the probability to use the serial recall strategy even for free recall.
+(For serial recall, a fixed values of $\psi = 1$ is implied as no free recall is allowed.)
+Furthermore, in experiments with delay periods, a distractor rate $\drate$ needs to be set.
+Lastly, to simulate the effect of scopolamine the AML learning rate $\eta$ was adjusted.
+However, in non-scopolamine conditions, it was treated as a fixed parameter and set to a value high enough to learn associations until the threshold for inhibition was achieved within the presentation duration.
+Even higher values would not have any effect as long as it does not largely exceed the inverse of the synaptic time delay of the inhibition.
+
+While few free parameters are desirable with respect to model parsimony, they should also be assigned similar values to model related experimental conditions.
+This is mostly the case for the CUE model.
+The bias of the null choice in recall ranges from \numrange{0.03}{0.04} and values get monotonously smaller as the task difficulty increases with additional delays.
+This corresponds to plausible longer recall attempts in more difficult experimental conditions.
+Only a small difference is also observed in the distractor rates (\numrange{0.03}{0.04}) and the probability of using a serial recall strategy (zero for delayed recall and \num{0.1} in all other free recall conditions).
+However, the noise standard deviation $\recnoise$ in recall differs by a factor of more than \num{1.5} without a clear relation to the experimental condition.
+It is hard to hypothesize potential reasons for this difference as the parameter is accounting for things not explicitly modeled in recall.
+
+It is also of interest how robust the model is against parameter changes.
+I have not done a formal analysis of this because the model simulation times are prohibitive.
+However, this also means that only a small set of parameter values without a lot of fine tuning has been tested (less than \num{200} combinations summed over all experimental conditions).
+Given that finding the right parameters with few simulations is less likely if the model were highly sensitive to the parameter choice, a sufficient robustness to the exact choice of parameter values can be expected.
+
+The CUE model is based on prior model of memory, but improves on them in important ways.
+With regard to the OSE model two main advancements can be stated.
+First, The episodic memory buffer has been replaced with a much more plausible long-term memory mechanism that relies on synaptic-weight changes rather than reverberating neural activity.
+Second, the CUE model also implements the mechanism providing the position tags fully in spiking neurons.
+
+Implementing a long-term memory component based on the TCM in a spiking neural network provides a strong support for the biological plausibility of the TCM that previously was missing.
+Certain simplifications of the TCM equations in this process to facilitate this implementation highlight which aspects of the TCM are essential and which do not contribute to the explanation of the data.
+In particular, it also shows that certain assumptions, like perfectly orthogonal vectors, useful in the mathematical analysis, are not essential.
+In addition, the modified TCM has been extended with a short-term memory component in the CUE model.
+While the TCM has been posited as a single-store model, this has been criticized \parencite{Davelaar2008}.
+The CUE model demonstrates that treating the TCM as part of a multi-store model is not unreasonable, provides good matches to the free recall data and in addition allows to match serial recall data.
+Finally, the recall process in the TCM was not modeled in a particular biological plausible way and has been replaced with a more plausible spiking neural mechanism (\cref{sec:recall}).
+
+In the broader context of memory models, the CUE model is unique as providing a low-level spiking network implementation, but matching high-level behavioural data.
+This includes the recall process that is not explicitly modeled in many other models.
+Furthermore, due to the item based context, there is no reinstantiation problem found in most context-based memory models (except the TCM and CUE model).
+
+
+[AML]
+central part, meaning, insights?
+
 \begin{itemize}
-    \item match multitude of data
-    \item delayed CRP not worse the original paper
-    \item Robustness against parameter change (picked with few simulation, thus robust)
-    \item fuzzy temp memory sensitive to noise and thus no alternative for context signal
-    \item basal ganglia involvement
-    \item changes with regard to original TCM\@: finite vector dimensionality, not perfectly orthogonal; simpler equations
-    \item partially better match than TCM\@?
+    %\item match multitude of data
+    %\item delayed CRP not worse the original paper
+    %\item Robustness against parameter change (picked with few simulation, thus robust)
+    \item basal ganglia involvement?
+    %\item changes with regard to original TCM\@: finite vector dimensionality, not perfectly orthogonal; simpler equations
+    %\item partially better match than TCM\@?
     \item Role of AML
-    \item Things developed on the way of creating large scale model: spaopt, better product, binding operations, wta network
-    \item neural position counting
+    %\item neural position counting
     \item Control is the hard part
+    %\item From math model to spiking neural network model viable and useful 
+    %(why?)
+    %\item Consideration of spiking noise
+    \item exact implementation of experimental protocol
+    %\item discuss merits of model in terms of desired properties of models
+    %\item Explains context reinstantiation
+    %\item giving account of response generation missing from other models
+    \item fuzzy temp memory sensitive to noise and thus no alternative for context signal
+    \item Things developed on the way of creating large scale model: spaopt, better product, binding operations, wta network, optimizer
     \item Integration with Spaun, use actual distractor task
-    \item From math model to spiking neural network model viable and useful (why?)
-    \item Consideration of spiking noise, exact implementation of experimental protocol
-    \item discuss merits of model in terms of desired properties of models
-    \item Explains context reinstantiation
-    \item optimizer
-    \item giving account of response generation missing from other models
 \end{itemize}
