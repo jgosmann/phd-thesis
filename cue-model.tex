@@ -53,8 +53,7 @@ During the recall phase, recalled items and position are routed back to the $\mf
 The recalled position also sets the current position in the \pop{position} network to recall that position from the \pop{OSE} short-term memory.
 The recall networks also store recently recalled items in neural integrators to prevent repetition errors that happen rarely in human experiments.
 
-
-TODO more detailed Gephi visualization? Neuron numbers etc.?
+% TODO more detailed Gephi visualization? Neuron numbers etc.?
 
 
 \section{Control}\label{sec:control}
@@ -152,7 +151,7 @@ During free recall, instead, the output of $\mft$ is used to update the context 
 The main control problem for each item is to regulate the context update because as discussed in \cref{sec:ctx-update} this cannot be done based on the context signal alone, but requires an external control signal.
 Before the context can be updated, the new input signal \ctxin\ needs to be present at the network input which requires a delay after a new list item has been presented.
 Accordingly, as soon as a new item is presented the context update should be stopped until that input signal is propagated and the current context has been propagated to the buffer for the old context in the context network.
-To achieve this delay, the Semantic Pointer of the new item is fed into an integrator with a slow synaptic time constant ($\tau = \SI{100}{\milli\second}$).
+To achieve this delay, the Semantic Pointer of the new item is fed into an integrator with a slow synaptic time constant of $\tau = \SI{0.1}{\second}$ (\cref{fig:simth-ctrl}).
 Between the input Semantic Pointer and the output of the integrator a dot product is calculated which will slowly increase towards one.
 The threshold obtained with a thresholding ensemble gives the required control signal for the presentation phase.
 During the recall phase, the logic is inverted.
@@ -165,7 +164,53 @@ The thresholded dot product signal is also used to control a few more things:
     \item It is used to provide the control signal to transfer the updated OSE memory to the secondary memory buffer to allow for the next update.
     \item The inverted signal is used to gate the transmission of the recalled item in the recall network to the memory of recalled items preventing repetition errors.
 \end{itemize}
-TODO figures
+\begin{figure}
+    \centering
+    \begin{tikzpicture}[nef]
+        \graph [no placement] {
+            presented [ext, x=-.25, y=1.5];
+            recalled [ext, x=-.25, y=0];
+            int/"" [ea, x=2.5, y=1.5];
+            dot [net, x=2.5, y=0];
+            simth/"" [rect, x=4, y=0];
+            simthpos/"" [rect, x=5.5, y=0.75];
+            simthneg/"" [rect, x=5.5, y=-0.75];
+            presphase/"presentation phase" [ext, x=5.5, y=2];
+            recallphase/"recall phase" [ext, x=5.5, y=-2];
+            posinc/"increment position" [ext, x=8, y=0.75, anchor=west];
+            ctxupdate/"update context" [ext, x=8, y=-0.75, anchor=west];
+            pos/"" [inner sep=0cm, minimum size=0cm, x=6.5, y=0.75];
+            neg/"" [inner sep=0cm, minimum size=0cm, x=6.5, y=-0.75];
+            osestore/"OSE store" [ext, x=5, y=-3, anchor=west];
+            procdone/"recall net processing done" [ext, x=5, y=-3.5, anchor=west];
+
+            presented -> ["$\tau = \SI{0.1}{\second}$" above] int;
+            presented -> [out=0, in=180] dot;
+            recalled -> [out = 0, in=180] int;
+            recalled -> dot;
+
+            int -> [recurrent] int;
+            int -> dot;
+
+            dot -> simth;
+            simth -> [out=0, in=180] simthpos;
+            simth -> [out=0, in=180] simthneg;
+
+            presphase -> [inhibit] simthpos;
+            recallphase -> [inhibit] simthneg;
+
+            simthpos -- pos -> posinc;
+            pos -> [out=0, in=180] ctxupdate;
+            simthneg -- ["$-1$"] neg -> [out=0, in=180] posinc;
+            neg -> ctxupdate;
+
+            simth -> [out=270, in=180] osestore;
+            simth -> [out=270, in=180] procdone;
+            bias1/"$-1$" [ext, x=3.5, y=-3.5] -> procdone;
+        };
+    \end{tikzpicture}
+    \caption{Generation of control signals from the currently presented or recalled item}\label{fig:simth-ctrl}
+\end{figure}
 
 Special control and information routing is also necessary during the distractor tasks or when no list item stimulus is present.
 Because the distractors are irrelevant to the task, they are assumed to be encoded not as strong in the hippocampal long-term memory.
@@ -177,7 +222,7 @@ Switching of task phases requires also some reconfiguration of the network state
 The start of the recall phase is detected with thresholded differentiators for serial and free recall (one of them will be inhibited).
 For serial recall the position network will be reset to the first position by feeding exciting the neural ensemble for the first position and inhibiting all others.
 At the same time the Semantic Pointer for the first position will be fed to the \mft\ network to start of the recall while the position network is still transitioning to representing the first position.
-Because some subjects may use a serial recall strategy even in free recall, models are configured with probability \num{0.1} to perform this serial recall routing even in free recall.
+Because some subjects may use a serial recall strategy even in free recall, models are configured with probability $\psi = 0.1$ to perform this serial recall routing even in free recall (except in the delayed recall condition).
 In free recall, the position network is inhibited at the start of recall to base the first recall purely on the currently active context signal.
 If during the free recall process a position vector is recalled it may set the position network to represent that position later.
 
