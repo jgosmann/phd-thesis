@@ -72,28 +72,86 @@ In the broader context of memory models, the CUE model is unique as providing a 
 This includes the recall process that is not explicitly modeled in many other models.
 Furthermore, due to the item based context, there is no reinstantiation problem found in most context-based memory models (except the TCM and CUE model).
 
+A key part of the CUE model is the association matrix learning rule.
+It provides insight into how one-shot learning without catastrophic forgetting is possible.
+Several options and their biological plausibility of how this learning rule might be realized in the brain have been discussed in \cref{sec:aml}.
+The main point there was that either some form of weight-sharing or symmetric decoder matrix is needed, or the input needs to be transformed into a sparse representation.
+The dentate gyrus of the hippocampus exhibits such sparse firing and is implicated in associative learning, giving support to the latter hypothesis.
+But I provided also evidence that a symmetric decoder matrix might be learned in a biological plausible way.
+Moreover, using the AML for learning simple pairwise associations, allows to reproduce changes in firing rates that have been observed in recordings from human hippocampus.
+These results are not only of interest for the CUE and TCM models, but many other cognitive models that assume the storage of associations in a similar association matrix without further explanation of how these associations are learned.
 
-[AML]
-central part, meaning, insights?
 
-\begin{itemize}
-    %\item match multitude of data
-    %\item delayed CRP not worse the original paper
-    %\item Robustness against parameter change (picked with few simulation, thus robust)
-    \item basal ganglia involvement?
-    %\item changes with regard to original TCM\@: finite vector dimensionality, not perfectly orthogonal; simpler equations
-    %\item partially better match than TCM\@?
-    \item Role of AML
-    %\item neural position counting
-    \item Control is the hard part
-    %\item From math model to spiking neural network model viable and useful 
-    %(why?)
-    %\item Consideration of spiking noise
-    \item exact implementation of experimental protocol
-    %\item discuss merits of model in terms of desired properties of models
-    %\item Explains context reinstantiation
-    %\item giving account of response generation missing from other models
-    \item fuzzy temp memory sensitive to noise and thus no alternative for context signal
-    \item Things developed on the way of creating large scale model: spaopt, better product, binding operations, wta network, optimizer
-    \item Integration with Spaun, use actual distractor task
-\end{itemize}
+\section{Anatomical mapping}
+
+Given that the CUE model is neural, it is of interest to consider how parts of the model map to brain areas.
+\Textcite{howard2005} proposed a mapping of the TCM model to brain areas that applies to a large degree also to the TCM-based part of the CUE model.
+There are however some details to be reconsidered and the OSE-based short-term part has obviously not been discussed.
+
+The medial temporal lobe (MTL) is known to be essential for free recall.
+Damage to the MTL is detrimental to free recall performance \parencite{graf1984}.
+Thus, we can assume the TCM related parts of the model to reside in the MTL (TODO figure).
+
+More precisely, the context storage network can be mapped  onto parahippocampal areas, in particular the entorhinal cortex (EC).
+Its properties are consistent with the storage of non-spatial memories for tens of seconds.
+In delay periods stimulus dependent persistent activity can be observed \parencite{suzuki1997,young1997}.
+\Textcite{quirk1992} showed EC has a higher mean firing rate than hippocampus which is not caused by short bursts and is thus compatible with the sustained maintenance of neural firing.
+Also, the electrophysiological properties of the EC support integration \parencite{egorov2002}.
+These findings are, however, based on the intrinsic cell properties, whereas the CUE model uses recurrent connectivity for integration instead.
+Note, that the context network does contain integration ensembles that maintain the context signal over the timespan of seconds.
+
+While the EC firing is modulated to some degree by the position, this coding is more noisy than in the hippocampus \parencite{quirk1992}.
+This indicates that EC codes for additional information.
+\Textcite{Frank2000} have shown that superficial EC employs retrospective coding, that it differentiates visits of the same position by the history leading up to that visit.
+This is consistent with a context signal encoding the history of items leading up to the current item.
+
+The other major component to map to brain structures are the learning and retrieval of associations in the $\mft$ and $\mtf$ matrices.
+\Textcite{howard2005} stated that the $\mft$ matrix might not be implemented by a single anatomical region due to its complicated structure.
+However, the updating equation for $\mft$ in the CUE model has been simplified which makes the correspondence to a single region more plausible.
+The learning of new associations in these matrices is attributed to the hippocampus by \textcite{howard2005}.
+TODO more details.
+Though, they do not consider the retrieval to be dependent on the hippocampus because TODO\@.
+
+TODO because of striatal association learning?
+Simple associations of same modality might be learned there, but cross-modality and integration (i.e.\ of item and context) might happen in hippocampus.
+But striatum seems to be mostly for reward associations like in Pavlovian conditioning and other reward/punishment learning.
+
+The CUE model provides a more detailed description of the updating of the association matrices due to the neural implementation by means of the AML\@.
+In the learning network we get recurrent connectivity between TODO\@.
+This is analogous to recurrent connectivity in the CA3 region of hippocampus.
+TODO additional input via different pathways.
+Moreover, the AML highlighted the need to incorporate the decoder matrix $\mdec\Tr$ into the connections.
+While I have shown it might be plausible that this connectivity is learned, the matrix could be reduced to the identity if the input ensemble were to provide orthogonalized inputs.
+The dentate gyrus, providing input to CA3 is commonly assumed to perform such orthogonalization given its large neuron count, sparse firing, and neurogenesis (TODO refs).
+Thus, while the CUE model does not explicitly model the dentate gyrus (which is a significant research problem in itself), the learning rule used at least provides a principled reason for its existence.
+
+Further evidence for this neuroanatomical mapping can be obtained from the connectivity between hippocampus and EC\@.
+The superficial EC provides input to hippocampus, but does not receive direct input for hippocampus (TODO ref).
+In contrast to that, the deep layers of EC receive input from hippocampus and might be relevant for recall, especially the recall of pre-experimental contex.
+This is consistent with the connectivity in the model where the context network projects to the association matrix learning network attributed to hippocampus.
+The learning network for $\mft$ also projects back to an ensemble recalling the prior context before it gets combined in a different ensemble.
+
+
+TODO did they actually say anything about context-to-item matrix?
+
+more going on in MTL, eg place cells
+
+
+\section{Advances in large-scale cognitive modeling}
+The primary objective of building the CUE model lead to a number of advances in large-scale cognitive modeling in general that are worth summarizing, even though not all have been presented as part of this thesis.
+Most importantly, optimizations for high-dimensional representations in neural networks (\cite{gosmann216}; \cref{sec:hdrep}).
+These allow to use fewer neurons which ultimately allows to build more complex networks without prohibitively long simulation times.
+A similar benefit has an improved product network \parencite{gosmann2015-1} as the calculation of products is often required, for example for the implementation of the circular convolution.
+Also a significant improvement to simulation times was achieved by the implementation of an optimization procedure in the Nengo simulator \parencite{gosmann2017}.
+\Cref{sec:spa} described a new method for binding Semantic Pointers, the vector-derived transformation binding.
+Even though it has not been used in the CUE model yet, it might provide a more precise binding and unbinding.
+Finally, the independent accumulator network described in \cref{sec:ia} might not only be useful in recall, but for other large-scale models too.
+
+
+%\begin{itemize}
+    %\item firing rates!
+    %\item basal ganglia involvement?
+    %\item Control is the hard part
+    %\item exact implementation of experimental protocol
+    %\item fuzzy temp memory sensitive to noise and thus no alternative for context signal
+%\end{itemize}
