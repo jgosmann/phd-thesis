@@ -131,7 +131,7 @@ Recurrent connectivity is also found in the CA3 region of hippocampus.
 Furthermore, CA3 receives input via the dentate gyrus and directly from entorhinal cortex which could correspond to separate transmission pathways for the associated cue and target.
 Interestingly, the AML highlighted the need to incorporate the decoder matrix $\mdec\Tr$ into the connections.
 While I have shown it might be plausible that this connectivity is learned, the matrix could be reduced to the identity if the input ensemble were to provide orthogonalized inputs.
-The dentate gyrus, providing input to CA3 is commonly assumed to perform such orthogonalization given its large neuron count, sparse firing, and neurogenesis (TODO refs).
+The dentate gyrus, providing input to CA3 is commonly assumed to perform such orthogonalization given its large neuron count, sparse firing, and neurogenesis \parencite[e.g.,][]{boss1987,jung1993-1,piatti2013}.
 Thus, while the CUE model does not explicitly model the dentate gyrus (which is a significant research problem in itself), the learning rule used at least provides a principled reason for its existence.
 
 Further evidence for this neuroanatomical mapping can be obtained from the connectivity between hippocampus and EC\@.
@@ -178,7 +178,7 @@ The amplification of the noise standard deviation is given by \textcite{shankar2
     g_{\eta}(s_i, k) = \frac{\sqrt{2^k} s_i^{k+1}}{\delta_{s_i}^k k!}
 \end{equation}
 where $\delta_{s_i} = s_i - s_{i - 1}$. 
-When following their proposal for optimal spacing of the $s_i$ by picking $t_i^* = {(1 + \nu)}^{i - 1} t_1^*$ for some constant $\nu$, it follows that $\delta_{s_i} / s_i = \nu$ and the formula can be simplified to
+When following their proposal for optimal spacing of the $s_i$ by picking $t_i^* = {(1 + \nu)}^{i - 1} t_1^*$ for some constant $\nu > 0$, it follows that $\delta_{s_i} / s_i = \nu$ and the formula can be simplified to
 \begin{equation}
     g_{\eta}(s_i, k) = \frac{\sqrt{2^k} s_i}{\nu^k k!} = - \frac{\sqrt{2^k}}{\nu^k (k-1)! t_i^*} \text{.}
 \end{equation}
@@ -194,9 +194,9 @@ When both $\nu$ and $k$ are chosen large enough, noise will actually be attenuat
 However, this also increases the timescale (\cref{fig:fuzzy-mem-noise-ts}b) and as such their is a trade-off between the time resolution of the memory and noise amplification.
 This increase in timescale given by
 \begin{equation}
-    \tau_i(\nu) = - {(1 + \nu)}^k t^*_i
+    \tau_i(\nu) = - {(1 + \nu)}^k t^*_i \label{eqn:fuzzymem-ts}
 \end{equation}
-and is caused by the discrete approximation of the derivative that relies on $t^*_{i - k}$ to $t^*_{i + k}$ for the reconstruction of $\hat{f}_t(t + t^*_i)$ and is dominated by $t^*_{i + k}$ (TODO appendix).
+and is caused by the discrete approximation of the derivative that relies on $t^*_{i - k}$ to $t^*_{i + k}$ for the reconstruction of $\hat{f}_t(t + t^*_i)$ and is dominated by $t^*_{i + k}$ (\cref{apdx:fuzzymem-derivative}).
 \begin{figure}
     \centering
     \includegraphics{figures/fuzzy-mem-noise-example}
@@ -208,9 +208,9 @@ and is caused by the discrete approximation of the derivative that relies on $t^
     \caption[Noise amplification and timescales in fuzzy temporal memory]{(a) Noise amplification $g_{\eta,\ped{NEF}}$ in the fuzzy temporal memory. (b) Timescale $\tau_1$ for the $t^*_1$ reconstruction of the fuzzy temporal memory.}\label{fig:fuzzy-mem-noise-ts}
 \end{figure}
 
-Based on these equations, the total number of neurons $N_{\ped{tot}}$ required can be estimated as (TODO appendix)
+Based on these equations, the total number of neurons $N_{\ped{tot}}$ required can be estimated as (\cref{apdx:fuzzymem-neurons})
 \begin{align}
-    N_{\ped{tot}}(t^*_1, k) &= N \dims\, g_{\eta,\ped{NEF}}^2(\nu, k) \del{M + 2k} \\
+    N_{\ped{tot}}(t^*_1, k) &= N \dims\, g_{\eta,\ped{NEF}}^2(\nu, k) \del{M + 2k} \label{eqn:fuzzy-n-neurons}\\
     M &\geq \frac{\log(t^*_{\max} / t^*_1)}{\log(1 + \nu)} \\
     \nu &\leq \sqrt[k]{-\tau_1 / t^*_1} - 1
 \end{align}

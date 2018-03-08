@@ -1,0 +1,57 @@
+\chapter{Fuzzy temporal memory}
+Here I derive relations used in the analysis of the optimal fuzzy temporal memory \parencite{shankar2013} used in the main  text.
+
+\section{Discretized derivative}\label{apdx:fuzzymem-derivative}
+The first discretized derivative of $\vc c$ with regard to $s$ at $s_i$ is given by \parencite{shankar2013}
+\begin{align}
+    c_i^{(1)} &= \frac{c_{i+1} - c_i}{s_{i+1} - s_i} \cdot \frac{s_i - s_{i-1}}{s_{i+1} - s_{i-1}} + \frac{c_i - c_{i-1}}{s_i - s_{i-1}} \cdot \frac{s_{i+1} - s_i}{s_{i+1} - s_{i-1}} \\
+    &= \frac{1}{K_c} \sbr{c_{i-1} \del{s_i - s_{i+1}}^2 + c_i \del{\del{s_i - s_{i-1}}^2 - \del{s_i - s_{i+1}}^2} - c_{i+1} \del{s_i - s_{i-1}}^2 }
+\end{align}
+with
+\begin{equation*}
+    K_c = s_i^2 s_{i+1} - s_i^2 s_{i-1} - s_i s_{i+1}^2 + s_i s_{i-1}^2 + s_{i+1}^2 s_{i-1} - s_{i+1} s_{i-1}^2 \text{.}
+\end{equation*}
+\begin{lemma}\label{lemma:sdiff}
+    When using the optimal fuzzy temporal memory spacing of $s_i$ given by $t^*_{i+1} = (1 + \nu) t^*_i \Leftrightarrow s_i = (1 + \nu) s_{i+1}$ with $\nu > 0$ and $s_i > s_{i+1}$, we have $s_i - s_{i+1} < s_{i-1} - s_i$.
+    \begin{proof}
+        \begin{align*}
+            && s_i - s_{i+1} &\stackrel{?}{<} s_{i-1} - s_i \\
+            &\Leftrightarrow& (1+\nu) s_{i+1} - s_{i+1} &\stackrel{?}{<} {(1+\nu)}^2 s_{i+1} - (1+\nu) s_{i+1} \\
+            &\Leftrightarrow& 2 + 2\nu - 1 - 1 - 2\nu - \nu^2 &\stackrel{?}{<} 0 \\
+            &\Leftrightarrow& -\nu^2 &< 0
+        \end{align*}
+    \end{proof}
+\end{lemma}
+\noindent It follows from \cref{lemma:sdiff} that
+\begin{equation}
+    \del{s_i - s_{i-1}}^2 > \del{s_i - s_{i-1}}^2 - \del{s_i - s_{i+1}}^2
+\end{equation}
+and
+\begin{equation}
+    \del{s_i - s_{i-1}}^2 > \del{s_i - s_{i+1}}^2 \text{.}
+\end{equation}
+This makes the $c_{i+1}$ coefficient corresponding the largest in the discrete derivative.
+Repeated application to obtain higher $k$-th derivative will yield $c_{i+k}$ with the largest coefficient accordingly.
+Thus, the $k$-th derivative for $c_i$ with respect to $s$ will be dominated by the timescale $t^*_{i+1}$.
+
+
+\section{Required neurons}\label{apdx:fuzzymem-neurons}
+To achieve a lower timescale of $\tau_1$ an appropriate $\nu$ for spacing $t^*_i$ can be obtained with \cref{eqn:fuzzymem-ts} as
+\begin{equation}
+    -{(1+\nu)}^k t^*_1 \leq \tau_1 \quad\Leftrightarrow\quad \nu \leq \sqrt[k]{\tau_1 / t^*_1} - 1 \text{.}
+\end{equation}
+By spacing $M$ nodes, the earliest reconstructable point $t^*_{\max}$ is given by
+\begin{equation}
+    t^*_{\max} = {(1+\nu)}^M t^*_1
+\end{equation}
+from which the minimum $M$ for given $t^*_{\max}$ follows as
+\begin{equation}
+    M \geq \frac{\log(t^*_{\max} / t^*_1)}{\log(1+\nu)} \text{.}
+\end{equation}
+To be able to construct the $k$-th discrete derivative an additional $2k$ nodes for a total of $M + 2k$ nodes are required.
+The noise in the output of the leaky accumulators is amplified by $g_{\eta,\ped{NEF}}$.
+As additional neurons will diminish noise by $\bO(1/\sqrt{n})$ (\cref{sec:neural-err}), the number of neurons needs to be scaled by $g_{\eta,\ped{NEF}}^2$ to achieve the same noise level that would be present without the noise amplification.
+Multiplying this factors together with a base number of neurons $N$ used to represent a single dimension and the number of dimensions $d$ yields \cref{eqn:fuzzy-n-neurons}
+\begin{equation*}
+    N_{\ped{tot}}(t^*_1, k) = N \dims\, g_{\eta,\ped{NEF}}^2(\nu, k) \del{M + 2k} \text{.}
+\end{equation*}
