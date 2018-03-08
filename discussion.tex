@@ -99,7 +99,7 @@ There are however some details to be reconsidered and the OSE-based short-term p
 
 The medial temporal lobe (MTL) is known to be essential for free recall.
 Damage to the MTL is detrimental to free recall performance \parencite{graf1984}.
-Thus, we can assume the TCM related parts of the model to reside in the MTL (TODO figure).
+Thus, we can assume the TCM related parts of the model to reside in the MTL\@.
 
 More precisely, the context storage network can be mapped  onto parahippocampal areas, in particular the entorhinal cortex (EC).
 Its properties are consistent with the storage of non-spatial memories for tens of seconds.
@@ -118,32 +118,30 @@ The other major component to map to brain structures are the learning and retrie
 \Textcite{howard2005} stated that the $\mft$ matrix might not be implemented by a single anatomical region due to its complicated structure.
 However, the updating equation for $\mft$ in the CUE model has been simplified which makes the correspondence to a single region more plausible.
 The learning of new associations in these matrices is attributed to the hippocampus by \textcite{howard2005}.
-TODO more details.
-Though, they do not consider the retrieval to be dependent on the hippocampus because TODO\@.
+This is consistent with the results about the AML presented in \cref{sec:aml}.
 
-TODO because of striatal association learning?
-Simple associations of same modality might be learned there, but cross-modality and integration (i.e.\ of item and context) might happen in hippocampus.
-But striatum seems to be mostly for reward associations like in Pavlovian conditioning and other reward/punishment learning.
+%Though, they do not consider the retrieval to be dependent on the hippocampus because TODO\@.
+%TODO because of striatal association learning?
+%Simple associations of same modality might be learned there, but cross-modality and integration (i.e.\ of item and context) might happen in hippocampus.
+%But striatum seems to be mostly for reward associations like in Pavlovian conditioning and other reward/punishment learning.
 
 The CUE model provides a more detailed description of the updating of the association matrices due to the neural implementation by means of the AML\@.
-In the learning network we get recurrent connectivity between TODO\@.
-This is analogous to recurrent connectivity in the CA3 region of hippocampus.
-TODO additional input via different pathways.
-Moreover, the AML highlighted the need to incorporate the decoder matrix $\mdec\Tr$ into the connections.
+The learning network has recurrent connectivity to inhibit the learning once an association has been learned with the desired strength.
+Recurrent connectivity is also found in the CA3 region of hippocampus.
+Furthermore, CA3 receives input via the dentate gyrus and directly from entorhinal cortex which could correspond to separate transmission pathways for the associated cue and target.
+Interestingly, the AML highlighted the need to incorporate the decoder matrix $\mdec\Tr$ into the connections.
 While I have shown it might be plausible that this connectivity is learned, the matrix could be reduced to the identity if the input ensemble were to provide orthogonalized inputs.
 The dentate gyrus, providing input to CA3 is commonly assumed to perform such orthogonalization given its large neuron count, sparse firing, and neurogenesis (TODO refs).
 Thus, while the CUE model does not explicitly model the dentate gyrus (which is a significant research problem in itself), the learning rule used at least provides a principled reason for its existence.
 
 Further evidence for this neuroanatomical mapping can be obtained from the connectivity between hippocampus and EC\@.
-The superficial EC provides input to hippocampus, but does not receive direct input for hippocampus (TODO ref).
-In contrast to that, the deep layers of EC receive input from hippocampus and might be relevant for recall, especially the recall of pre-experimental contex.
+The superficial EC provides input to hippocampus, but does not receive direct input for hippocampus \parencite{witter2010}.
+In contrast to that, the deep layers of EC receive input from hippocampus and might be relevant for recall, especially the recall of pre-experimental context.
 This is consistent with the connectivity in the model where the context network projects to the association matrix learning network attributed to hippocampus.
 The learning network for $\mft$ also projects back to an ensemble recalling the prior context before it gets combined in a different ensemble.
 
-
-TODO did they actually say anything about context-to-item matrix?
-
-more going on in MTL, eg place cells
+The short-term memory related components of the CUE model can be assumed to correspond to cortical areas, in particular the prefrontal cortex.
+The prefrontal cortex has been found to be involved in working memory tasks in many studies \parencite[e.g.,][]{goldman-rakic1995,owen1997}
 
 
 \section{Optimally fuzzy temporal memory}
@@ -236,7 +234,12 @@ For an implementation with a realistic limit on the neuron number, $t^*_1$, but 
 
 Unfortunately, choosing small $t^*_1$ and $k$ is also problematic.
 The error of the approximate inversion of the Laplace transform with Post's formula converges only at a rate of $1/k$ \parencite{vukimtuan2000}.
-\Textcite{shankar2013} also comment themselves that $t^*_1$ needs to be kept sufficiently far from zero as it introduce a relative error in the order of $\bO(k^3\nu^2/96 t^{*2}_1)$ in the construction of the activity of $c_i$.
+\Textcite{shankar2013} also comment themselves that $t^*_1$ needs to be kept sufficiently far from zero as it introduces a relative error in the order of $\bO(k^3\nu^2/96 t^{*2}_1)$ in the construction of the activity of $c_i$.
+
+In conclusion, the fuzzy temporal memory has only a small parameter space that allows an implementation with feasible neural resources due to noise sensitivity.
+This parameters space suffers from large relative errors unrelated to noise in the approximation of the inverse Laplace transform and discretized derivative.
+Currently, it is not clear whether these non-noise related errors are sufficiently small to allow the fuzzy temporal memory to be used as a context signal in the CUE model.
+At the same time it would require an increased number of neurons compared to the current implementation as each dimensions requires a set of leaky integrators, i.e.\ additional values have to be stored for each dimensions.
 
 
 \section{Advances in large-scale cognitive modeling}
