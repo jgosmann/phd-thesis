@@ -20,9 +20,9 @@ Given $D$ choices, the leaky, competing accumulator (LCA) model proposed by \tex
 where $u_i(t)$ are the external inputs, $\kappa$ is the leak rate, $\lambda$ the lateral inhibition, and $\tau$ the integration time-constant.
 Each state variable $x_i$ is kept non-negative by setting negative values to zero.
 Intuitively, each state variable integrates its input with leak term of $-\kappa x_i$ and provides lateral inhibition to all other state variables.
-Given one input $u_i > u_j$ for all $j \neq i$, the state variable $x_i$ will converge to $u_i$ while all other state variable $x_j, j \neq i$ will converge to $0$ if $\kappa = \lambda = 1$ (\cref{sec:apdx-wta}).
+Given one input $u_i > u_j$ for all $j \neq i$, the state variable $x_i$ will converge to $u_i$ while all other state variables $x_j,\ j \neq i$ will converge to $0$ if $\kappa = \lambda = 1$ (\cref{sec:apdx-wta}).
 In the following analysis, $\kappa = \lambda = 1$ will be fixed.
-Other choices of $\lambda$ affect the effective integration time-constant $\tau$ and gain on the input, while changing $\beta$ will result in undesired behaviour.
+Other choices of $\lambda$ affect the effective integration time-constant $\tau$ and gain on the input, while changing $\beta$ will result in undesired behaviour where the history of inputs influences the current choice.
 
 By means of principle 3 of the NEF, the prescribed dynamics can be exactly implemented in the NEF\@.
 Here, one ensemble per state variable is used (\cref{fig:lca}) and the gains and biases of the neurons are distributed as described in \cref{sec:thresholding} to ensure the rectification of the state variables.
@@ -69,7 +69,7 @@ The first layer consists of independent accumulators representing the state vari
 This layer projects to the second layer that performs the computation of $\bar{x}_i$ (i.e.\ the Heaviside function).
 The second layer projects back to first layer and can be used to read out the output of the network.
 \begin{figure}
-    \begin{captionbeside}[Independent accumulator (IA) network]{Independent accumulator (IA) network. The second layer computes $\bar{x}_i = \Heavi(x_i - \vartheta)$.\label{fig:ia}}
+    \begin{captionbeside}[Independent accumulator (IA) network]{Independent accumulator (IA) network. The second layer is used to compute the function $\bar{x}_i = \Heavi(x_i - \vartheta)$.\label{fig:ia}}
         \begin{tikzpicture}[nef, every path/.style={-{Latex}}]
 
             \matrix [column sep=20, row sep=18] {
@@ -105,19 +105,20 @@ The second layer projects back to first layer and can be used to read out the ou
 \section{Comparisons of the WTA networks}
 The pure analytical description does not tell which network is better suited for certain tasks.
 To compare these networks, I simulate them with an input of $u_i = u - s\del{1 - \krond_{1i}} + \eta_i$, where $u$ is the magnitude of the largest input, $s > 0$ is the target separation, $\krond$ is the Kronecker delta, and $\eta_i$ is Gaussian white noise with a standard deviation of $\sigma$.
-Here, without loss of generality as we can reorder the indices, the first input is always set to be the target and all other inputs are set to be lower by $s$.
-The rationale behind this is that it should present the hardest case because every is close to the largest input.
-As $s \rightarrow 0$, the problem will get more difficult as the separation of the target shrinks.
+Here, without loss of generality as we can reorder the indices.
+The first input is always set to be the target and all other inputs are set to be lower by $s$.
+The rationale behind this is that it should present the hardest case because every choice is close to the largest input.
+As $s \rightarrow 0$, the problem will get more difficult as the separation to the target shrinks.
 Note, that $u$ determines the general baseline of inputs in addition to the value of the largest input.
 Furthermore, it is important to consider the influence of noise $\eta_i$ on the robustness of the decision process.
 
-As the input lists to the CUE model will be about ten to twelve items, I compare the networks $d=10$ choices.
-To make a fair comparison 200 LIF neurons are used per choice in either model.
+As the input lists to the CUE model will be about ten to twelve items, I compare the networks for $D=10$ choices.
+To make a fair comparison \num{200}~LIF neurons are used per choice in either model.
 In the IA model this means, that the number of neurons is split between the first and second layer.
 Here I use \num{150} neurons in the first, and \num{50} neurons in the second layer.
 As the first layer is performing the evidence accumulation it needs to more accurate and requires more neural resources.
 Due to the lower number of neurons in the output layer, the decoded output has a higher variance.
-This, however, is not as relevant as the variance in interpreting the output.
+This, however, is not as relevant as variation of the highest output.
 If all other choices do not produce an output, the winning choice can still be clearly identified despite the variance.
 
 Given this basic setup of the comparison, a number of metrics give insight in the performance of the networks.
@@ -141,7 +142,7 @@ The \emph{highest output of a losing choice} during the whole simulation is take
 \Cref{fig:ia-clear} shows the proportion of trials that the LCA network reaches a clear decision for different input parameters.
 The input magnitude $u$ must be large enough to reliably exceed the \num{0.15} detection threshold under noise.
 For $u = 0.2$ and even low amounts of noise the network fails to reach a clear decision.
-However, it seems that a input magnitude too large decreases performance as well when we compare the performance for $u=0.6$ and $u=1$.
+However, it seems that a too large input magnitude decreases performance as well when we compare the performance for $u=0.6$ and $u=1$.
 Increasing the noise standard deviation $\sigma$ or decreasing the target separation $s$, both decrease the performance as this makes the problem harder.
 Interestingly, the IA network does not fail to reach a clear decision in any of these conditions.
 \begin{figure}
@@ -171,10 +172,10 @@ In other words, noise in the LCA network influences whether a decision can be re
     \caption[Mean WTA decisions times]{Mean decision times for the (a) LCA and (b) IA network. Data for the LCA network is shown in dependence of the input magnitude $u$ and is averaged over all noise levels $\sigma$ because noise had a minimal effect on decision times. Data fro the IA network is shown in dependence of the noise standard deviation $\sigma$ for two input magnitudes of $u = 1$ (dashed lines) and $u = 0.2$ (solid lines). Target separation is indicated by color. Error bars show \SI{95}{\percent} confidence intervals.}\label{fig:ia-time}
 \end{figure}
 
-Finally, both networks might produce a transient response (\cref{fig:ia-transient}).
-This is inherent in the LCA network because the state variables are directly used as output and gets worse with increased noise.
+Finally, both networks might produce a transient response that gets worse with increased noise (\cref{fig:ia-transient}).
+This is inherent in the LCA network because the state variables are directly used as output.
 In the IA network, this transient response is caused when two accumulators cross the threshold in close temporal proximity before the inhibition from the first one can silence the remaining accumulators.
-By increasing the feedforward time-constant, this transient response gets reduced as the evidence integration gets slowed down and this temporally stretches out when accumulators cross the threshold.
+By increasing the feedforward time-constant, this transient response gets reduced as the evidence integration gets slowed down which temporally stretches out when accumulators cross the threshold.
 \begin{figure}
     \centering
     \includegraphics{figures/ia-transient}
@@ -208,15 +209,15 @@ If it is too high, small inputs might not produce an output at all.
 While the IA can also produce transient responses, these can be reduced to almost zero by a proper selection of the integration time-constant according to the input magnitude and target separation.
 
 By increasing $\tau_1 \rightarrow \infty$, the IA discrimination ability can be increased without bound.
-This is sometimes used as argument to criticize these sort of models \parencite[e.g.,]{Usher2001} because there is no sensible stopping criterion.
-However, this does not consider that there might be a cost to come to a decision.
+This is sometimes used as argument to criticize these sort of models \parencite[e.g.,][]{Usher2001} because there is no sensible stopping criterion.
+However, this does not consider that there might be a cost to taking more time for a decision.
 If that cost is included, there is a trade-off between accurate decisions and the cost incurred by taking more time to decide.
 Furthermore, this argument also assumes perfect integration accuracy which an actual neural system cannot have due to neural noise and limited neural resources.
 
 To summarize these findings, for the recall of items in memory experiments the IA network is more suited.
 Such recall requires discrete decisions and a stable input to downstream motor systems producing the response.
 Such a stable input cannot be guaranteed with the LCA network and it provides challenge to detect when a recall is completed.
-\Textcite{Sederberg2008} still used the LCA network for modelling the recall, but it is important to highlight that they upon reaching the decision threshold the state variable where immediately set back to zero.
+\Textcite{Sederberg2008} still used the LCA network for modelling the recall, but it is important to highlight that upon reaching the decision threshold, the state variable were immediately set back to zero.
 This is easy to do in a pure math model, but when transitioning to a full neural model detecting the decision and resetting the state variables is much more difficult as it cannot be done instantaneous.
 
 Finally, let us consider the biological plausibility briefly.
@@ -225,8 +226,7 @@ Also, accumulation of evidence to a threshold is a well known finding for neuron
 Often this is assumed to be a gradual integration, but when looking at individual trials instead of the trial-average, a distinct step response becomes evident \parencite{latimer2015}.
 This matches the output of the second layer of the IA network.
 However, both networks have in integration layer with gradually increasing firing rates which implies that such neurons should exist too.
-Ultimately, I also want to highlight that this is not as issue which of these two networks is the \emph{one} network employed in the brain.
-It is certainly possible, that the brain employs both networks for different tasks as they have different strengths and weaknesses.
+Ultimately, it is possible, that the brain employs both networks for different tasks as they have different strengths and weaknesses.
 
 
 \section{Recall network}\label{sec:recall-net}

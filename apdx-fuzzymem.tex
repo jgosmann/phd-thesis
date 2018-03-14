@@ -3,10 +3,10 @@ Here I derive relations used in the analysis of the optimal fuzzy temporal memor
 
 \section{Discretized derivative}\label{apdx:fuzzymem-derivative}
 The first discretized derivative of $\vc c$ with regard to $s$ at $s_i$ is given by \parencite{shankar2013}
-\begin{align}
+\begin{equation}\begin{split}
     c_i^{(1)} &= \frac{c_{i+1} - c_i}{s_{i+1} - s_i} \cdot \frac{s_i - s_{i-1}}{s_{i+1} - s_{i-1}} + \frac{c_i - c_{i-1}}{s_i - s_{i-1}} \cdot \frac{s_{i+1} - s_i}{s_{i+1} - s_{i-1}} \\
-    &= \frac{1}{K_c} \sbr{c_{i-1} \del{s_i - s_{i+1}}^2 + c_i \del{\del{s_i - s_{i-1}}^2 - \del{s_i - s_{i+1}}^2} - c_{i+1} \del{s_i - s_{i-1}}^2 }
-\end{align}
+    &= \frac{1}{K_c} \bigg[c_{i-1} \del{s_i - s_{i+1}}^2 + c_i \del{\del{s_i - s_{i-1}}^2 - \del{s_i - s_{i+1}}^2}\\&\quad - c_{i+1} \del{s_i - s_{i-1}}^2 \bigg]
+\end{split}\end{equation}
 with
 \begin{equation*}
     K_c = s_i^2 s_{i+1} - s_i^2 s_{i-1} - s_i s_{i+1}^2 + s_i s_{i-1}^2 + s_{i+1}^2 s_{i-1} - s_{i+1} s_{i-1}^2 \text{.}
@@ -51,7 +51,7 @@ from which the minimum $M$ for given $t^*_{\max}$ follows as
 To be able to construct the $k$-th discrete derivative an additional $2k$ nodes for a total of $M + 2k$ nodes are required.
 The noise in the output of the leaky accumulators is amplified by $g_{\eta,\ped{NEF}}$.
 As additional neurons will diminish noise by $\bO(1/\sqrt{n})$ (\cref{sec:neural-err}), the number of neurons needs to be scaled by $g_{\eta,\ped{NEF}}^2$ to achieve the same noise level that would be present without the noise amplification.
-Multiplying this factors together with a base number of neurons $N$ used to represent a single dimension and the number of dimensions $d$ yields \cref{eqn:fuzzy-n-neurons}
+Multiplying this factors together with a base number of neurons $N$ used to represent a single dimension and the number of dimensions $d$ yields \cref{eqn:fuzzy-n-neurons}:
 \begin{equation*}
     N_{\ped{tot}}(t^*_1, k) = N \dims\, g_{\eta,\ped{NEF}}^2(\nu, k) \del{M + 2k} \text{.}
 \end{equation*}

@@ -6,7 +6,7 @@ The same model matches a variety of behavioural data from serial and free recall
 The CUE model exhibits many of the hallmark findings in memory research.
 It shows the primacy and recency effect in immediate serial and free recall.
 These effects get attenuated in delayed free recall, but in continuous distractor free recall the recency effect reappears.
-Furthermore, the model was found to make very view transposition errors in serial recall and if it does so nearby items will be transposed.
+Furthermore, the model was found to make very few transposition errors in serial recall and if it does so nearby items will be transposed.
 In the free recall conditions, the model tends to start with items at the end of the list, recall nearby items together, and favour recall in forward direction.
 Introducing delays and distractors attenuates these effects.
 All of this matches the findings from experiments with human subjects.
@@ -70,7 +70,7 @@ Finally, the recall process in the TCM was not modeled in a particular biologica
 
 In the broader context of memory models, the CUE model is unique as providing a low-level spiking network implementation, but matching high-level behavioural data.
 This includes the recall process that is not explicitly modeled in many other models.
-Furthermore, due to the item based context, there is no reinstantiation problem found in most context-based memory models (except the TCM and CUE model).
+Furthermore, due to the item based context, there is no reinstantiation problem found in most context-based memory models.
 
 A key part of the CUE model is the association matrix learning rule.
 It provides insight into how one-shot learning without catastrophic forgetting is possible.
@@ -157,7 +157,7 @@ The memory itself consists out of a set of independent, leaky accumulators given
 \end{equation}
 where $s_i$ are decay constants.
 This set of integrators is essentially computing a Laplace transform.
-To readout the memory the Laplace transform is inverted approximately as with a linear operator $\mat L_k^{-1}$ given by
+To readout the memory the Laplace transform is inverted approximately with a linear operator $\mat L_k^{-1}$ given by
 \begin{equation}
     \sbr{\mat L_k^{-1}}_{ij} = \frac{{(-1)}^k}{k!} s_i^{k+1} \sbr{\mat D_k}_{ij}
 \end{equation}
@@ -168,7 +168,7 @@ The reconstruction will become more accurate as $k \rightarrow \infty$.
 \Textcite{shankar2013} derive a signal to noise ratio, but use the magnitude of a delta impulse input to do so.
 As the magnitude of a delta impulse is infinite in the limit, the signal to noise ratio also grows without bound for $k \rightarrow \infty$.
 However, it is physically impossible to deliver a perfect delta impulse.
-Instead it is more appropriate to use analyze the steady state response for a fixed input $f(t) = u$.
+Instead it is more appropriate to analyze the steady state response for a fixed input $f(t) = u$.
 In the context of the NEF, $u=1$ can be assumed without loss of generality because any change in the magnitude $u$ will require a matched change in the representational radius $\radius$ which will also scale the absolute error keeping the relative error the same.
 The steady state of the leaky integrators is then given by $c_i(t) = s_i^{-1}$.
 This implies that NEF ensembles representing $c_i$ should use a radius of $\radius = s_i^{-1}$.
@@ -215,16 +215,16 @@ Based on these equations, the total number of neurons $N_{\ped{tot}}$ required c
     \nu &\leq \sqrt[k]{-\tau_1 / t^*_1} - 1
 \end{align}
 where $N$ is the number of neurons to represent a single dimension with sufficient accuracy (before the effect of the noise amplification), $\dims$ is the dimensionality of the input signal, $M$ gives the number of required leaky integrators, $\tau_1$ gives the desired smallest timescale, and $t^*_{\max}$ gives the desired timespan of the fuzzy memory.
-Assuming that the fuzzy temporal memory is to be used for the TCM context signal, $\tau_1 \leq \SI{1}{\second}$ and $t^*_{\max} \geq \SI{10}{\second}$ are reasonable choices because 10 items lists with a presentation rate one item per second are typical for the memory experiments matched in this work.
+Assuming that the fuzzy temporal memory is to be used for the TCM context signal, $\tau_1 \leq \SI{1}{\second}$ and $t^*_{\max} \geq \SI{10}{\second}$ are reasonable choices because ten item lists with a presentation rate one item per second are typical for the memory experiments matched in this work.
 Furthermore, $N = 50$ and $\dims = 64$ can be used as conservative estimates.
 Using \num{50}~neurons with maximum firing rates between \SIrange{200}{400}{\second^{-1}} is sufficient to read out the represented value, but not very precisely.
 This default range of firing rates is much higher than firing rates typically observed in vivo.
 Thus the actual required number of neurons can be expected to be higher.
-A dimensionality of $\dims = 64$ is also on the lower end to be able to fit sufficiently many almost orthogonal vectors in the space.
+A dimensionality of $\dims = 64$ is also on the lower end to be able to fit sufficiently many almost orthogonal vectors into the space.
 The CUE model used four times as much $\dims = 256$ dimensions.
 Ultimately, the choice of $N$ and $\dims$ has only a minor influence on the results as they are just linear factors while the required number of neurons grows exponentially for $t^*_1, k \rightarrow \infty$.
 The results for this choice of parameter values is shown in \cref{fig:fuzzy-mem-n-neurons}.
-For most parameter combinations, the number of about $\num{13e6}$ neurons in the entorhinal cortex \parencite{west1998}, assumed to be the locus of the TCM context signal, and even the number of about \num{86e9} neurons in the human brain \parencite{azevedo2009} is far exceeded.
+For most parameter combinations, the number of about $\num{13e6}$ neurons in the entorhinal cortex \parencite{west1998}, assumed to be the locus of the CUE/TCM context signal, and even the number of about \num{86e9} neurons in the human brain \parencite{azevedo2009} is far exceeded.
 For an implementation with a realistic limit on the neuron number, $t^*_1$, but also $k$, needs to be sufficiently small.
 \begin{figure}
     \centering
@@ -234,7 +234,7 @@ For an implementation with a realistic limit on the neuron number, $t^*_1$, but 
 
 Unfortunately, choosing small $t^*_1$ and $k$ is also problematic.
 The error of the approximate inversion of the Laplace transform with Post's formula converges only at a rate of $1/k$ \parencite{vukimtuan2000}.
-\Textcite{shankar2013} also comment themselves that $t^*_1$ needs to be kept sufficiently far from zero as it introduces a relative error in the order of $\bO(k^3\nu^2/96 t^{*2}_1)$ in the construction of the activity of $c_i$.
+\Textcite{shankar2013} also comment themselves that $t^*_1$ needs to be kept sufficiently far from zero as it introduces a relative error in the order of $\bO\big(k^3\nu^2/96 t^{*2}_1\big)$ in the construction of the activity of $c_i$.
 
 In conclusion, the fuzzy temporal memory has only a small parameter space that allows an implementation with feasible neural resources due to noise sensitivity.
 This parameters space suffers from large relative errors unrelated to noise in the approximation of the inverse Laplace transform and discretized derivative.
@@ -244,7 +244,7 @@ At the same time it would require an increased number of neurons compared to the
 
 \section{Advances in large-scale cognitive modeling}
 The primary objective of building the CUE model lead to a number of advances in large-scale cognitive modeling in general that are worth summarizing, even though not all have been presented as part of this thesis.
-Most importantly, optimizations for high-dimensional representations in neural networks (\cite{gosmann216}; \cref{sec:hdrep}).
+Most importantly, optimizations for high-dimensional representations in neural networks (\cref{sec:hdrep};\ \cite{gosmann216}).
 These allow to use fewer neurons which ultimately allows to build more complex networks without prohibitively long simulation times.
 A similar benefit has an improved product network \parencite{gosmann2015-1} as the calculation of products is often required, for example for the implementation of the circular convolution.
 Also a significant improvement to simulation times was achieved by the implementation of an optimization procedure in the Nengo simulator \parencite{gosmann2017}.
