@@ -83,7 +83,9 @@
 \setmathfont{TeX Gyre Pagella Math}
 \DeclareMathAlphabet{\mathcal}{OMS}{cmsy}{m}{n}
 %\setmathfont{XITS Math}[range=cal]
-\setsansfont{Lato}
+\setsansfont{Lato}[
+    ItalicFont={Lato Italic},
+]
 \setkomafont{chapterentry}{\normalfont}
 \sisetup{
     mode=math,number-math-rm=\lining,
@@ -95,6 +97,7 @@
 \Crefname{equation}{Equation}{Equations}
 
 \renewcommand*{\partpagestyle}{empty}
+\renewcommand*{\dictumwidth}{0.4\textwidth}
 
 \addbibresource{references.bib}
 \addbibresource{proposal-references.bib}
