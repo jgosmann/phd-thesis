@@ -114,7 +114,7 @@ Note that feeding a null vector to the difference ensemble will clear out the me
 Thus, the input the integrator needs to be gated.
 This can be done by inhibiting the neurons of the difference ensemble to keep the current value in the integrator.
 \begin{figure}
-    \begin{captionbeside}[Gated memory buffer network]{Gated memory buffer network. The \pop{store} input controls whether the input $\vc u(t)$ is allowed to overwrite the stored value $\vc x(t)$.}[i]
+    \begin{captionbeside}[Gated memory buffer network]{A gated memory buffer network. The \pop{store} input controls whether the input $\vc u(t)$ is allowed to overwrite the stored value $\vc x(t)$.}[i]
     \begin{tikzpicture}[nef]
         \graph [branch down=40pt] {
             u/"$\vc u$" -> diff/"$\vc u - \vc x$" [ens] -> ["$g \syntau$" above, bend left] x/"$\vc x$" [ens];

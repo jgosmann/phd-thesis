@@ -69,7 +69,7 @@ The first layer consists of independent accumulators representing the state vari
 This layer projects to the second layer that performs the computation of $\bar{x}_i$ (i.e.\ the Heaviside function).
 The second layer projects back to first layer and can be used to read out the output of the network.
 \begin{figure}
-    \begin{captionbeside}[Independent accumulator (IA) network]{Independent accumulator (IA) network. The second layer is used to compute the function $\bar{x}_i = \Heavi(x_i - \vartheta)$.\label{fig:ia}}
+    \begin{captionbeside}[Independent accumulator (IA) network]{The independent accumulator (IA) network. The second layer is used to compute the function $\bar{x}_i = \Heavi(x_i - \vartheta)$.\label{fig:ia}}
         \begin{tikzpicture}[nef, every path/.style={-{Latex}}]
 
             \matrix [column sep=20, row sep=18] {
