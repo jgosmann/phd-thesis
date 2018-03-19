@@ -15,7 +15,7 @@
 \usepackage{bm}
 \usepackage{booktabs}
 \usepackage{commath}
-\usepackage[backend=biber,style=authoryear]{biblatex}
+\usepackage[backend=biber,style=authoryear,isbn=false,date=year,uniquename=init,giveninits]{biblatex}
 \usepackage{graphicx}
 \usepackage{siunitx}
 \usepackage{subcaption}
@@ -39,6 +39,29 @@
 \usepackage{glossary-mcols}
 \glssetwidest{$\mat M^{\ped{epis}}$}
 \setglossarystyle{mcolalttree}
+
+\directlua{
+    local function adjust_kern (chars, a, b, d)
+        if chars[a] then
+            if not chars[a].kerns then
+                chars[a].kerns = { }
+            end
+            chars[a].kerns[b] = d
+        end
+    end
+
+    local function custom_kern (fontdata)
+        if fontdata then
+            local chars = fontdata.characters
+            if chars then
+                adjust_kern (chars, 47, 47, -219978)
+                adjust_kern (chars, 55, 47, -116160)
+            end
+        end
+    end
+
+    luatexbase.add_to_callback ("luaotfload.patch_font", custom_kern, "custom_kern")
+}
 
 
 \usetikzlibrary{backgrounds}  % FIXME just for debugging
@@ -67,6 +90,7 @@
     separate-uncertainty,
     multi-part-units=single,
 }
+\urlstyle{same}
 \crefname{equation}{}{}
 \Crefname{equation}{Equation}{Equations}
 
@@ -74,6 +98,14 @@
 
 \addbibresource{references.bib}
 \addbibresource{proposal-references.bib}
+\addbibresource{forthcoming.bib}
+
+\AtEveryBibitem{
+    \ifentrytype{thesis}{}{
+        \clearfield{url}
+        \clearfield{urlyear}
+    }
+}
 
 \newcommand{\mat}[1]{\symbfit{#1}}
 \newcommand{\vc}[1]{\symbfit{#1}}
@@ -96,7 +128,7 @@
 
 \input{glossary.tex}
 
-%\includeonly{discussion}
+%\includeonly{}
 \begin{document}
 
 \include{uw-ethesis-frontpgs} 
@@ -107,7 +139,7 @@
 \include{networks}
 \include{spa}
 \include{hdrep}
-\part{The Context-Unified Encoding memory model}
+\part{The Context-Unified Encoding memory model}\label{prt:cue}
 \include{ose}
 \include{tcm}
 \include{aml}
@@ -115,13 +147,7 @@
 \include{cue-model}
 \include{results}
 \include{discussion}
-\include{mapping}
 \include{conclusion}
-
-\addchap{Acknowledgements}
-IK
-Sharcnet/compute canada + their support team
-Nengo development team and opportunities
 
 \printbibliography[heading=bibintoc,title=References]
 

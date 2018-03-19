@@ -68,9 +68,9 @@ I understand that my thesis may be made electronically available to the public.
 \Cref{sec:recall} (excluding \cref{sec:recall-net}) paraphrases a conference submission that was co-authored by myself, a PhD student Aaron R.\ Voelker, and my supervisor, Dr.\ Chris Eliasmith \parencite{jangosmann2017}.
 \Cref{sec:apdx-wta} is a verbatim copy from the supplementary material accompanying the same paper.
 I implemented the network models, performed the benchmarks, and data analysis.
-Mr.\ Voelker contributed the mathematical analyses.
+Mr.~Voelker contributed the mathematical analyses.
 
-TODO cogsci submission
+A summary of \cref{prt:cue} of this thesis, co-authored by myself and my supervisor Dr.\ Chris Eliasmith, has been submitted to the CogSci 2018 conference \parencite{gosmann2018}.
 
 \cleardoublepage
 
@@ -78,22 +78,29 @@ TODO cogsci submission
 % ---------------
 
 \begin{center}\textsc{Abstract}\end{center}
+I present the context-unified encoding (CUE) model, a large-scale spiking neural network model of human memory.
+It combines and integrates activity-based short-term memory with weight-based long-term memory.
+The implementation with spiking neurons ensures biological plausibility and allows for predicitions on the neural level.
+At the same time, the model produces behavioural outputs that have been matched to human data from serial and free recall experiments.
+In particular, well known results such as primacy, recency, transposition error gradients, and forward recall bias have been reproduced with good quantitative matches.
+Additionally, the model accounts for the effect of the acetylcholine antagonist scopolamine.
 
-This is the abstract.
+To construct the CUE model, the Neural Enineering Framework (NEF) and Semantic Pointer Architecture (SPA) have been utilized.
+This thesis makes novel contributions to both.
+I propose to distribute NEF intercepts according to the distribution of cosine similarities of random uniformly distributed unit vectors.
+This leads to a uniform distribution of active neurons and reduces the error introduced by spiking noise considerably in high-dimensional neuronal representations.
+It improves the asymptotic scaling of the noise error with dimensions $\dims$ from $\bO(\dims)$ to $\bO\big(\dims^{3/4}\big)$.
+These results are applied to achieve improved Semantic Pointer representations in neural networks which are on par or better compared to previous methods of optimizing neural representations for the Semantic Pointer architecture.
+Furthermore, the vector-derived transformation binding (VTB) is investigated as an alternative to circular convolution in the SPA with promising results.
 
-Vulputate minim vel consequat praesent at vel iusto et, ex delenit, esse euismod luptatum augue ut sit et eu vel augue autem feugiat, quis ad dolore. Nulla vel, laoreet lobortis te commodo elit qui aliquam enim ex iriure ea ullamcorper nostrud lorem, lorem laoreet eu ex ut vel in zzril wisi quis. Nisl in autem praesent dignissim, sit vel aliquam at te, vero dolor molestie consequat.
+The CUE model combines and extends the ordinal serial encoding (OSE) model, a spiking neuron model of short-term memory, and the temporal context model (TCM), a mathematical model of free recall.
+To the former a neural mechanism for tracking the list position is added.
+The latter is converted into a spiking neural network under considerations of the main features and simplifying equations where appropriate.
+Previous models of the recall process in the TCM are replaced by a new independent accumulator recall process that is more suited to the integration in a large-scale network.
+To implement the modification of the required association matrices, a novel learning rule, the association matrix learning rule (AML), is derived that allows for one-shot learning without catastrophic forgetting.
+Its biological plausibility is discussed and it is shown that it accounts for changes in neural firing observed in human recordings from an association learning experiment.
+Furthermore, I discuss a recent proposal of an optimal fuzzy temporal memory as replacement for the TCM context signal and show it to be likely to require more neurons than the human brain consits of.
 
-Tation iriure sed wisi feugait odio dolore illum duis in accumsan velit illum consequat consequat ipsum molestie duis duis ut ullamcorper. Duis exerci odio blandit vero dolore eros odio amet et nisl in nostrud consequat iusto eum suscipit autem vero. Iusto dolore exerci, ut erat ex, magna in facilisis duis amet feugait augue accumsan zzril delenit aliquip dignissim at. Nisl molestie nibh, vulputate feugait nibh luptatum ea delenit nostrud dolore minim veniam odio volutpat delenit nulla accumsan eum vero ullamcorper eum. Augue velit veniam, dolor, exerci ea feugiat nulla molestie, veniam nonummy nulla dolore tincidunt, consectetuer dolore nulla ipsum commodo.
-
-At nostrud lorem, lorem laoreet eu ex ut vel in zzril wisi. Suscipit consequat in autem praesent dignissim, sit vel aliquam at te, vero dolor molestie consequat eros tation facilisi diam dolor. Odio luptatum dolor in facilisis et facilisi et adipiscing suscipit eu iusto praesent enim, euismod consectetuer feugait duis. Odio veniam et iriure ad qui nonummy aliquip at qui augue quis vel diam, nulla. Autem exerci tation iusto, hendrerit et, tation esse consequat ut velit te dignissim eu esse eros facilisis lobortis, lobortis hendrerit esse dignissim nisl. Nibh nulla minim vel consequat praesent at vel iusto et, ex delenit, esse euismod luptatum.
-
-Ut eum vero ullamcorper eum ad velit veniam, dolor, exerci ea feugiat nulla molestie, veniam nonummy nulla. Elit tincidunt, consectetuer dolore nulla ipsum commodo, ut, at qui blandit suscipit accumsan feugiat vel praesent. In dolor, ea elit suscipit nisl blandit hendrerit zzril. Sit enim, et dolore blandit illum enim duis feugiat velit consequat iriure sed wisi feugait odio dolore illum duis. Et accumsan velit illum consequat consequat ipsum molestie duis duis ut ullamcorper nulla exerci odio blandit vero dolore eros odio amet et.
-
-In augue quis vel diam, nulla dolore exerci tation iusto, hendrerit et, tation esse consequat ut velit. Duis dignissim eu esse eros facilisis lobortis, lobortis hendrerit esse dignissim nisl illum nulla minim vel consequat praesent at vel iusto et, ex delenit, esse euismod. Nulla augue ut sit et eu vel augue autem feugiat, quis ad dolore te vel, laoreet lobortis te commodo elit qui aliquam enim ex iriure. Ut ullamcorper nostrud lorem, lorem laoreet eu ex ut vel in zzril wisi quis consequat in autem praesent dignissim, sit vel. Dolore at te, vero dolor molestie consequat eros tation facilisi diam. Feugait augue luptatum dolor in facilisis et facilisi et adipiscing suscipit eu iusto praesent enim, euismod consectetuer feugait duis vulputate veniam et.
-
-Ad eros odio amet et nisl in nostrud consequat iusto eum suscipit autem vero enim dolore exerci, ut. Esse ex, magna in facilisis duis amet feugait augue accumsan zzril. Lobortis aliquip dignissim at, in molestie nibh, vulputate feugait nibh luptatum ea delenit nostrud dolore minim veniam odio. Euismod delenit nulla accumsan eum vero ullamcorper eum ad velit veniam. Quis, exerci ea feugiat nulla molestie, veniam nonummy nulla. Elit tincidunt, consectetuer dolore nulla ipsum commodo, ut, at qui blandit suscipit accumsan feugiat vel praesent.
-
-Dolor zzril wisi quis consequat in autem praesent dignissim, sit vel aliquam at te, vero. Duis molestie consequat eros tation facilisi diam dolor augue. Dolore dolor in facilisis et facilisi et adipiscing suscipit eu iusto praesent enim, euismod consectetuer feugait duis vulputate.
 
 \cleardoublepage
 
@@ -101,8 +108,19 @@ Dolor zzril wisi quis consequat in autem praesent dignissim, sit vel aliquam at 
 % -------------------------------
 
 \begin{center}\textsc{Acknowledgements}\end{center}
+I would like to thank my supervisor, Chris Eliasmith, for his continued support and guidance.
+I am also grateful to my colleagues at the Centre for Theoretical Neuroscience, in particular Terrance Stewart and Aaron Voelker, for their invaluable knowledge and helpful discussions.
+The research in this thesis would have not been possible without the excellent and continuously improving work of the Nengo development team, spearheaded by Trevor Bekolay.
+This research was also enabled in part by support provided by SHARCNET\footnote{\href{https://www.sharcnet.ca}{www.sharcnet.ca}} and Compute Canada\footnote{\href{https://www.computecanada.ca}{www.computecanada.ca}}.
+Many CPU cycles were burned on their hardware simulating iterations of the CUE model.
+I also would like to acknowledge the financial support for this research by the Canada Research Chairs program, the NSERC Discovery garnt 261453, the Air Force Office of Scientific Research grant FA8655-13-1-3084, CFI, and OIT\@.  % chktex 8
 
-I would like to thank all the little people who made this thesis possible.
+A special mention is deserved by the Interdisciplinary College, a unique annual spring-school at the Lake Möhne in Germany.
+It is the place where I met Chris Eliasmith for the first time and ultimately made me pursue this research direction.
+
+Finally, I would like to thank all the people I climbed with over the years as they helped me to stay sane during this period.
+
+
 \cleardoublepage
 
 % D E D I C A T I O N
@@ -110,7 +128,7 @@ I would like to thank all the little people who made this thesis possible.
 
 \begin{center}\textsc{Dedication}\end{center}
 
-This is dedicated to the one I love.
+This is dedicated to the one I love. TODO
 \cleardoublepage
 
 % T A B L E   O F   C O N T E N T S
