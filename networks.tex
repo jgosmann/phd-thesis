@@ -1,21 +1,21 @@
 \chapter{Basic NEF networks}
 When constructing neural models with the NEF, there are certain networks that are often used in multiple places and constitute basic building blocks for larger scale networks.
-In the following, I will shortly discuss how to create a differentiator, an integrator, a gated memory buffer based on that integrator, an ensemble applying a threshold to a signal, and how to do multiplication in neurons.
+In the following, I briefly discuss how to create a differentiator, an integrator, a gated memory buffer based on that integrator, an ensemble applying a threshold to a signal, and a multiplier in neurons.
 
 Often it is helpful to use a graphic representation to understand NEF networks.
 The graphical primitives used in the network diagrams in this thesis are shown in \cref{fig:tikz-nef}.
 Normal ensembles are marked with a circle.
 Sometimes the dimensions of a vector will be split across multiple ensembles, called an \emph{ensemble array}, and marked by a stack of circles.
-Multiple NEF components that constitute a network not shown in full detail, use rectangles with rounded corners.
+Multiple NEF components that constitute a network not shown in full detail, are identified with rectangles with rounded corners.
 Sometimes it is useful to combine decoded representations before transmitting them to the destination neurons in a \emph{pass-through} node.
 Such nodes are marked by filled circles.
 Note that such pass-through nodes could be replaced with the actual neuron-to-neuron connections and are not biological implausible.
 \emph{Rectification ensembles} are useful enough to warrant a special symbol: a rectified linear plot in its circle.
 These ensembles are discussed in detail in \cref{sec:thresholding}.
-Normal NEF connections are represented by arrows and typically have a synaptic time constant of \SI{5}{\milli\second} which is is in the range of experimentally measured values for AMPA-type glutamate receptors \parencite{jonas1993,spruston1995-1}.
+Normal NEF connections are represented by arrows and typically have a synaptic time constant of \SI{5}{\milli\second}, which is is in the range of experimentally measured values for AMPA-type glutamate receptors \parencite{jonas1993,spruston1995-1}.
 Linear transforms or functions computed across the connection are denoted along the arrow.
 Inhibitory connections bypass the encoders of the target ensemble and use a negative transform to suppress firing in the target ensemble.
-Finally, modulatory connections do not influence the representation in an ensemble directly, but the connection weights of another connection.
+Finally, modulatory connections do not influence the representation in an ensemble directly, but the connection weights of another connection, and are indicated with a half open circle terminating the connection.
 \begin{figure}
     \hfill
     \begin{tikzpicture}[nef,every node/.style={font={\small}}]
@@ -53,7 +53,7 @@ For this an approximation can be constructed out of two synaptic low pass filter
 The attenuation of low frequency is desired as this corresponds to the differentiation.
 The attenuation of high-frequencies above the pass-band is undesired, but given appropriate $\tau_1$ and $\tau_2$ unproblematic in a neural network because signals will in general be subject to synaptic filtering of high frequencies.
 The implementation of such a differentiator is straight-forward with the NEF (\cref{fig:differentiator-net}) by feeding the same input with two different synaptic time constants into an ensemble.
-In this work $\tau_1 = \SI{5}{\milli\second}$ and $\tau_2 = \SI{50}{\milli\second}$ were used which is in the range of experimentally observed neurotransmitter decay constants \parencite{sah1990-1,moreno-bote2005}.
+In this work $\tau_1 = \SI{5}{\milli\second}$ and $\tau_2 = \SI{50}{\milli\second}$ were used, which are in the range of experimentally observed neurotransmitter decay constants \parencite{sah1990-1,moreno-bote2005}.
 \begin{figure}
     \centering
     \includegraphics{figures/differentiator}
@@ -72,7 +72,7 @@ In this work $\tau_1 = \SI{5}{\milli\second}$ and $\tau_2 = \SI{50}{\milli\secon
 
 
 \section{Integrator}
-Integrators are important components in many NEF models because they allow to store values over some timespan in neural activity.
+Integrators are important components in many NEF models because they enable the storage of values over some time span in neural activity.
 An integrator is described by the differential equation
 \begin{equation}
     \od{\vc x(t)}{t} = \vc u(t)
@@ -83,10 +83,10 @@ Furthermore, a recurrent connection feeding the output of the integrator back to
 To get a stable representations over a sufficient time window, it is best to use a long time constant like $\syntau = \SI{0.1}{\second}$ which is the range measured for the NMDA neurotransmitter \parencite{sah1990-1,moreno-bote2005}.
 Due to neural noise and distortion error, the represented value can drift over time (\cref{fig:integrator}).
 The distortion in the decoded representation leads to a finite number of fixed points and the represented value will shift to one of the stable fixed points.
-The neural noise will prevent the representation to stay in an unstable fixed point and can make the representation to move out of the basin of attraction of current stable fixed point.
-Adding more neurons to an integrator will make it more stable as the spiking noise will be decreased.
-Similarly, a longer recurrent synaptic time constant makes the integrator also more stable.
-Increasing the number of represented dimensions will make the integrator less stable because there will be less fixed points.
+The neural noise prevents the representation from staying in an unstable fixed point and can make the representation move out of the basin of attraction of a stable fixed point.
+Adding more neurons to an integrator makes it more stable as the spiking noise is decreased.
+Similarly, a longer recurrent synaptic time constant also makes the integrator more stable.
+Increasing the number of represented dimensions makes the integrator less stable because there are fewer fixed points.
 \begin{figure}
     \begin{captionbeside}{Implementation of an integrator with the NEF\label{fig:integrator-net}}[i]
         \begin{tikzpicture}[nef]
@@ -109,12 +109,12 @@ Increasing the number of represented dimensions will make the integrator less st
 While the integrator enables us to store a value over time, it does not allow for particularly quick updating.
 A quicker update can be achieved by adding a difference ensemble (\cref{fig:gated-mem}).
 By scaling the difference with a gain factor $g$ the updating speed can be regulated.
-However, too large values will lead to oscillations in the integrator.
-Note that feeding a null vector to the difference ensemble will clear out the memory instead of keeping the current value.
+However, too large of a value leads to oscillations in the integrator.
+Note that feeding a null vector to the difference ensemble clears out the memory instead of keeping the current value.
 Thus, the input the integrator needs to be gated.
 This can be done by inhibiting the neurons of the difference ensemble to keep the current value in the integrator.
 \begin{figure}
-    \begin{captionbeside}[Gated memory buffer network]{A gated memory buffer network. The \pop{store} input controls whether the input $\vc u(t)$ is allowed to overwrite the stored value $\vc x(t)$.}[i]
+    \begin{captionbeside}[Gated memory buffer network]{A gated memory buffer network. The \pop{store} input controls whether the input $\vc u(t)$ is allowed to overwrite the stored value $\vc x(t)$.\label{fig:gated-mem}}[i]
     \begin{tikzpicture}[nef]
         \graph [branch down=40pt] {
             u/"$\vc u$" -> diff/"$\vc u - \vc x$" [ens] -> ["$g \syntau$" above, bend left] x/"$\vc x$" [ens];
@@ -123,7 +123,7 @@ This can be done by inhibiting the neurons of the difference ensemble to keep th
             store [ext] -> [inhibit] diff;
         };
     \end{tikzpicture}
-\end{captionbeside}\label{fig:gated-mem}
+\end{captionbeside}
 \end{figure}
 
 \section{Thresholding ensembles}\label{sec:thresholding}
@@ -184,4 +184,4 @@ The neural implementation of this equation is straight-forward (\cref{fig:produc
 
 Multiple scalar product networks can be combined to compute element-wise vector products.
 By summing across those element-wise products a dot product can be computed.
-Product networks are also used in the computation of circular convolution as binding operation in the Semantic Pointer Architecture (\cref{sec:spa}).
+Product networks are also used in the computation of circular convolution as the binding operation in the Semantic Pointer Architecture (\cref{sec:spa}).

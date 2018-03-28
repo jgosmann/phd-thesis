@@ -1,17 +1,17 @@
 \chapter{The Semantic Pointer Architecture}\label{sec:spa}
-While the Neural Engineering Framework allows us to encode vectors into spiking neural network and transform them, but it does not tell us how to use those vectors to represent structured, conceptual, or symbol-like information.
+While the Neural Engineering Framework allows us to encode vectors into spiking neural networks and transform them, it does not tell us how to use those vectors to represent structured, conceptual, or symbol-like information.
 Different such methods could be devised, though in the context of the NEF the most widely used method is the Semantic Pointer Architecture \parencite[SPA;][]{eliasmith2013}.
 The SPA has been used to build a multitude of cognitive models, including the n-back task \parencite{gosmann2015}, the Tower of Hanoi task \parencite{stewart2011-2}, human-scale knowledge representation \parencite{crawford2016}.
-The largest and most complex example of an SPA model is Spaun, the Semantic Pointer Architecture Unified Network, combining eight different tasks in a single functional spiking-neuron model \parencite{Eliasmith2012}.
+The largest and most complex example of a SPA model is Spaun, the Semantic Pointer Architecture Unified Network, combining eight different tasks in a single functional spiking-neuron model \parencite{Eliasmith2012}.
 
-The SPA is a specific instance of a Vector Symbolic Architecture \parencite[VSA;][]{gayler2004}.
-In VSAs concepts are represented with vectors and linear and nonlinear operators are used to combine basic concepts in more complex structured representations.
-Three types of operators can be considered essential in a VSA\@.
+The conceptual representations in the SPA are a specific instance of a Vector Symbolic Architecture \parencite[VSA;][]{gayler2004}.
+In VSAs concepts are represented with vectors, and linear and nonlinear operators are used to combine basic concepts in more complex structured representations.
+Three types of operators are considered essential in a VSA\@.
 First, a measure of similarity
 \begin{equation}
     \simmeasure: \mathbb{R}^{\dims} \times \mathbb{R}^{\dims} \longrightarrow \mathbb{R}
 \end{equation}
-for which we will use the normalized dot product (also known as cosine similarity)
+for which I use the normalized dot product (also known as cosine similarity)
 \begin{equation}
     \simmeasure(\vc x, \vc y) := \frac{\left\langle \vc x, \vc y \right\rangle}{\norm{\vc x} \cdot \norm{\vc y}}
 \end{equation}
@@ -20,17 +20,17 @@ Second, a superposition operator
 \begin{equation}
     \superpos: \mathbb{R}^{\dims} \times \mathbb{R}^{\dims} \longrightarrow \mathbb{R}^{\dims}
 \end{equation}
-that produces a vector similar to both inputs, i.e.\ $\simmeasure(\superpos(\vc x, \vc y), \vc x) \approx \simmeasure(\superpos(\vc x, \vc y), \vc y) \gtrapprox \sqrt{1/2}$ for $\simmeasure(\vc x, \vc y) \approx 0$.
-This is usually, and will be for the remainder of this thesis, simple elementwise addition, i.e. $\superpos(\vc x, \vc y) := \vc x + \vc y$.
+is required that produces a vector similar to both inputs, i.e., $\simmeasure(\superpos(\vc x, \vc y), \vc x) \approx \simmeasure(\superpos(\vc x, \vc y), \vc y) \gtrapprox \sqrt{1/2}$ for $\simmeasure(\vc x, \vc y) \approx 0$.
+This is usually, and will be for the remainder of this thesis, simple elementwise addition, i.e., $\superpos(\vc x, \vc y) := \vc x + \vc y$.
 Finally, a binding operator
 \begin{equation}
     \bind: \mathbb{R}^{\dims_1} \times \mathbb{R}^{\dims_2} \longrightarrow \mathbb{R}^{\dims}
 \end{equation}
-with an approximate inverse or unbinding operation
+is needed with an approximate inverse or unbinding operation
 \begin{equation}
     \bind^+: \mathbb{R}^d \times \mathbb{R}^{\dims_2} \longrightarrow \mathbb{R}^{\dims_1} \text{.}
 \end{equation}
-To be able to build up and retrieve information from representations, the binding and unbinding operation are required to be distributive, i.e.
+To be able to build up and retrieve information from representations, the binding and unbinding operations are required to be distributive, i.e.,
 \begin{align}
     \bind(\vc x + \vc y, \vc z) &= \bind(\vc x, \vc z) + \bind(\vc y, \vc z) \\
     \bind^+(\vc x + \vc y, \vc z) &= \bind^+(\vc x, \vc z) + \bind^+(\vc y, \vc z) \text{.}
@@ -46,7 +46,7 @@ For that reason, I will only consider binding methods that keep the dimensionali
 In pure math, it is still possible to define binding operators with an exact inverse, but we need to keep the implementation in neurons in mind.
 This introduces additional constraints.
 First, the actual usable representational space $\repspace \subsetneq \mathbb{R}^{\dims}$ is limited, constraining unlimited growth of bound vectors.
-Second, neural noise limits the representational accuracy preventing highly non-linear operators.
+Second, neural noise limits the representational accuracy, preventing highly non-linear operators.
 It follows that for a binding operator in a neural system it is desired to maximize the set $\mathcal{V} \subseteq \repspace$ for which  $\simmeasure(\bind^+(\bind(\vc x, \vc y) + \vc\zeta, \vc y), \vc x) \approx 1$ for all $\vc x, \vc y \in \mathcal{V}$ and samples of noise $\vc\zeta$ in the neural system.
 Note that this condition would be satisfied by using the identity $\bind(\vc x, \vc y) = \bind^+(\vc x, \vc y) = \vc x$.
 Thus, simultaneously it needs to hold that $\simmeasure(\bind^+(\bind(\vc x, \vc y), \vc z), \vc x) \approx 0$ for all $\vc x, \vc y, \vc z \in \mathcal{V}$ with $\simmeasure(\vc y, \vc z) \approx 0$.
@@ -56,7 +56,7 @@ At this point, it is useful to introduce three more definitions.
     A vector $\bid_{\bind}$ with the property $\bind(\vc x, \bid_{\bind}) = \vc x$ is called \emph{identity vector} under $\bind$.
 \end{defn}
 \begin{defn}[absorbing element]
-    A vector $\bzero_{\bind}$ with the property $\bind(\vc x, \bzero_{\bind}) = c \cdot \bzero_{\bind}$ where $c \in \mathbb{R}$ is called \emph{absorbing element} under $\bind$.
+    A vector $\bzero_{\bind}$ with the property $\bind(\vc x, \bzero_{\bind}) = c \cdot \bzero_{\bind}$ where $c \in \mathbb{R}$ is called an \emph{absorbing element} under $\bind$.
 \end{defn}
 Such an absorbing element effectively destroys the information in the vector $\vc x$.
 For that reason, absorbing elements should be avoided when constructing representations with binding.
@@ -70,13 +70,13 @@ It also implies that binding with a unitary vector preserves the length of the b
 
 
 \section{Binding operations}
-I will introduce two concrete binding operations now.
-First, circular convolution is discussed which has been the binding operation of choice in the SPA so far.
-Second, I will introduce a new binding method, termed vector-derived transformation binding, with some other trade-offs.
-The two binding approaches and their suitability for different problems will be discussed.
+I introduce two specific binding operations now.
+First, circular convolution is discussed, which has been the binding operation of choice in the SPA so far.
+Second, I introduce a new binding method, termed vector-derived transformation binding, with some trade-offs.
+The two binding approaches and their suitability for different problems is discussed.
 
 \subsection{Circular convolution}
-The binding operator classically used in the SPA is circular convolution and was suggested by \textcite{plate1995,plate2003} for his Holographic Reduced Representations (HRRs).
+The binding operator classically used in the SPA is circular convolution, and was suggested by \textcite{plate1995,plate2003} for his Holographic Reduced Representations (HRRs).
 \begin{defn}[circular convolution binding]
     The circular convolution binding operator is given by
     \begin{equation}
@@ -102,20 +102,20 @@ A useful property of circular convolution for the implementation in a neural net
 where $\fouriermat$ is the discrete Fourier transform (DFT) matrix.
 The linear transform with the DFT matrix can be put easily into the neural connection weights and the element-wise product can be done with a well-optimized product network \parencite{gosmann2015-1}.
 
-The expression in Fourier space also allows to derive the special elements of circular convolution.
+The expression in Fourier space also allows the derivation of the special elements of circular convolution.
 The identity vector must not change the complex Fourier coefficient in the element-wise multiplication.
 Thus, its Fourier coefficients must all be $1 + 0\iu$ and the identity vector is given by
 \begin{equation}
     \bid_{\circledast} = (1, 0, 0, \dotsc, 0)\Tr \text{.}
 \end{equation}
-Furthermore, all vectors with Fourier coefficients $c_n \in \mathbb{C}$ that have an absolute value of $\left|c_n\right| = 1$ will be unitary as one can easily verify.
+Furthermore, all vectors with Fourier coefficients $c_n \in \mathbb{C}$ that have an absolute value of $\left|c_n\right| = 1$ will be unitary, as one can easily verify.
 A trivial example of a unitary vector is the identity vector $\bid_{\circledast}$.
-Finally, all vectors $(z, \dotsc, z)\Tr$ with $z \in \mathbb{R}$ are absorbing elements.
+Finally, all vectors $(z, \dotsc, z)\!\Tr$ with $z \in \mathbb{R}$ are absorbing elements.
 
 \subsection{Vector-derived transformation binding}
 Circular convolution can be interpreted as moving one of the operands around in the $d$-dimensional space in a way defined by the other operand.
 This leads to the question, whether there are other ways to project one vector to a new location based on the other vector.
-One such way is what I call \emph{vector-derived transformation binding (VTB)} which to my knowledge has not been described before.
+One such way is what I call \emph{vector-derived transformation binding (VTB)}, which to my knowledge has not been described before.
 \begin{defn}[vector-derived transformation binding, VTB]
     Given a $\dims' = \dims^{\frac{1}{2}} \in \posnum$, the vector-derived transformation binding operator $\vtb: \mathbb{R}^{\dims} \times \mathbb{R}^{\dims} \longrightarrow \mathbb{R}^{\dims}$ is defined as
     \begin{equation}
@@ -187,8 +187,8 @@ nor associative
 \begin{equation}
     \vtb(\vc x, \vtb(\vc y, \vc z)) = \bar{\mat V}_{\bar{\mat V}_{\vc z} \vc y} \vc x \neq \bar{\mat V}_{\vc z} \bar{\mat V}_{\vc y} \vc x = \vtb(\vtb(\vc x, \vc y), \vc z) \text{.}
 \end{equation}
-This implies that unlike circular convolution multiple binding cannot be undone in a single step, but a separate unbinding step is required for each binding.
-Despite the non-commutativity, it is possible to flip the operands in bound state $\vtb(\vc x, \vc y) = \mat V_{\leftrightarrow} \vtb(\vc y, \vc x)$ with matrix
+This implies that unlike circular convolution, multiple bindings cannot be undone in a single step, but a separate unbinding step is required for each binding.
+Despite the non-commutativity, it is possible to flip the operands in the bound state $\vtb(\vc x, \vc y) = \mat V_{\leftrightarrow} \vtb(\vc y, \vc x)$ with the matrix
 \begin{equation}
     \sbr{\mat V_{\leftrightarrow}}_{ij} = \left\{ \begin{array}{ll}
             1 & j = 1 + \left\lfloor \frac{i - 1}{\dims'} \right\rfloor + \dims' \sbr{\del{i - 1} \bmod \dims'} \\
@@ -209,17 +209,17 @@ Example for $d = 4$:
 Both circular convolution and VTB are compressed binding operations.
 Because of the lossy compression, we lose some information in each binding which makes it increasingly harder to recover the original unbound vectors.
 To combat this effect (and the effect of neuron noise) clean-up memories like the one by \textcite{stewart2011} are required.
-Likewise the independent accumulator model discussed in \cref{sec:ia} can be used as clean-up memory.
+Likewise the independent accumulator model discussed in \cref{sec:ia} can be used as a clean-up memory.
 
-In addition to the information loss, the binding operations will change the length of the vector (if neither operand is unitary).
-This can be a problem in a neural representation as neurons will saturate and might not represent the vector accurately anymore.
+In addition to the information loss, the binding operations change the length of the vector (if neither operand is unitary).
+This can be a problem in a neural representation as neurons saturate and might not represent the vector accurately anymore.
 In particular, neural ensembles in the NEF are optimized for a certain representational space, usually a hyperball with a given radius $\radius$.
 It is convenient to set $\radius = 1$ and try to keep the Semantic Pointer vectors at unit-length.
 
-\Cref{fig:bindings-autoconv} shows how the mean length of random vectors repeatedly bound with itself changes.
+\Cref{fig:bindings-autoconv} shows how the mean length of random vectors repeatedly bound with themselves changes.
 For the circular convolution the length increases much faster than for VTB\@.
-Such a rapid increase in length can be problematic in a neural network with limited representational radius as in the NEF\@.
-Moreover, VTB preserves more information of the bound vectors as shown by the similary to the original vectors when undoing all bindings.
+Such a rapid increase in length can be problematic in a neural network with a limited representational radius as in the NEF\@.
+Moreover, VTB preserves more information of the bound vectors as shown by the similarity to the original vectors when undoing all bindings.
 After repeated binding with itself and then the same number of unbindings, the resulting VTB bound vector is more similar to the original vector than the circular convolution bound vector.
 \begin{figure}
     \centering
@@ -238,10 +238,10 @@ Again, this decrease is much quicker for circular convolution binding than for V
 \end{figure}
 
 It is conceivable that the problems with scaling of the vector length can be fixed by normalizing after each binding.
-This, however, will not affect the loss of information in each binding (\cref{fig:bindings-normalized}).
+This, however, does not affect the loss of information in each binding (\cref{fig:bindings-normalized}).
 Also, implementing normalization in a neural network is notoriously difficult because of the division involved with an unbounded output as the divisor approaches zero.
 Good approximations of normalization are only possible for a defined and finite input range.
-It is worth to note that the neurons in the NEF will perform some sort of soft normalization for large values as the neuron's firing rates will saturate.
+It is worth noting that the neurons in the NEF perform a sort of ``soft normalization'' for large values, as the neuron's firing rates saturate.
 But this only affects vectors exceeding a certain length and can lead to other distortions in the representation.
 \begin{figure}
     \centering
@@ -249,36 +249,36 @@ But this only affects vectors exceeding a certain length and can lead to other d
     \caption[Repeatedly binding a 256-dimensional vector with normalization]{Repeatedly binding a 256-dimensional vector with (a) itself or (b) random vectors and normalizing in each step. The similarity to the original vector after undoing all bindings is shown. The shaded areas represent \SI{95}{\percent} confidence intervals.}\label{fig:bindings-normalized}
 \end{figure}
 
-Another approach to prevent the growth or decay of the vector length and even prevent the information loss, is the usage of unitary vectors.
-These will keep the vector length constant and perform lossless binding due to their perfect inverse.
-Note that binding two unitary vectors will give another unitary vector.
+Another approach to preventing the growth or decay of the vector length, and even prevent the information loss, is the usage of unitary vectors.
+These keep the vector length constant and perform lossless binding due to their perfect inverse.
+Note that binding two unitary vectors gives another unitary vector.
 Thus, repeated binding is not a problem.
 However, the scaling properties of VSAs are based on the fact that the number of almost orthogonal vectors that fits into a vector space grows exponentially with the dimensionality of that space \parencite{wyner1967,cai2013}.
 Because not all vectors are unitary, this scaling property might be lost when restricted to unitary vectors.
-It might be best to use unitary vectors only for those Semantic Pointers that will be repeatedly used in bindings.
-But it is also worth keeping in mind that achieving the theoretical limit of almost orthogonal vectors in a space is a hard problem closely related to sphere packing and unsolved for arbitrary dimensionality \parencite{cohn2017}.
+It might be best to use unitary vectors only for those Semantic Pointers that are repeatedly used in bindings.
+But it is also worth keeping in mind that achieving the theoretical limit of almost orthogonal vectors in a space is a hard problem, closely related to sphere packing and unsolved for arbitrary dimensionality \parencite{cohn2017}.
 Thus, the practical scaling of the number of useable vectors might be less then the exponential scaling for both unitary and non-unitary vectors.
 
 So far VTB looks like the better choice for a binding operation.
-But it comes not without downsides.
-In contrast to circular convolution, it is not associative and commutative.
-While the desirability of commutativity depends on the employed representation scheme, the non-associativity implies that each binding has to be undone in an individual step, while circular convolution allows to undo a chain of bindings in a single step if the vector representing that chain is available.
-Thus, circular convolution can allow to recover information more quickly.
-Ultimately, this will be a question what binding operations the brain applies for different forms of processing (if the SPA is at all related to what the brain does).
-Potentially, the binding operations lead to different timing predictions as unbinding with the VTB will take more time.
+But it does not come not without downsides.
+In contrast to circular convolution, it is not associative or commutative.
+While the desirability of commutativity depends on the employed representation scheme, the non-associativity implies that each binding has to be undone in an individual step, while circular convolution allows us to undo a chain of bindings in a single step, if the vector representing that chain is available.
+Thus, circular convolution can allows the recovery of information more quickly.
+Ultimately, this is a question of what binding operations the brain applies for different forms of processing (if such binding is at all related to what the brain does).
+Potentially, the binding operations lead to different timing predictions, as unbinding with the VTB may take more time.
 Deriving such predictions and testing them experimentally is, however, out of the scope of this thesis.
 
 Finally, we have to consider the neural implementation of these binding operations.
 Both essentially require a set of multiplication networks.
 For the circular convolution, the DFT (and inverse DFT) can be implemented in feed-forward connection weights that do not require any additional neurons.
-For each of the input vectors $\dims$ Fourier complex coefficients will be produced, but as the inputs are real-valued, half of these will be the complex conjugate of the other half.
+For each of the input vectors $\dims$ Fourier complex coefficients will be produced, but as the inputs are real-valued, half of these are the complex conjugate of the other half.
 Thus, only $\dims / 2$ coefficients have to be considered.
 Each coefficient is a complex number multiplied with one coefficient of the other vector.
-That results in for real-valued multiplies per coefficient.
-In total, $2\dims$ multiplications will be required for a circular convolution.
+That results in four real-valued multiplies per coefficient.
+In total, $2\dims$ multiplications are required for a circular convolution.
 For VTB, there are $d^{1/2}$ multiplications of $d^{1/2} \times d^{1/2}$ matrices with a vector, resulting in a total of $d^{3/2}$ multiplications.
 Thus, the VTB requires more neural resources as a larger number of multiplication networks is required.
-It should be noted, that for either binding method the binding with a fixed vector can be implemented purely in the connection weights as it reduces to a simple matrix multiplication in either case.
+It should be noted, that for either binding method, the binding with a fixed vector can be implemented purely in the connection weights as it reduces to a simple matrix multiplication in either case.
 
 Despite VTB having many advantages over circular convolution, I decided to use circular convolution in the memory model.
 The main reason is that support for circular convolution is already implemented in Nengo and the model does not use a lot of binding operations.
@@ -308,8 +308,8 @@ For example, the properties can be bound to a role and each object to an object 
 \end{align}
 To find the color of a specific shape, each object would have to be retrieved, then the shape of the object to compare it to the target shape, and finally the color has to recovered if the shape matches.
 Thus, different encoding schemes can lead to different timing predictions.
-The latter approach requires scanning and through multiple object and thus it should take longer to recover information with more items, while the former approach can recover any property in a single step.
-Despite those differences, both encoding approaches are similar in so far as pairs of semantic pointers are bound together.
+The latter approach requires scanning and through multiple objects and thus it should take longer to recover information with more items, while the former approach can recover any property in a single step.
+Despite those differences, both encoding approaches are similar, in so far as pairs of semantic pointers are bound together.
 \begin{defn}[encoding with binding]
     Given $k$ pairs $(\vc x_i, \vc y_i) \in \mathbb{R}^{\dims} \times \mathbb{R}^{\dims}$, the encoding of these pairs into a single Semantic Pointer $\vc m$ with binding is given by
     \begin{equation}
@@ -330,16 +330,16 @@ The retrieval of an $\vc x_i \approx \hat{\vc x}_i$ is accomplished with
     c &= \argmax_{j \in \sbr{1, k}}\ \simmeasure\!\del{\vc y_i, \del{\mat M^{2j-1}}^{\!+} \vc m} \text{.}
 \end{align}
 
-There is a number of sensible choices for the matrix $\mat M$.
+There are a number of sensible choices for the matrix $\mat M$.
 \begin{itemize}
     \item First of all, for both, circular convolution and VTB, binding with a \emph{fixed} vector $\vc v$ can be expressed as a matrix multiplication.
-        A matrix $\mat M$ derived in this way will be unitary, if and only if the vector $\vc v$ is unitary for the given binding operation.
+        A matrix $\mat M$ derived in this way is unitary, if and only if the vector $\vc v$ is unitary for the given binding operation.
     \item A common choice for encoding with tagging are permutation matrices.
         These are unitary and an exact inverse is given by the transpose.
     \item A special permutation matrix is the matrix that shifts all vector components by one.
         For a given permutation matrix, the vector space dimensions can be reordered such that the permutation matrix becomes the shift by one.
         Interestingly, the shift by one is also equivalent to a circular convolution with the vector $(0, 1, 0, 0, \dotsc)\Tr$.
-    \item Another good candidate for $M$, that has not been considered to my knowledge, are (random) orthogonal matrices.
+    \item Other good candidates for $M$, that have not been considered to my knowledge, are (random) orthogonal matrices.
         These are unitary operators on $\mathbb{R}^{\dims}$ and thus have an exact inverse given by the transpose.
 \end{itemize}
 The relations of these different matrix choices is shown in the Venn diagram in \cref{fig:tagging-matrices}.
@@ -349,7 +349,7 @@ The relations of these different matrix choices is shown in the Venn diagram in 
     \caption[Venn diagram of matrices for encoding with tagging]{Venn diagram of the relations between different classes of matrices $\mat M$ that can be used for encoding with tagging.}\label{fig:tagging-matrices}
 \end{figure}
 
-Either encoding method allows to recover encoded vectors, but the encoding vector itself is (in general) not similar to those encoded vectors.
+Either encoding method allows the recovery of encoded vectors, but the encoding vector itself is (in general) not similar to those encoded vectors.
 In this way, the vector is analogous to a pointer in computer science that doesn't directly contain the information, but can be dereferenced to access the information it is pointing to.
 Unlike pointers, however, these vectors can also capture semantic information by their distance in vector space.
 Due to the combination of these two facts, these vectors are called Semantic Pointers. 
@@ -357,16 +357,16 @@ Due to the combination of these two facts, these vectors are called Semantic Poi
 
 \subsection{Comparison of encoding methods}
 Based on experiment~1 from \textcite{recchia2015}, the encoding methods can be compared by measuring the pairwise binding capacity.
-To do so, a set of \num{1000}~vectors with normal distributed components $x_i \sim \ndist\!\del{\!0, \sqrt{1/\dims}}$ will be created (note that $\expected\!\sbr{\,\norm{\vc x}} = 1$).
+To do so, a set of \num{1000}~vectors with normally distributed components $x_i \sim \ndist\!\del{\!0, \sqrt{1/\dims}}$ are created (note that $\expected\!\sbr{\,\norm{\vc x}} = 1$).
 From this set \num{500}~pairs are sampled with replacement.
 Then $k$ of these pairs are encoded into a single vector and it is tested whether the $\vc x$ of a random encoded pair $(\vc x, \vc y)$ can recovered with the cue $\vc y$.
-A vector counts a successfully recovered if $\hat{\vc x}$ is most similar to $\vc x$ than any other vector in the initial set of vectors.
+A vector counts a successfully recovered if $\hat{\vc x}$ is more similar to $\vc x$ than any other vector in the initial set of vectors.
 \num{1000} trials were run and averaged over for each encoding scheme and vector dimensionality.
 Because VTB requires the dimensionality~$\dims$ to be square, \num{256}, \num{484}, \num{1024}, and \num{2025} were picked.
 
 \Cref{fig:encoding}a shows the results for encoding with binding.
 Both binding operators perform about the same.
-While this experiment essentially follows \textcite{recchia2015}, it gives much better results here.
+While this experiment essentially follows \textcite{recchia2015}, it gives much better results.
 It is not clear whether they omitted an essential detail from their description or whether their implementation of the binding operation is flawed.
 \begin{figure}
     \centering
@@ -378,11 +378,12 @@ The results for encoding with tagging by a shift of one are shown in \cref{fig:e
 Note that the same result applies to any other permutation matrix as the vector components can be reordered accordingly.
 Very similar results are obtained with orthogonal matrices, fixed unitary circular convolution, and unitary VTB\@.
 In all these cases, the pairwise binding capacity is below the encoding with binding, opposed to what \textcite{recchia2015} reported.
-Intuitively, this can be explained by the fact that encoding with binding is a sum of $2k$ vectors, where each vector has encoded information about the pair's constituents, whereas encoding with tagging is a sum of $k$ vectors because each pair's constituent gets encoded separately.
-In the plots, the retrieval accuracies for encoding with binding at $k$ matches roughly with the retrieval accuracy with tagging at $2k$.
+Intuitively, this can be explained by the fact that encoding with tagging is a sum of $2k$ vectors, where each vector has encoded information about the pair's constituents, whereas encoding with binding is a sum of $k$ vectors because each pair's constituent gets encoded separately.
+In the plots, the retrieval accuracies for encoding with binding at $2k$ matches roughly with the retrieval accuracy with tagging at $k$.
+% TODO is this discussion to confusing?
 
-Finally, we can observe (\cref{fig:encoding-nonunitary-tagging}) that encoding with tagging completely fails with fixed non-unitary circular convolution matrices and does do much better with non-unitary VTB matrices either.
-This is likely due to the fact, that repeated circular convolution with the same (non-unitary) leads to a super-exponential increase in length.
+Finally, we can observe (\cref{fig:encoding-nonunitary-tagging}) that encoding with tagging completely fails with fixed non-unitary circular convolution matrices and does not do much better with non-unitary VTB matrices either.
+This is likely due to the fact that repeated circular convolution with the same (non-unitary) vector leads to a super-exponential increase in length.
 That causes one pair (or even one vector of that pair) to be much stronger than all the other pairs, preventing their recovery.
 \begin{figure}
     \centering
@@ -391,8 +392,8 @@ That causes one pair (or even one vector of that pair) to be much stronger than 
 \end{figure}
 
 These experiments clearly show that encoding with binding is preferable.
-Even more though as retrieving items from an encoding with tagging is much more involved.
-Each potential cue vector $\vc y_i$ has to be recovered and compared to the actual cue $\vc y$ to determine the maximum similarity to the cue and which $\vc x_i$ has to be decoded from the encoding.
-The encoding with binding allows to directly query an $\vc x_i$ with a given $\vc y_i$.
+Even more so, as retrieving items from an encoding with tagging is much more involved.
+Each potential cue vector $\vc y_i$ has to be recovered and compared to the actual cue $\vc y$ to determine the maximum similarity to the cue, and which $\vc x_i$ has to be decoded from the encoding.
+The encoding with binding allows direct querying of an $\vc x_i$ with a given $\vc y_i$.
 This makes for a simpler implementation in a neural network.
-That being said, if the main concern is not the implementation in a neural network, but the performance of the vector operations on a classical digital computer, one might come to a different conclusion as did \textcite{recchia2015}.
+That being said, if the main concern is not the implementation in a neural network, but the performance of the vector operations on a classical digital computer, one might come to a different conclusion as \textcite{recchia2015} did.
