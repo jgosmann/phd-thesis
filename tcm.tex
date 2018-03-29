@@ -120,10 +120,10 @@ To add at most $\tcmbeta \ctxin$ to the context $\ctx$, we can gate the input to
 After thresholding the dot product at $\tcmbeta$, it can be used to suppress the input by inhibiting the gate ensembles (see \cref{fig:ctx-bounded-integrator}).
 Furthermore, in the original TCM $\ctx$ was kept at unit length while the integration has no such bound.
 To keep the unit length, we can project $\ctx$ to another population $\ctx_{\downarrow}$ which projects back to the integrator with a transform of $\zeta = -0.1$.
-Picking a $\zeta$ closer to zero will allow the $\vc c$ vector exceed unit length by a larger amount while the integrator receives input and will increase the time required to settle back to unit length, whereas a large magnitude of $\zeta$ can lead to oscillatory behaviour.
+Picking a $\zeta$ closer to zero allows the $\vc c$ vector exceed unit length by a larger amount while the integrator receives input and will increase the time required to settle back to unit length, whereas a large magnitude of $\zeta$ can lead to oscillatory behaviour.
 The $\ctx_{\downarrow}$ population needs to be controlled to only provide the inhibitory input to the integrator as long as $\lVert\ctx\rVert > 1$.
 This is achieved by decoding the length of $\vc c$ from the integrator and thresholding it at $1$.
-As long as the threshold is not exceeded $\ctx_{\downarrow}$ will be inhibited.
+As long as the threshold is not exceeded $\ctx_{\downarrow}$ is inhibited.
 \begin{figure}
     \centering
     \begin{tikzpicture}[nef]
@@ -161,7 +161,7 @@ Note that it is not sufficient to simply adjust $\tcmbeta$ as depending on the s
 
 \subsection{Alternating update of two memories}
 With a single integrator, we have to rely on the dot product between the input vector and current context as a measure of $\tcmbeta$.
-This dot product will be biased in different directions if the input vectors have differing similarities.
+This dot product is biased in different directions if the input vectors have differing similarities.
 To circumvent this, we need to use two gated memory populations that are updated in alternating fashion.
 Then the output of the old context and input vector can be combined according to $\theta \ctx + \tcmbeta \ctxin$ and fed into to the memory buffer for the current context.
 The completion of that memory update can be detected by the dot product of the updated context and the current context crossing a threshold of one.
@@ -183,7 +183,7 @@ Such a network is shown in \cref{fig:ctx-alt-update}.
 \end{figure}
 
 Unfortunately, this still does not work for non-orthogonal input vectors (\cref{fig:amb}).
-In that case the dot product of the updated context and current context will already be quite high and the updated context is not completely loaded into the current memory buffer.
+In that case the dot product of the updated context and current context are already quite high and the updated context is not completely loaded into the current memory buffer.
 \begin{figure}
     \centering
     \includegraphics{figures/context-analysis/amb}
@@ -223,6 +223,6 @@ If we take the alternating memory buffer network, but control the updating exter
 
 This leads to two predictions.
 First, the update of the context signal is not directly regulated by the input, but externally controlled.
-Second, there are neural populations that will start representing the current context in succession.
+Second, there are neural populations that start representing the current context in succession.
 % TODO I'm not sure what this last bit means (represent in succession?), coudl 
 % you add a few sentences to explain the prediction?

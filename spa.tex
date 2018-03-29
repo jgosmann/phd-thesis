@@ -41,7 +41,7 @@ For some proposed binding operations, like Tensor products \parencite{smolensky1
     \bind^{-1}(\bind(\vc x, \vc y), \vc y) = \vc x \text{.}
 \end{equation*}
 However, Tensor products increase the vector dimensionality with each successive binding which leads to biological implausible scaling problems \parencite[Appendix D.5]{eliasmith2013}.
-For that reason, I will only consider binding methods that keep the dimensionality $\dims = \dims_1 = \dims_2$ constant.
+For that reason, I only consider binding methods that keep the dimensionality $\dims = \dims_1 = \dims_2$ constant.
 
 In pure math, it is still possible to define binding operators with an exact inverse, but we need to keep the implementation in neurons in mind.
 This introduces additional constraints.
@@ -108,7 +108,7 @@ Thus, its Fourier coefficients must all be $1 + 0\iu$ and the identity vector is
 \begin{equation}
     \bid_{\circledast} = (1, 0, 0, \dotsc, 0)\Tr \text{.}
 \end{equation}
-Furthermore, all vectors with Fourier coefficients $c_n \in \mathbb{C}$ that have an absolute value of $\left|c_n\right| = 1$ will be unitary, as one can easily verify.
+Furthermore, all vectors with Fourier coefficients $c_n \in \mathbb{C}$ that have an absolute value of $\left|c_n\right| = 1$ are unitary, as one can easily verify.
 A trivial example of a unitary vector is the identity vector $\bid_{\circledast}$.
 Finally, all vectors $(z, \dotsc, z)\!\Tr$ with $z \in \mathbb{R}$ are absorbing elements.
 
@@ -147,7 +147,7 @@ This binding method is based on the fact that in the SPA vectors are usually ran
 In that case each subvector (e.g., each row in $\mat V_{\vc y}$) is also uniformly distributed with identically distributed components.
 Furthermore, for high-dimensional vector spaces almost all (uniformly sampled) vectors are orthogonal and semantic pointers are usually picked to have unit-length.
 Thus, the matrix $\bar{\mat V}_{\vc y}$ is almost orthogonal with the implication $\bar{\mat V}_{\vc y}\Tr \bar{\mat V}_{\vc y} \approx \imat$.
-Vectors $\vc y$ that give a perfectly orthogonal matrix $\mat V_{\vc y}$, will be unitary.
+Vectors $\vc y$ that give a perfectly orthogonal matrix $\mat V_{\vc y}$, are unitary.
 One special unitary vector is the identity vector.
 \begin{corollary}[VTB identity vector]
     The identity vector for VTB is given by
@@ -229,7 +229,7 @@ After repeated binding with itself and then the same number of unbindings, the r
 
 While binding vectors with themselves can sometimes be useful (e.g., for generating Semantic Pointers with a successive relationship like position indices), it is much more common to bind randomly sampled vectors.
 \Cref{fig:bindings-random} shows the same experiment where a random vector was used in each binding.
-In this case, the vector length will decrease to zero, even if it might increase in some of the early bindings.
+In this case, the vector length decreases to zero, even if it might increase in some of the early bindings.
 Again, this decrease is much quicker for circular convolution binding than for VTB and the latter method also preserves more of the similarity across bindings.
 \begin{figure}
     \centering
@@ -271,7 +271,7 @@ Deriving such predictions and testing them experimentally is, however, out of th
 Finally, we have to consider the neural implementation of these binding operations.
 Both essentially require a set of multiplication networks.
 For the circular convolution, the DFT (and inverse DFT) can be implemented in feed-forward connection weights that do not require any additional neurons.
-For each of the input vectors $\dims$ Fourier complex coefficients will be produced, but as the inputs are real-valued, half of these are the complex conjugate of the other half.
+For each of the input vectors $\dims$ Fourier complex coefficients are produced, but as the inputs are real-valued, half of these are the complex conjugate of the other half.
 Thus, only $\dims / 2$ coefficients have to be considered.
 Each coefficient is a complex number multiplied with one coefficient of the other vector.
 That results in four real-valued multiplies per coefficient.

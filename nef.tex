@@ -20,7 +20,7 @@ The spiking activity $\act_i(t)$ of a neuron can then be described with
 \end{equation}
 where $\gain_i$ is a neuron gain factor, $\jbias_i$ a bias input current, and $\nl$ the neuron nonlinearity.
 The nonlinearity $\nl$ represents the neuron model and converts an input current into spikes.
-Usually this will be the spiking, leaky integrate-and-fire model (LIF) discussed in \cref{sec:neurons}, which provides a good trade-off of captured neuron behaviour, detail, and simulation effort.
+Usually this is the spiking, leaky integrate-and-fire model (LIF) discussed in \cref{sec:neurons}, which provides a good trade-off of captured neuron behaviour, detail, and simulation effort.
 But simpler neuron models (e.g., a rate-based LIF model, or rectified linear units) could be used, as well as much more complex neuron models, like the compartmental models in \textcite{eliasmith2016} and \textcite{duggins2017c}.
 The input current to the neuron is obtained from how well the stimulus aligns with the preferred stimulus as measured by the dot product.
 As this alignment with the preferred stimulus ``encodes'' the stimulus into the neural representational space, $\enc_i$ is usually referred to as \emph{encoder} in the context of the NEF\@.
@@ -39,7 +39,7 @@ These values are used to calculate the gain and bias so that the neuron starts f
 
 Given a population of neurons, also called a neural \emph{ensemble} in NEF terms, how can the encoded vector $\vc x(t)$ be recovered?
 First the activity or spike trains $\act_i(t)$ are convolved with a synaptic filter $\syn$ to obtain the induced post-synaptic voltage change.
-Usually this will be a decaying exponential $\syn(t) = \syntau^{-1}\exp(-t / \syntau)$, but other filters can be used to more precisely model the dynamics of the synapse \parencite{voelker2017a} and even extensions to conductance-based synapses are possible \parencite{stockel2017}.
+Usually this is a decaying exponential $\syn(t) = \syntau^{-1}\exp(-t / \syntau)$, but other filters can be used to more precisely model the dynamics of the synapse \parencite{voelker2017a} and even extensions to conductance-based synapses are possible \parencite{stockel2017}.
 From the filtered activity, the represented vector can be reconstructed with a linear, weighted decoding
 \begin{equation}
     \hat{\vc x}(t) = \sum_i \dec_i \cdot \sbr{a_i * h}\!(t)
@@ -82,7 +82,7 @@ By decoding from the pre-synaptic ensemble and encoding into the post-synaptic e
     \weights_{ij} = \enc_i\Tr \mat T \dec_j
 \end{equation}
 where $\mat T$ can describe a linear transform to implement across the neural connections.
-If $\mat T$ is the identity matrix the connection will be a pure communication channel.
+If $\mat T$ is the identity matrix, the connection will be a pure communication channel.
 
 
 \section{Transformation}
