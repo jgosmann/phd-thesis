@@ -34,16 +34,16 @@ To implement this within a neural network, the discrete equation has to be conve
 with learning rate $\eta$.
 Note that while in the discrete formulation all associations are added in with the same strength, in the continuous formulation, the associative strength depends on the learning rate and presentation time.
 This equation can be directly implemented with the NEF and thus realized with spiking neurons.
-That alone, however, does not ensure the biological plausibility as any mathematical formulation of synaptic weight changes could be implemented with the NEF\@.
+That alone, however, does not ensure the biological plausibility, as any mathematical formulation of synaptic weight changes could be implemented with the NEF\@.
 There are also multiple ways to implement the equation with the NEF that have different implications about a potential biological realization.
-In the following, these different ways are discussed.
+In the following, several of these possibilities are discussed.
 
 
 \section{Explicit calculation of weight change}
 Both the cue $\vc u(t)$ and target $\vc v(t)$ are available as neural signals.
-That allows to implement the calculation of the outer product $\vc v(t) \vc u(t)\!\Tr$ in a set of neural ensembles.
+That allows the implementation of the calculation of the outer product $\vc v(t) \vc u(t)\!\Tr$ in a set of neural ensembles.
 The multiplication of each pair of scalars can be accurately implemented in spiking neurons as demonstrated by \textcite{gosmann2015-1}.
-Those ensembles can than be connected up to modulate the synaptic strengths from the pre to the post populations (see \cref{fig:aml-explicit}) by forming the transpose of the outer product, applying a transform of $\mdec\Tr\!$, and transposing back.
+Those ensembles can then be connected up to modulate the synaptic strengths from the pre to the post populations (see \cref{fig:aml-explicit}) by forming the transpose of the outer product, applying a transform of $\mdec\Tr\!$, and transposing back.
 \begin{figure}
     \centering
     \begin{tikzpicture}[nef]
@@ -66,9 +66,9 @@ But as most NEF models do not give a developmental account of how such structure
 However, there is one more aspect that can be criticized as being biologically implausible: the connections from the outer product calculation depend on the decoders of the pre population.
 It is not clear how the pre-population could transmit this information to this other place.
 
-A similar problem of biological plausibility occurs in classical neural networks and deep learning with back propagation where the weights for the transmission of the error signal need to be symmetric to the forward weights.
+A similar problem of biological plausibility occurs in classical neural networks and deep learning with back propagation, where the weights for the transmission of the error signal need to be symmetric to the forward weights.
 Recently, this concern of biological plausibility in deep learning has been slightly alleviated by the discovery that the weight symmetry is not strictly required.
-It is possible for the network to adjust it forward weights to account for existing, non-symmetric backward weights, a process known as feedback alignment \parencite{lillicrap2016}.
+It is possible for the network to adjust its forward weights to account for existing, non-symmetric backward weights, a process known as feedback alignment \parencite{lillicrap2016}.
 Unfortunately, it is not clear whether this can be applied to the situation here.
 
 
@@ -98,8 +98,8 @@ As we generally assume, in the context of the NEF, that there is some mechanism 
 \end{figure}
 
 However, it is not possible to state the function to obtain the decoders $\mdec_*$ because the function itself depends on the encoding by the neurons.
-Moreover, $\mdec_*$ is a symmetric matrix which is a constraint not respected by the normal decoder optimization process.
-But in the context of the NEF, it can be assumed that the neural network can decode the identity function, i.e.\ there is a connection with decoders $\mdec$.
+Moreover, $\mdec_*$ is a symmetric matrix, which is a constraint not respected by the normal decoder optimization process.
+But in the context of the NEF, it can be assumed that the neural network can decode the identity function, i.e., there is a connection with decoders $\mdec$.
 This can be used to learn a connection with decoders $\mdec_*$.
 
 Given the vector of neural activities $\vc \act$ at time $t$, we have $\vc x = \mdec \vc \act$ and can state
@@ -120,7 +120,7 @@ The gradient can be used for a weight update rule
 \end{equation}
 in a (spiking) neural network to perform stochastic gradient descent.
 
-To demonstrate that this learning rule allows to learn the desired symmetric matrix, it was applied to a connection where the pre-synaptic ensemble was fed with a randomly varying vector signal.
+To demonstrate that this learning rule allows the learning of the desired symmetric matrix, it was applied to a connection where the pre-synaptic ensemble was fed with a randomly varying vector signal.
 The vector was generated from bandwidth limited Gaussian white noise (upper limit \SI{40}{\hertz}) for each component, normalized, and then multiplied by a bandwidth limited white noise scalar.
 The learning rate was set to $\eta_* = \SI{1e-13}{\second^{-1}}$.
 We can see that the Frobenius norm of the difference between the learned matrix $\mdec_*$ and the desired matrix $\mdec\Tr\mdec$ continuously decreases (\cref{fig:aml:grad-err}).
@@ -172,26 +172,26 @@ The observed decrease demonstrates the basic viability of this approach, but the
 The whole term $\vc\act\Tr \mdec_* \vc\act - \vc x\Tr \vc x$ is a scalar that influence all synapses.
 This could be realized by a broadly acting neuro-modulator or by extensive connectivity of the neural ensembles calculating this error term.
 Neither option is implausible.
-The role of this gradient term seems to play a role weight normalization as it acts equally on all weights and the magnitude depends on the magnitude of the values of $\mdec_*$.
+This gradient term seems to play a role in weight normalization as it acts equally on all weights and the magnitude depends on the magnitude of the values of $\mdec_*$.
 Also, without it all weight changes would always be negative.
 Note that in many learning rules, normalization factors are often criticized as implausible for requiring knowledge of the whole weight matrix at the level of a single synapse.
 This critique does not apply to this learning rule.
 The decoding matrix is only used to decode from the activities which require only local knowledge of the weights.
 
 Finally, the term $\vc\act \vc\act\Tr$ correlates neuron activities and appears somewhat Hebbian-like.
-Hebbian learning is one of the best studied ways how biological systems learn.
+Hebbian learning is one of the best studied ways that biological systems learn.
 In this form of learning pre- and post-synaptic neurons become connected when they fire in short succession.
-In difference to this usual account, here two pre-synaptic neurons will connect to the same post-synaptic neuron if they fire together.
+In contrast to this usual account, here two pre-synaptic neurons connect to the same post-synaptic neuron if they fire together.
 Again, the biological plausibility of this is somewhat uncertain, but cannot be outright rejected.
 
 
 \section{Implicit error calculation}
 The previous two implementations of the AML use minimal assumptions about the computational power of synapses.
 All that is needed are additive weight changes proportional to some error signal.
-However, it has been proposed that synapses could not simply transmit information, but also perform computations \parencites{abbott2004}[Ch.~5]{koch2004}.
+However, it has been proposed that synapses might not simply transmit information, but also perform computations \parencites{abbott2004}[Ch.~5]{koch2004}.
 In particular, \textcite{andreasstockel2018} showed that conductance-based synapses can be used in the NEF to compute nonlinear functions like multiplication.
-That should allow to roll the explicit outer product, required in the previous two approaches, into the synapses itself.
-This requires the considerably less neurons as no neural populations are required for each product.
+That should allow us to roll the explicit outer product, required in the previous two approaches, into the synapses itself.
+This requires the considerably fewer neurons as no neural populations are required for each product.
 
 In this thesis, I am using an implementation that corresponds to this implicit error calculation, but implements the required synaptic computation in pure math rather than implementing it with actual synaptic models.
 This is mainly to reduce simulation times and is not meant as a statement that this is likely to correspond to the brain's implementation as there is not enough evidence to make such a strong claim.
@@ -212,7 +212,7 @@ For example, assuming orthogonal encoders, the decoder matrix $\mdec$ will be or
 That in turn means that $\mdec_* = \mdec\Tr \mdec = \imat$ becomes the identity matrix which is independent of the exact decoders.
 This simplifies connectivity and removes the need to learn the symmetric matrix $\mdec_*$ which alleviates some of the concerns of biological plausibility.
 
-The dentate gyrus in the hippocampus is often assumed to pattern separation which is a form of orthogonalization.
+The dentate gyrus in the hippocampus is often assumed to perform pattern separation, which is a form of orthogonalization.
 Hence, it might be possible that the hippocampus learns associations with a form of the AML where $\mdec_*$ ends up being the identity matrix and thus simplifies the learning rule itself.
 
 
@@ -223,16 +223,16 @@ Five different cue-target pairs were presented for one second each, before testi
 The initially presented target vectors are almost perfectly recalled.
 Note that no catastrophic forgetting occurred and each association was learned with a single presentation of the cue-target pair (one-shot learning).
 Most other learning rules exhibit destructive interference between the items in this scenario.
-As an example, \cref{fig:aml} shows the same experiment also using the Prescribed Error Sensitivity (PES) learning rule \parencite{bekolay2013} which is commonly used in NEF models \parencite[e.g.,][]{komer2015,Rasmussen2017}.
+As an example, \cref{fig:aml} shows the same experiment using the Prescribed Error Sensitivity (PES) learning rule \parencite{bekolay2013}, which is commonly used in NEF models \parencite[e.g.,][]{komer2015,Rasmussen2017}.
 Here all associations except for the last get destroyed.
-It is still possible to learn associations with PES, but it requires to present each item multiple times in interleaved fashion, i.e.\ one-shot learning cannot be done to learn associations in a reliable way.
+It is still possible to learn associations with PES, but it requires the presentation of each item multiple times in interleaved fashion, i.e.\ one-shot learning cannot be done to learn associations in a reliable way.
 \begin{figure}
     \centering
     \includegraphics{figures/aml}
     \caption[Learning and recall testing of five cue-target pairs with the AML and PES]{Learning and recall testing of five cue-target pairs with the AML and PES\@. Each colored trace is the dot product with one of the vectors used. The cue vectors $\vc u(t)$ and target vectors $\vc v(t)$ differ.}\label{fig:aml}
 \end{figure}
 
-This ability for one-shot learning with the AML is due to the $\mdec_*$ matrix which accounts for the interference between neurons.
+This ability for one-shot learning with the AML is due to the $\mdec_*$ matrix, which accounts for the interference between neurons.
 In fact, the AML and PES are the same except for that matrix.
 The PES learning rule can be expressed as
 \begin{equation}
@@ -252,10 +252,10 @@ Thus, one should not expect the AML to generalize to unseen mappings.
 This might be another reason, besides the stability-plasticity dilemma, why a two-stage memory system is needed.
 The first stage would learn simple associations with the AML and only in the second step of consolidation with a different learning rule, commonalities get extracted for generalization.
 This is consistent with data that shows that generalization improves with sleep.
-For example, sleep improves transitive inference improves \parencite{stickgold2013-2} and gives insight into implicit rules \parencite{wagner2004}.
+For example, sleep improves transitive inference \parencite{stickgold2013-2} and gives insight into implicit rules \parencite{wagner2004}.
 Experience replay in hippocampus might be responsible for the necessary interleaving of memory traces when using a learning rule that allows for more generalization, but exhibits destructive interference such as PES \parencite{mcclelland1995-1,kumaran2016}.
 Overall, it is likely that AML only represents a first step in the association learning process and multiple learning rules are at play here.
-That the brain uses no a single general purpose learning rule, but combines different learning rules was also argued by \textcite{gallistel2009}.
+That the brain uses no single general purpose learning rule, but combines different learning rules has been forcefully argued by \textcite{gallistel2009}.
 
 
 \section{AML accounts for neural changes during association learning}\label{sec:aml-neural}
@@ -265,7 +265,8 @@ They identified neurons that responded to specific visual stimuli of pictures of
 Then the participants learned associations between pairs of a person and a landmark.
 Besides multiple tasks to assess the learning, the neuron responses to the different stimuli were recorded again after learning.
 
-Pair-coding units could be identified that showed an elevated firing rate only to the preferred stimulus before learning (BL), and after learning (AL) an elevated firing rate only to the preferred and associated non-preferred stimulus.
+Pair-coding units could be identified that showed an elevated firing rate only to the preferred stimulus before learning (BL).
+After learning (AL), those same units showed an elevated firing rate only to the preferred and associated non-preferred stimulus.
 This can also be observed qualitatively for associations learned with the AML\@.
 \Cref{fig:aml-net} shows a NEF network that implements the learning of associations between persons and landmarks to reproduce the experiment by \textcite{ison2015}.
 The connections weights from both pre-ensembles $\vc l$ and $\vc p$ are initialized with the identity transform.
@@ -291,7 +292,7 @@ Any change in firing rate is caused deterministically by the inputs.
 Based on this, visually active units were defined as neurons that had a firing rate of more than \SI{2}{\second^{-1}} for the preferred stimulus and less than \SI{2}{\second^{-1}} for all other stimuli.
 The cutoff value corresponds to the value used in analysis of the data recorded from the human subjects.
 
-The main results obtained from the experimental and model data are shown in \crefrange{fig:aml-spikes}{fig:aml-population-response}.
+The main results obtained from the experimental and model data are shown in Figs.~\ref{fig:aml-spikes} and~\ref{fig:aml-population-response}.
 Based on the selection criteria for pairwise coding units, they show increased firing for the preferred stimulus, but no other stimuli.
 The response to the preferred stimulus stays about the same after learning, but is increased for the non-preferred stimulus.
 The response to non-associated stimuli, i.e.\ non-preferred stimuli that are not associated to the preferred stimulus, did not show a significant change in the experimentally recorded data.
@@ -322,7 +323,7 @@ A better quantitative fit might be achievable with more careful parameter select
 Note that the AML allows weights to grow without bound.
 By introducing a factor of $1 - \vc v(t)\!\Tr \hat{\vc v}(t)$ this can be prevented where $\hat{\vc v}(t)$ is the retrieved, learned association.
 But similar to other weight normalizations it introduces the need for each weight to have access to the global population activity and weights as $\hat{\vc v}(t) = \tilde{\mdec} \vc\act_{\vc u}(t)$.
-Such global dependencies are ofter criticized for not being biological plausible.
+Such global dependencies are ofter criticized for not being biologically plausible.
 As such, I decided to take a slightly different approach with an equivalent effect.
 Instead of including the dot product $\vc v(t)\Tr \hat{\vc v}(t)$ in the learning rule, it can be computed by another neural population and the thresholded result can be used to inhibit the population providing $\vc v$.
 Once fully inhibited, $\vc\act_{\vc v}(t)$ will be all-zero and thus prevent further weight changes.

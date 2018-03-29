@@ -8,7 +8,7 @@ While this does well in capturing the recall probabilities, it does not provide 
 In an extension of the TCM model \parencite{Sederberg2008} a winner-take-all (WTA) process based on the widely-used leaky, competing accumulator (LCA) model by \textcite{Usher2001} was used.
 This works well if the output can be evaluated in a mathematical analysis.
 However, within the CUE model other parts of the model need to recognize when a single recall is completed to update the context and reset the recall system.
-As I will show, this is difficult to do robustly with the LCA model, but more easily with an alternate WTA mechanism termed the independent accumulator (IA) model.
+As I show, this is difficult to do robustly with the LCA model, but more easily accomplished with an alternate WTA mechanism termed the independent accumulator (IA) model.
 A comparison of these two networks has also been previously published as \textcite{jangosmann2017}.
 
 
@@ -103,9 +103,8 @@ The second layer projects back to first layer and can be used to read out the ou
 \end{figure}
 
 \section{Comparisons of the WTA networks}
-The pure analytical description does not tell which network is better suited for certain tasks.
-To compare these networks, I simulate them with an input of $u_i = u - s\del{1 - \krond_{1i}} + \eta_i$, where $u$ is the magnitude of the largest input, $s > 0$ is the target separation, $\krond$ is the Kronecker delta, and $\eta_i$ is Gaussian white noise with a standard deviation of $\sigma$.
-Here, without loss of generality as we can reorder the indices.
+The pure analytical description does not tell us which network is better suited for certain tasks.
+To compare these networks, I simulate them with an input of $u_i = u - s\del{1 - \krond_{1i}} + \eta_i$, where $u$ is the magnitude of the largest input, $s > 0$ is the target separation, $\krond$ is the Kronecker delta, and $\eta_i$ is Gaussian white noise with a standard deviation of $\sigma$.  (without loss of generality as we can reorder the indices).
 The first input is always set to be the target and all other inputs are set to be lower by $s$.
 The rationale behind this is that it should present the hardest case because every choice is close to the largest input.
 As $s \rightarrow 0$, the problem will get more difficult as the separation to the target shrinks.
@@ -122,13 +121,13 @@ This, however, is not as relevant as variation of the highest output.
 If all other choices do not produce an output, the winning choice can still be clearly identified despite the variance.
 
 Given this basic setup of the comparison, a number of metrics give insight in the performance of the networks.
-First, we want the network to reach a \emph{clear decision} which I define as exactly one output being above a threshold of \num{0.15} during the time interval from \SIrange{1}{2}{\second} simulation time while all other outputs remain below the threshold.
+First, we want the network to reach a \emph{clear decision} which I define as exactly one output being above a threshold of \num{0.15} during the time interval from \SIrange{1}{2}{\second} simulation time, while all other outputs remain below the threshold.
 The threshold of \num{0.15} was chosen as it is usually sufficient to tell a zero and non-zero signal apart despite spiking noise (except for very low neuron numbers or firing rates).
 This metric requires that the output does not change during the interval as this might cause problems in downstream networks that operate on the output.
 Also, with a change in output it would be unclear which output should be taken as the actual decision.
 One thing this metric does not take into account is whether the output corresponds to the highest input.
 This, whether a decision is \emph{correct}, is the second metric.
-But note, that in some situations within larger scale network a wrong, but clear decision, can be preferable to a decision that tends to be correct, but is unstable.
+But note, that in some situations within a larger scale network a wrong, but clear decision, can be preferable to a decision that tends to be correct, but is unstable.
 
 Two more metrics are used for all trials that reached a clear decision.
 The amount of time taken to fulfill the conditions for a clear decision are considered as the \emph{decision time}.
@@ -169,63 +168,63 @@ In other words, noise in the LCA network influences whether a decision can be re
 \begin{figure}
     \centering
     \includegraphics{figures/ia-time}
-    \caption[Mean WTA decisions times]{Mean decision times for the (a) LCA and (b) IA network. Data for the LCA network is shown in dependence of the input magnitude $u$ and is averaged over all noise levels $\sigma$ because noise had a minimal effect on decision times. Data fro the IA network is shown in dependence of the noise standard deviation $\sigma$ for two input magnitudes of $u = 1$ (dashed lines) and $u = 0.2$ (solid lines). Target separation is indicated by color. Error bars show \SI{95}{\percent} confidence intervals.}\label{fig:ia-time}
+    \caption[Mean WTA decisions times]{Mean decision times for the (a) LCA and (b) IA network. Data for the LCA network is shown as depending on the input magnitude $u$ and is averaged over all noise levels $\sigma$ because noise had a minimal effect on decision times. Data fro the IA network is shown as depending on the noise standard deviation $\sigma$ for two input magnitudes of $u = 1$ (dashed lines) and $u = 0.2$ (solid lines). Target separation is indicated by color. Error bars show \SI{95}{\percent} confidence intervals.}\label{fig:ia-time}
 \end{figure}
 
 Finally, both networks might produce a transient response that gets worse with increased noise (\cref{fig:ia-transient}).
 This is inherent in the LCA network because the state variables are directly used as output.
 In the IA network, this transient response is caused when two accumulators cross the threshold in close temporal proximity before the inhibition from the first one can silence the remaining accumulators.
-By increasing the feedforward time-constant, this transient response gets reduced as the evidence integration gets slowed down which temporally stretches out when accumulators cross the threshold.
+By increasing the feedforward time-constant, this transient response gets reduced as the evidence integration gets slowed down, which temporally stretches out when accumulators cross the threshold.
 \begin{figure}
     \centering
     \includegraphics{figures/ia-transient}
-    \caption[Transient WTA responses]{Transient responses (i.e.\ highest output of a non-winning choice) for the WTA networks in dependence of the noise standard deviation $\sigma$. Data from the IA network is shown for two integration constants Each curves shows a different target separation $s$. The optimum is marked with the gray horizontal line. Error bars show \SI{95}{\percent} confidence intervals.}\label{fig:ia-transient}
+    \caption[Transient WTA responses]{Transient responses (i.e.\ highest output of a non-winning choice) for the WTA networks as depending on the noise standard deviation $\sigma$. Data from the IA network is shown for two integration constants. Each curves shows a different target separation $s$. Error bars show \SI{95}{\percent} confidence intervals.}\label{fig:ia-transient}
 \end{figure}
 
 
 \subsection{Discussion}
 Neither network performs better on all metrics.
 Thus, each is best suited for a different purpose.
-In situations where a continuous adjustment of a decision is necessary, the LCA network will most-likely be the better choice.
-Under noisy conditions it is not necessarily able to produce a stable, clear output, but if a clear output was obtained, it was always correct.
-If the input changes, the output will adjust according to the networks time constant and allow for continuous updates.
+In situations where a continuous adjustment of a decision is necessary, the LCA network is most likely the better choice.
+Under noisy conditions it is not necessarily able to produce a stable, clear output, but if a clear output is obtained, it is always correct.
+If the input changes, the output adjusts according to the network's time constant and allows for continuous updates.
 Unfortunately, this also makes the network susceptible to noise.
 
-The IA network will be better for discrete series of decisions.
-It does not produce a continuous output, but waits until the evidence integration threshold is crossed at which point the network needs to be inhibited to be reset and obtain another decision.
+The IA network is better for a discrete series of decisions.
+It does not produce a continuous output, but waits until the evidence integration threshold is crossed, at which point the network needs to be inhibited to be reset and obtain another decision.
 While this produces sequential and discrete decisions, it has the advantage that evidence can be accumulated over a longer time frame to average out noise.
-Depending on the choice of the integration time-constant, the IA network will either be not as quick or as reliable in identifying the correct winner as the LCA network.
-However, it will eventually produce a clear decision that a downstream network can act on (as long as at least on input is strictly positive).
+Depending on the choice of the integration time-constant, the IA network either be not as quick or as reliable in identifying the correct winner as the LCA network.
+However, it will eventually produces a clear decision that a downstream network can act on (as long as at least one input is strictly positive).
 This can be important in a larger scale model where stalling a decision indefinitely can result in a breakdown of model behaviour.
-Or in other words, sometimes it is better to act on a wrong decision that to not act all.
-For example, in memory recall it might be better to produce a wrong output and continue to recall the next item than indefinitely trying to recall an item that cannot be recalled.
+Or in other words, sometimes it is better to act on a wrong decision than to not act all.
+For example, in memory recall it might be better to produce a wrong output and continue to recall the next item than indefinitely be trying to recall an item that cannot be recalled.
 It is also worth pointing out that the IA network allows for dynamic control of the decision speed by adjusting the $\vartheta$ threshold through a bias input to the second layer.
 
-As mentioned it is also important to consider the transient outputs of the network within a larger scale model.
+As mentioned, it is also important to consider the transient outputs of the network within a larger scale model.
 Such transient responses are inherent in the LCA model as the state variable is directly used as an output.
-One could pass the output through a thresholding layer, but the right choice of threshold is not clear as the output magnitude will depend on the input magnitude.
+One could pass the output through a thresholding layer, but the right choice of threshold is not clear, as the output magnitude depends on the input magnitude.
 If the threshold is too low, a transient response would be produced even with the thresholding layer.
 If it is too high, small inputs might not produce an output at all.
 While the IA can also produce transient responses, these can be reduced to almost zero by a proper selection of the integration time-constant according to the input magnitude and target separation.
 
 By increasing $\tau_1 \rightarrow \infty$, the IA discrimination ability can be increased without bound.
-This is sometimes used as argument to criticize these sort of models \parencite[e.g.,][]{Usher2001} because there is no sensible stopping criterion.
+This is sometimes used as argument to criticize these sort of models \parencite[e.g.,][]{Usher2001}, because there is no sensible stopping criterion.
 However, this does not consider that there might be a cost to taking more time for a decision.
-If that cost is included, there is a trade-off between accurate decisions and the cost incurred by taking more time to decide.
-Furthermore, this argument also assumes perfect integration accuracy which an actual neural system cannot have due to neural noise and limited neural resources.
+If that cost is included, then there is a trade-off between accurate decisions and the cost incurred by taking more time to decide.
+Furthermore, this argument also assumes perfect integration accuracy, which an actual neural system cannot have due to neural noise and limited neural resources.
 
-To summarize these findings, for the recall of items in memory experiments the IA network is more suited.
+To summarize these findings, for the recall of items in memory experiments the IA network is better suited.
 Such recall requires discrete decisions and a stable input to downstream motor systems producing the response.
-Such a stable input cannot be guaranteed with the LCA network and it provides challenge to detect when a recall is completed.
-\Textcite{Sederberg2008} still used the LCA network for modelling the recall, but it is important to highlight that upon reaching the decision threshold, the state variable were immediately set back to zero.
-This is easy to do in a pure math model, but when transitioning to a full neural model detecting the decision and resetting the state variables is much more difficult as it cannot be done instantaneous.
+Such a stable input cannot be guaranteed with the LCA network and it proves a challenge to detect when a recall is completed.
+\Textcite{Sederberg2008} used the LCA network for modelling the recall, but it is important to highlight that upon reaching the decision threshold, the state variables were immediately set back to zero.
+This is easy to do in a pure math model, but when transitioning to a full neural model detecting the decision and resetting the state variables is much more difficult, as it cannot be done instantaneously.
 
-Finally, let us consider the biological plausibility briefly.
-Both networks where simulated in spiking neurons which ensures a certain degree of biological plausibility.
+Finally, let us consider biological plausibility briefly.
+Both networks where simulated in spiking neurons, which ensures a certain degree of biological plausibility.
 Also, accumulation of evidence to a threshold is a well known finding for neurons in LIP \parencite{gold2007,smith2004}.
 Often this is assumed to be a gradual integration, but when looking at individual trials instead of the trial-average, a distinct step response becomes evident \parencite{latimer2015}.
 This matches the output of the second layer of the IA network.
-However, both networks have in integration layer with gradually increasing firing rates which implies that such neurons should exist too.
+However, both networks have an integration layer with gradually increasing firing rates, which implies that such neurons should exist too.
 Ultimately, it is possible, that the brain employs both networks for different tasks as they have different strengths and weaknesses.
 
 
@@ -234,15 +233,15 @@ The recall network in the CUE model is based on the independent accumulator netw
 Each potentially recallable item is regarded as one choice.
 An additional \emph{null choice} is added to represent a failed recall.
 This is a stand-in for additional items that might be present in the recall network, but have not occurred in the learned list.
-It is also a way of providing a time-limit on trying to recall a particular item and prevents pure noise resulting in a successful recall of one of the learned list items.
+It is also a way of providing a time-limit on trying to recall a particular item, and prevents pure noise resulting in a successful recall of one of the learned list items.
 The additional choice is fed a constant signal of $\minev$.
 Additive Gaussian white noise is applied to each input with zero mean and a standard deviation of $\recnoise$ to account for additional processes that might interfere with the recall process.
 
 Furthermore, the IA network is embedded into further components (\cref{fig:recall}).
 First, items are represented as Semantic Pointers, but the IA network needs a separate utility value for each potential choice.
-Thus, the incoming connection uses the matrix collecting the Semantic Pointers of all possible list items as transform, effectively calculating a dot product between the input signal and each potential item.
+Thus, the incoming connection uses the matrix of the Semantic Pointers of all possible list items as a transform, effectively calculating a dot product between the input signal and each potential item.
 These utility values are then rectified to only consider positive evidence.
-By subtracting \num{0.1} from the input utilities provided by the OSE output, it is prevented that pure noise from a failed short-term memory recall is integrated.
+By subtracting \num{0.1} from the input utilities provided by the OSE output, integration of pure noise from a failed short-term memory recall is prevented.
 \begin{figure}
     \centering
     \begin{tikzpicture}[nef]
@@ -299,24 +298,26 @@ By subtracting \num{0.1} from the input utilities provided by the OSE output, it
 
 The IA network does not produce an output during the evidence accumulation phase.
 It is, however, helpful to have a persistent output of the last recalled item (note that this is still different from the output of the LCA network).
+% TODO why is it helpful? give a quick reason in one sentence
 To achieve this, the output of the IA network is routed through a gated memory that is only updated when the IA network produces an output.
 As the gated memory stores a Semantic Pointer, a transform matrix needs to be applied to the IA output to project the choice back into the Semantic Pointer space.
 The updating is controlled by inhibiting the memory gate by default and disinhibiting it (by inhbiting the inhibitory population) when the IA network produces output.
 
 Repetition errors are rarely made in recall experiments.
 Thus, it is necessary to inhibit already recalled items.
-However, this inhibition should not happen immediately as otherwise the recall output would be inhibited to quickly for downstream network to act upon.
+However, this inhibition should not happen immediately as otherwise the recall output would be inhibited too quickly for the downstream network to act upon.
 Thus, a two-stage process is used.
-First, an initial working memory population gets immediately updated by feeding in the current recall.
-This will add the recalled Semantic Pointer into the representation of items to inhibit.
+First, an initial working memory population gets immediately updated by feeding in the currently recalled item.
+This adds the recalled Semantic Pointer into the representation of items to inhibit.
 From that representation and the current recalled item, a dot product is calculated and thresholded at \num{0.5}.
-Once the threshold is crossed the gate to the memory population is inhibited as the new item should be added into the representation, but not completely overwrite it.
-The output of that memory population is fed to a gated memory that provides the inhibition to recall state.
+Once the threshold is crossed, the gate to the memory population is inhibited as the new item should be added into the representation, but not completely overwrite it.
+The output of that memory population is fed to a gated memory that provides the inhibition to recall in the IA\@.
 The gate for this memory is controlled externally and disinhibited once the downstream processing has completed.
 Note that the output of that memory population is projected back into utility values and thresholded to prevent positive evidence from the inhibition memory.
+% TODO verb missing in previous sentence
 
-Finally, the recall network needs to be reset if a recall fails to allow to continue trying to recall the item for the next position in serial recall.
-Here the problem is, that if the IA output for a failed recall is directly used to inhibit the IA network to reset it, this will also immediately inhibit the output used for the inhibition.
+Finally, the recall network needs to be reset if a recall fails to allow it to continue trying to recall the item for the next position in serial recall.
+Here the problem is that if the IA output for a failed recall is directly used to inhibit the IA network to reset it, this also immediately inhibits the output used for the inhibition.
 This will not reliably reset the network as the reset signal is disabling itself.
 Thus, the signal will be fed to an integrator until a threshold is reached and then the signal of the integrator is used to provide an inhibitory pulse to the IA network.
-The slower decay of the integrator ensures a sufficient length of the pulse to restart the recall process.
+The slower decay of the integrator ensures a sufficient pulse length to restart the recall process.

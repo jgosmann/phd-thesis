@@ -6,7 +6,7 @@ Similar to a number of other memory models, the TCM assumes a time varying conte
 But unlike those other models, this context is based on the items itself rather than being randomly generated.
 
 In particular, items in the TCM are represented as orthogonal vectors $\tcmitem_i$ and the context signal is also a vector $\ctx$.
-If we relax the orthogonality constrained on the items to almost (instead of perfectly) orthogonal, we can use Semantic Pointers for these vectors.
+If we relax the orthogonality constraint on the items to almost (instead of perfectly) orthogonal, we can use Semantic Pointers for these vectors.
 To associate items and contexts, two association matrices are used.
 The $\mtf$ matrix represents the associations from a context to an item and is constructed as an outer product matrix as
 \begin{equation}
@@ -29,7 +29,7 @@ In the TCM this corresponds to the assumption that item $i$ has not been present
 This change is further motivated by still producing a good match to the data and simplifying the neural implementation as no dynamic scaling of a vector is required.
 Such scaling would require a product network for each vector dimension in the NEF\@.
 \Cref{eqn:ctx-update} introduces the asymmetric bias to forward recall into the model (\cref{fig:ctxsim}).
-While the similarity of contexts $\langle\ctx_i, \ctx_j\rangle$ is symmetric for the lag $j - i$, $\ctxin_i$ will only be included in context vectors $\ctx_j$ with $j \geq i$.
+While the similarity of contexts $\langle\ctx_i, \ctx_j\rangle$ is symmetric for the lag $j - i$, $\ctxin_i$ is only included in context vectors $\ctx_j$ with $j \geq i$.
 \begin{figure}
     \hfill
     \subcaptionbox{}{\begin{tikzpicture}[every path/.style={-Latex}]
@@ -79,7 +79,7 @@ Instead of splitting $\mft_i$ into components parallel and orthogonal to $\tcmit
 Given a context $\ctx$, a mixture of associated items can be recalled as $\tcmitemin = \mtf \ctx$.
 To retrieve a single item some form of cleanup has to performed.
 Once such a single item has been recalled, the item can be used to recall the associated context as $\mft \tcmitemin$ which in turn can be used to update the current context according to \cref{eqn:ctx-update}.
-The updated context allows than to recall further items (\cref{fig:tcm}b).
+The updated context allows recalling further items (\cref{fig:tcm}b).
 
 Different cleanup strategies for the recalled item vector can be used.
 In the original TCM model, a set of activities $a_i = \tcmitem_i\Tr \tcmitemin$ was obtained and used to make a probabilistic decision according to Luce's choice rule.
@@ -99,7 +99,7 @@ The dynamics can be described by
 where $\vc u$ is the scaled vector of inputs determined from $\mtf \ctx$ from the current context, $\kappa$ the leak rate, $\lambda$ the lateral inhibition, ${[\mat L]}_{ij} = 1 - \krond_{ij}$ the lateral inhibition matrix, and $\vc\eta$ normal distributed random noise.
 This is a more detailed description of how the brain might actually decide for a single item.
 However, it is problematic to incorporate within a larger scale neural model under noisy conditions as detailed in \cref{sec:recall}.
-For this reason, a different winner-take-all process described in that chapter will be used.
+For this reason, a different winner-take-all process described in that chapter is used.
 
 
 \section{Neural context update}\label{sec:ctx-update}
@@ -117,7 +117,7 @@ It is still instructive to compare these different approaches and consider why t
 This equation is easily implemented with a neural integrator for a constant $\bar{\theta}$ and $\bar{\tcmbeta}$.
 However, there is no limit on the integration of $\ctxin$ anymore so that the proportion of $\ctxin$ added into $\ctx$ can exceed $\tcmbeta$.
 To add at most $\tcmbeta \ctxin$ to the context $\ctx$, we can gate the input to the integrator and add a network computing the dot product between $\ctx$ and $\ctxin$.
-After thresholding it at $\tcmbeta$, it can be used to suppress the input by inhibiting the gate ensembles (see \cref{fig:ctx-bounded-integrator}).
+After thresholding the dot product at $\tcmbeta$, it can be used to suppress the input by inhibiting the gate ensembles (see \cref{fig:ctx-bounded-integrator}).
 Furthermore, in the original TCM $\ctx$ was kept at unit length while the integration has no such bound.
 To keep the unit length, we can project $\ctx$ to another population $\ctx_{\downarrow}$ which projects back to the integrator with a transform of $\zeta = -0.1$.
 Picking a $\zeta$ closer to zero will allow the $\vc c$ vector exceed unit length by a larger amount while the integrator receives input and will increase the time required to settle back to unit length, whereas a large magnitude of $\zeta$ can lead to oscillatory behaviour.
@@ -144,7 +144,7 @@ As long as the threshold is not exceeded $\ctx_{\downarrow}$ will be inhibited.
     \caption{Bounded integrator network}\label{fig:ctx-bounded-integrator}
 \end{figure}
 
-To investigate the behaviour of the network, I fed it with new context vectors $\ctxin$ at rate of one vector per second.
+To investigate the behaviour of the network, it was fed with new context vectors $\ctxin$ at rate of one vector per second.
 These vectors were either orthogonal or had a cosine similarity of \num{0.6} between successive pairs.
 \Cref{fig:bounded-integrator} shows the mean similarity of the context vector to itself with given time lag.
 For (almost) orthogonal vectors $\ctxin$, the similarity between the context vectors is close under the target.
@@ -196,6 +196,8 @@ In that case the dot product of the updated context and current context will alr
 \subsection{Externally controlled alternating memory buffers}
 All approaches to determine required context updates based on vector similarity will fail because the similarity of $\ctxin_i$ and $\ctx_{i-1}$ is not known beforehand and can vary widely depending on what contexts are recalled.
 Thus, for a properly working context update in the TCM model, the update process has to be controlled by an external control signal (see \cref{sec:control}).
+% TODO can you say what the content of the control signal is here, so it's 
+% clearer what the circuit is being told to do?
 If we take the alternating memory buffer network, but control the updating externally (\cref{fig:ctx-ext-ctrl}), it works for both orthogonal and similar input vectors (\cref{fig:ext-amb}).
 \begin{figure}
     \centering
@@ -222,3 +224,5 @@ If we take the alternating memory buffer network, but control the updating exter
 This leads to two predictions.
 First, the update of the context signal is not directly regulated by the input, but externally controlled.
 Second, there are neural populations that will start representing the current context in succession.
+% TODO I'm not sure what this last bit means (represent in succession?), coudl 
+% you add a few sentences to explain the prediction?

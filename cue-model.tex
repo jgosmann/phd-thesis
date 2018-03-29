@@ -37,7 +37,7 @@ Both the current list item and position are input to the $\mft$ and \pop{OSE} ne
             recall -> [out=162, in=-15] mfc;
         };
     \end{tikzpicture}
-    \caption[General information flow in the CUE model]{General information flow in the CUE model. The routing of information depending on the task and task phase is not shown in this figures. Thus, not all shown connections are active at all times.}\label{fig:general-routing}
+    \caption[General information flow in the CUE model]{General information flow in the CUE model. The routing of information depending on the task, and task phase is not shown in this figures. Thus, not all shown connections are active at all times.}\label{fig:general-routing}
 \end{figure}
 
 Within the \pop{OSE} network, the list item and position Semantic Pointers are bound together and added into the representation of the current list in a neural integrator.
@@ -45,9 +45,9 @@ The inputted position is also used to unbind an item from the list representatio
 
 In the $\mft$ network the superposition of the input item and position (instead of the binding) is created.
 This superposition is used to recall the context previously associated with the item and position and to update the current context in the \pop{context} network accordingly.
-Furthermore, the current context is fed back to $\mft$ as modulatory signal to learn the association from the current item and position input to the current context.
+Furthermore, the current context is fed back to $\mft$ as a modulatory signal to learn the association from the current item and position input to the current context.
 Via the $\mtf$ network, the context recalls the associated Semantic Pointer and transmits it to the \pop{item recall} and \pop{position recall} networks.
-The current item and position are a modulatory input the $\mtf$ network to create the association from the current context to these Semantic Pointers.
+The current item and position are a modulatory input to the $\mtf$ network to create the association from the current context to these Semantic Pointers.
 
 During the recall phase, recalled items and positions are routed back to the $\mft$ network to recall further items.
 The recalled position, also sets the current position in the \pop{position} network to recall that position's item from the \pop{OSE} short-term memory.
@@ -62,12 +62,12 @@ This control happens on multiple levels.
 On the highest levels, the effective connectivity is modified by the general task performed (e.g., an immediate versus a serial recall task) and the task phase (e.g., presentation versus recall phase).
 Below that, certain information routing is done for each item until it has been stored in memory or for each recall.
 On the lowest levels, some control and routing happens within the individual networks of the CUE model as described in the corresponding sections.
-For example, the $\mft$ and $\mtf$ networks will inhibit the modulatory signal once a certain association strength has been reached.
+For example, the $\mft$ and $\mtf$ networks inhibit the modulatory signal once a certain association strength has been reached.
 
 \Cref{fig:pres-routing} shows the information flow during the presentation phase.
-Parts of the recall networks and the input to them will be inhibited.
-During the recall phase the routing of information depends in part on the type of recall task as shown in \cref{fig:recall-routing}.
-For serial recall, the transmission of the recall network outputs will be inhibited because the recalled item is not supposed to be a cue for recalling the next item.
+Parts of the recall networks and the input to them are inhibited.
+During the recall phase, the routing of information depends in part on the type of recall task as shown in \cref{fig:recall-routing}.
+For serial recall, the transmission of the recall network outputs is inhibited because the recalled item is not supposed to be a cue for recalling the next item.
 Instead, the output of the \pop{position} network is used as a cue.
 Also, for this cue to be most effective, the output of the $\mft$ network is routed directly to the $\mtf$ network.
 During free recall, instead, the output of $\mft$ is used to update the context as usual and the updated context acts as input to the $\mtf$ network.
@@ -149,16 +149,16 @@ During free recall, instead, the output of $\mft$ is used to update the context 
 \end{figure}
 
 The main control problem for each item is to regulate the context update because (as discussed in \cref{sec:ctx-update}) this cannot be done based on the context signal alone, but requires an external control signal.
-Before the context can be updated, the new input signal \ctxin\ needs to be present at the network input which requires a delay after a new list item has been presented.
-Accordingly, as soon as a new item is presented the context update should be stopped until that input signal is propagated and the current context has been propagated to the buffer for the old context in the context network.
+Before the context can be updated, the new input signal \ctxin\ needs to be present at the network, input which requires a delay after a new list item has been presented.
+Accordingly, as soon as a new item is presented, the context update should be stopped until that input signal is propagated and the current context has been propagated to the buffer for the old context in the context network.
 To achieve this delay, the Semantic Pointer of the new item is fed into an integrator with a slow synaptic time constant of $\tau = \SI{0.1}{\second}$ (\cref{fig:simth-ctrl}).
-Between the input Semantic Pointer and the output of the integrator a dot product is calculated which will slowly increase towards one.
+Between the input Semantic Pointer and the output of the integrator a dot product is calculated that slowly increases towards one.
 The threshold obtained with a thresholding ensemble gives the required control signal for the presentation phase.
 During the recall phase, the logic is inverted.
 That enables an immediate update of the current context based on the position provided by the \pop{position} network and last recalled item.
-Once an item has been recalled it is used like a newly presented item and fed to the integrator and dot product.
-This will provide the signal to transfer the current context to the secondary buffer after a delay.
-The thresholded dot product signal is also used to control a few more things:
+Once an item has been recalled, it is used like a newly presented item and fed to the integrator and dot product.
+This provides the signal to transfer the current context to the secondary buffer after a delay.
+The thresholded dot product signal is also used to control three other aspects of the model:
 \begin{itemize}
     \item It is required to enable the learning of associations in the $\mft$ and $\mtf$ matrices to prevent the creation of associations before the context has been updated.
     \item It is used to provide the control signal to transfer the updated OSE memory to the secondary memory buffer to allow for the next update.
@@ -214,14 +214,14 @@ The thresholded dot product signal is also used to control a few more things:
 
 Special control and information routing is also necessary during the distractor tasks or when no list item stimulus is present.
 Because the distractors are irrelevant to the task, they are assumed to be not encoded in the hippocampal long-term memory.
-Thus, during the distractor phases the error signals for the association learning are inhibited to prevent the distractors from being learnt.
+Thus, during the distractor phases the error signals for the association learning are inhibited to prevent the distractors from being learned.
 Moreover, the distractors are not part of the learned list and thus the advancement of the position counter is inhibited.
-Instead of the position network output, a different Semantic Pointer indicating an irrelevant position will be routed to networks otherwise receiving the position Semantic Pointer. 
+Instead of the position network output, a different Semantic Pointer indicating an irrelevant position is routed to networks otherwise receiving the position Semantic Pointer. 
 
-Switching of task phases requires also some reconfiguration of the network state.
-The start of the recall phase is detected with thresholded differentiators for serial and free recall (one of them will be inhibited).
-For serial recall the position network will be reset to the first position by exciting the neural ensemble for the first position and inhibiting all others.
-At the same time the Semantic Pointer for the first position will be fed to the \mft\ network to start of the recall while the position network is still transitioning to representing the first position.
+Switching of task phases also requires some reconfiguration of the network state.
+The start of the recall phase is detected with thresholded differentiators for serial and free recall (one of them is inhibited).
+For serial recall the position network is reset to the first position by exciting the neural ensemble for the first position and inhibiting all others.
+At the same time the Semantic Pointer for the first position is fed to the \mft\ network to start of the recall while the position network is still transitioning to representing the first position.
 Because some subjects may use a serial recall strategy even in free recall, models are configured with probability $\psi = 0.1$ to perform this serial recall routing even in free recall (except in the delayed recall condition).
 In free recall, the position network is inhibited at the start of recall to base the first recall purely on the currently active context signal.
 If later during the free recall process a position vector is recalled, it may still set the position network to represent that position.

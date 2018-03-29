@@ -17,8 +17,8 @@ The recall of an item is given by unbinding the corresponding position vector as
 \end{equation}
 These encoding equations produce the primacy and recency effect due to the differential effect of the decay and scaling factors $\osestmdecay$ and $\oseepisscale$.
 
-For the neural implementation each memory trace can be stored in an integrator with some additional processes for updating and unbinding the recalled item.
-For the integration within the CUE memory model, the episodic memory trace will be replaced by a version based on the temporal context model presented in the next chapter.
+For the neural implementation, each memory trace can be stored in an integrator with some additional processes for updating and unbinding the recalled item.
+For the integration within the CUE memory model, the episodic memory trace is replaced by a version based on the temporal context model presented in the next chapter.
 This introduces a more plausible episodic memory, storing experiences in actual synaptic weight changes rather than in the activities of a neural population.
 In addition, the recall process needs to be adjusted to integrate information from the exchanged episodic memory component (\cref{sec:recall}).
 
@@ -70,10 +70,10 @@ For the OSE it is necessary to keep track of the ordinal position of the current
 The CUE model extends the OSE to do this also in neurons.
 \Cref{fig:posnet} shows the network implementing this functionality.
 All ensembles in this networks are implementing a threshold at zero so that represented values are always positive.
-The \pop{state} ensemble array has one ensemble for each possible position and only the ensemble for the current position will be active.
+The \pop{state} ensemble array has one ensemble for each possible position and only the ensemble for the current position is active.
 This is ensured by providing a small negative bias ($-0.2$) to all ensembles to prevent spontaneous activity.
 Furthermore, a recurrent connection with $\syntau = \SI{0.1}{\second}$ decoding a constant of $1.2$ keeps the current position in a state of stable activity.
-\begin{figure}will 
+\begin{figure} 
     \centering
     \begin{tikzpicture}[nef]
         \graph [no placement] {
@@ -110,7 +110,7 @@ Furthermore, a recurrent connection with $\syntau = \SI{0.1}{\second}$ decoding 
     \caption{Implementation of position counting with the NEF\@. See text for details.}\label{fig:posnet}
 \end{figure}
 
-To advance to the next position a signal with a rising edge as to be provided to the \nin{increment} input.
+To advance to the next position a signal with a rising edge has to be provided to the \nin{increment} input.
 To detect the rising edge, a differentiator ensemble is used that receives its input via two connections where one connection has a fast synaptic time constant ($\syntau = \SI{5}{\milli\second}$) and the other connection has a slow synaptic time constant ($\syntau = \SI{50}{\milli\second}$) and a transform of $-1$ (\cref{sec:differentiator}).
 The output is fed through a gate ensemble that can be inhibited to prevent position increments.
 
@@ -124,8 +124,8 @@ The output of \pop{state} is also fed into \pop{advance threshold} with the tran
         \vdots & \vdots & \vdots & \ddots
     \end{array}}
 \end{equation}
-which will inhibit all ensembles except the one corresponding to the current position.
-This ensemble will only become active when a rising edge for the \pop{increment} input is detected.
+which inhibits all ensembles except the one corresponding to the current position.
+This ensemble only becomes active when a rising edge for the \pop{increment} input is detected.
 The \pop{advance threshold} ensemble projects back to the \pop{state} ensembles with a transform of
 \begin{equation}
     \mat T_2 = \sbr{\begin{array}{ccccc}
