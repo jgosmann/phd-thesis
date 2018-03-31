@@ -196,8 +196,7 @@ In that case the dot product of the updated context and current context are alre
 \subsection{Externally controlled alternating memory buffers}
 All approaches to determine required context updates based on vector similarity will fail because the similarity of $\ctxin_i$ and $\ctx_{i-1}$ is not known beforehand and can vary widely depending on what contexts are recalled.
 Thus, for a properly working context update in the TCM model, the update process has to be controlled by an external control signal (see \cref{sec:control}).
-% TODO can you say what the content of the control signal is here, so it's 
-% clearer what the circuit is being told to do?
+This control signal indicates when the context signal needs to be updated with the provided input and when it has to be kept stable.
 If we take the alternating memory buffer network, but control the updating externally (\cref{fig:ctx-ext-ctrl}), it works for both orthogonal and similar input vectors (\cref{fig:ext-amb}).
 \begin{figure}
     \centering
@@ -223,6 +222,4 @@ If we take the alternating memory buffer network, but control the updating exter
 
 This leads to two predictions.
 First, the update of the context signal is not directly regulated by the input, but externally controlled.
-Second, there are neural populations that start representing the current context in succession.
-% TODO I'm not sure what this last bit means (represent in succession?), coudl 
-% you add a few sentences to explain the prediction?
+Second, there are neural populations that start representing the current context in succession: first the updated context $\ctx$ is constructed in one memory population before it is transmitted to a secondary population $\ctx'$ to be available as old context for the next update.

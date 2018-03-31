@@ -7,8 +7,7 @@ In this way, memory allows for adaptation to a complex environment on a faster t
 This is especially important in unstable and changing environments.
 In humans, memory is also important for forming social relationships, a shared culture, and even a functioning society.
 For example, strategies in the repeated prisoner's
-% TODO foot note explaining the dilemma
-dilemma depend on working memory capacity \parencite{milinski1998}.
+dilemma\footnote{The scenario of the prisoner's dilemma poses that two subjects are arrested, but the evidence is not sufficient to convict them on the principle charge. If both subjects stay silent, they each get a prison sentence of one year. Either subject can decide to betray in which case they get not prison sentence while the other subject gets a sentence of three years. However, if both subjects decide to betray, each gets a prison sentence of two years. The subjects are not allowed to communicate, but in the repeated prisoner's dilemma they can penalize each other for previous decisions.} depend on working memory capacity \parencite{milinski1998}.
 Moreover, memory contributes to our individual sense of self \parencite{prebble2013}.
 
 In addition to these functional reasons, an addressable memory is also important from a computational perspective.
@@ -59,11 +58,10 @@ On the timescale axis one can differentiate between \emph{short-term memory (STM
 However, there is no single agreed upon definition of the exact boundaries.
 Sometimes the term \emph{very long-term memory (vLTM)} is used in addition to STM and LTM for memory that exceeds LTM \parencite{solso1998}.
 
-Another use of these terms defines STM as memory being maintained through sustained neural firing, while LTM is realized by synaptic-weight changes.
+Another use of these terms defines STM as memory being maintained through sustained neural firing, while LTM and vLTM are realized by synaptic-weight changes.
 The volatility of sustained neural firing explains why in this use of terms, STM usually corresponds to information maintained on shorter timescales than in LTM\@.
-In this classification, vLTM would correspond to information that has been consolidated from hippocampus to neo-cortical connections.
 Moreover, the term working memory (WM) is often used to refer to active representations that allow direct mental manipulation.
-In this thesis, I will use the latter definition of these terms.
+In this thesis, I will use the terms STM and LTM primarily to distinguish between activity-based and weight-based forms of memory.
 
 When classifying memory by type of information, a representation as a tree structure can be helpful (\cref{fig:memtypes}).
 On the highest level, we have the distinction between implicit and explicit memory.
@@ -277,7 +275,7 @@ Nevertheless, it has been proposed to model the coding in hippocampus \parencite
 In this framework, the input signal is stored by a bank of leaky accumulators with different time constants.
 This corresponds to a Laplace transform of the signal.
 To decode the history of the input signal, a linear operator approximating the inverse Laplace transform is used.
-I discuss this model in more detail in Section TODO, and demonstrate that it is highly sensitive to noise, which is prohibitive to a neural implementation.
+I discuss this model in more detail in \cref{sec:fuzzymem}, and demonstrate that it is highly sensitive to noise, which is prohibitive to a neural implementation.
 
 
 \subsection{Connectionist models}

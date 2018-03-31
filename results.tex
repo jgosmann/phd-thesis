@@ -39,7 +39,7 @@ Some other parameters, like the OSE scaling $\oseepisscale$ for episodic memory 
 
 \section{Serial recall}
 In serial recall participants are asked to recall items in the same order as they were presented.
-In an experiment presented by \textcite{Jahnke1968}, lists of ten items were presented at the rate of one item per second and recalled immediately.
+In an experiment presented by \textcite{Jahnke1968}, lists of ten items were presented at the rate of one item per second and recalled immediately by the \num{96}~subjects.
 \Cref{fig:results-serial} shows the serial position curve for the experimental and model data and the distribution of transposition errors averaged over all serial positions.
 In both cases the serial position curve shows a clear primacy and recency effect.
 The model predictions are statistically indistinguishable from the human data as all confidence intervals overlap.
@@ -73,6 +73,7 @@ This protocol is changed to a presentation rate of one item every \SI{1.2}{\seco
 In both of these latter conditions, the presentation and recall phase are separated by a \SI{16}{\second} distractor task.
 In addition, in the continuous distractor conditions such a \SI{16}{\second} distractor phase is inserted in between every pair of items.
 A list length of 12 items is used in all conditions.
+The experimental data was obtained from \num{65}~subjects presented with \num{25}~lists each for the immediate recall condition, and from \num{16}~subjects presented with \num{15}~lists each for the remaining conditions.
 
 Four resulting metrics from the model and experimental data are shown in \cref{fig:results-free}.
 First, the distribution of the total number of successful recalls is shown.
@@ -114,10 +115,9 @@ This indicates that scopolamine prevents encoding of new memories in LTM, but do
 More precisely, scopolamine has been shown to attenuate long-term potentiation in hippocampus \parencite{leung2003,ito1988,hirotsu1989-1}.
 
 To model the effect of scopolamine on LTP, A adjusted the AML learning rate for learning the $\mtf$ and $\mft$ matrices.
-With this approach the experimental results by \textcite{ghoneim1975} are reproduced.
-I focus here on the immediate recall experiment with Set~II\@.
-% TODO explain Set II or delete
-The simulation protocols were again modeled to replicate the experimental settings, with 16 items per list, and a presentation time of two seconds per item.
+With this approach the experimental results obtained by \textcite{ghoneim1975} from \num{36}~subjects (\num{8} trials each) are reproduced.
+I focus here on the immediate recall experiment with \num{16}~item word lists.
+The simulation protocols were again modeled to replicate the experimental settings, with a presentation time of two seconds per item.
 To obtain a similar effect, the normal AML learning rate was used before the time point of scopolamine injection and in placebo trials.
 After the time point of scopolamine injection it was scaled set to zero.
 
