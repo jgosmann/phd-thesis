@@ -130,13 +130,13 @@ With help of the Laplace transform one can obtain $\mat A'$ and $\mat B'$ from $
 \end{align}
 This implies that to implement a dynamical system with a neural ensemble, the input has to be multiplied by $\syntau$ to account for the synaptic filtering.
 In addition, one needs to add a recurrent transformation implementing the function $f(\vc x) = \syntau \mat A \vc x + \vc x$.
+Note that combining this third principle with the principle of transfomation, allows the implementation of nonlinear dynamics in a spiking neural network.
 \begin{figure}
     \centering
     \includegraphics{tikz/neural-lti}
     \caption[Block diagram of the linear system of a neural population]{Block diagram of the linear system of a neural population. $h(s)$ is the Laplace transformed synaptic filter $\syn(t)$.}\label{fig:neural-lti}
 \end{figure}
 
-% TODO comment that this works for nonlinear dynamics
 
 \section{Simulating NEF networks}
 To simulate NEF style networks, I use the Python library Nengo \parencite{bekolay2014,sharma2016}.

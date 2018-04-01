@@ -298,7 +298,7 @@ By subtracting \num{0.1} from the input utilities provided by the OSE output, in
 
 The IA network does not produce an output during the evidence accumulation phase.
 It is, however, helpful to have a persistent output of the last recalled item (note that this is still different from the output of the LCA network).
-% TODO why is it helpful? give a quick reason in one sentence
+This allows for a simpler analysis and can provide potential future downstream networks with a longer lasting input.
 To achieve this, the output of the IA network is routed through a gated memory that is only updated when the IA network produces an output.
 As the gated memory stores a Semantic Pointer, a transform matrix needs to be applied to the IA output to project the choice back into the Semantic Pointer space.
 The updating is controlled by inhibiting the memory gate by default and disinhibiting it (by inhbiting the inhibitory population) when the IA network produces output.

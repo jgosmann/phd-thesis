@@ -378,9 +378,9 @@ The results for encoding with tagging by a shift of one are shown in \cref{fig:e
 Note that the same result applies to any other permutation matrix as the vector components can be reordered accordingly.
 Very similar results are obtained with orthogonal matrices, fixed unitary circular convolution, and unitary VTB\@.
 In all these cases, the pairwise binding capacity is below the encoding with binding, opposed to what \textcite{recchia2015} reported.
-Intuitively, this can be explained by the fact that encoding with tagging is a sum of $2k$ vectors, where each vector has encoded information about the pair's constituents, whereas encoding with binding is a sum of $k$ vectors because each pair's constituent gets encoded separately.
-In the plots, the retrieval accuracies for encoding with binding at $2k$ matches roughly with the retrieval accuracy with tagging at $k$.
-% TODO is this discussion to confusing?
+Intuitively, this can be explained by the fact that encoding with binding is a sum of $k$ vectors, where each vector has encoded information about the pair's constituents, whereas encoding with tagging is a sum of $2k$ vectors because each pair's constituent gets encoded separately.
+In other words, encoding with binding has a pairwise binding capacity about twice as high as encoding with tagging.
+In the plots, the retrieval accuracies for encoding with binding at $2k$ matches roughly with the retrieval accuracy with tagging at $k$, illustrating this fact.
 
 Finally, we can observe (\cref{fig:encoding-nonunitary-tagging}) that encoding with tagging completely fails with fixed non-unitary circular convolution matrices and does not do much better with non-unitary VTB matrices either.
 This is likely due to the fact that repeated circular convolution with the same (non-unitary) vector leads to a super-exponential increase in length.
