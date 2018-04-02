@@ -35,6 +35,7 @@ Both the current list item and position are input to the $\mft$ and \pop{OSE} ne
             precall -> [out=0, in=190] position;
             ose -> [out=180, in=90] recall;
             recall -> [out=162, in=-15] mfc;
+            recall -> output [ext, x=3, y=-5];
         };
     \end{tikzpicture}
     \caption[General information flow in the CUE model.]{General information flow in the CUE model. The routing of information depending on the task, and task phase is not shown in this figures. Thus, not all shown connections are active at all times.}\label{fig:general-routing}
@@ -118,6 +119,7 @@ During free recall, instead, the output of $\mft$ is used to update the context 
                 mcf -> [out=270, in=180] recall;
                 mcf -> [out=270, in=180] precall;
                 ose -> [out=180, in=90] recall;
+                recall -> output [ext, x=2.5, y=-5];
             };
         \end{tikzpicture}
     }
@@ -142,6 +144,7 @@ During free recall, instead, the output of $\mft$ is used to update the context 
                 precall -> [out=0, in=190] position;
                 ose -> [out=180, in=90] recall;
                 recall -> [out=162, in=-15] mfc;
+                recall -> output [ext, x=2.5, y=-5];
             };
         \end{tikzpicture}
     }
