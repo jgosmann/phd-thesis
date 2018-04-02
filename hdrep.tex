@@ -72,7 +72,7 @@ Thus, parts of the hyperball near the surface are not covered by the evaluation 
 As the number of dimensions increases, this becomes a bigger problem as the volume for a hyperball goes to zero as $\dims \rightarrow \infty$ (all of the ball is a surface).
 To show that this distortion is indeed caused by the partial covering, we can increase the radius of the hyperball for sampling the evaluation points slightly to cover more of the unit-ball.
 This is done in \cref{fig:error-radius-scale} for a 64-dimensional representation with \num{50}~neurons per dimension (\num{3200} in total).
-While this makes the distortion more even (mean distortion reduced by \num{0.011}), it unfortunately also increases noise level (by \num{0.019}) because evaluation points have a larger spacing now.\footnote{Both values are statistically highly significant with $p \approx 0$ as determined by bootstrapping.}
+While this makes the distortion more even (mean distortion reduced by \num{0.011}), it unfortunately also increases noise level (by \num{0.019}) because evaluation points have a larger spacing now.\footnote{Both values are statistically highly significant with $p < 0.0001$ as determined by bootstrapping.}
 \begin{figure}
     \centering
     \includegraphics{figures/error-linecut}
@@ -145,7 +145,7 @@ This might invalidate the results for small neuron numbers, but such cases shoul
 Finally, spiking LIF neurons are of primary interest, as they are the most commonly used neuron model in the NEF\@.
 But, I give some consideration to other neuron types in \cref{apdx:hdrep}.
 Any stated differences in error are based on the aforementioned parameters.
-Furthermore, all stated differences have been found to be statistically highly significant with $p \approx 0$ using bootstrapping.
+Furthermore, all stated differences have been found to be statistically highly significant with $p < 0.0001$ using bootstrapping.
 
 The basic effects of the $\csdist(\dims + 2)$ intercept distribution can be seen in \cref{fig:error-cs-intercepts}.
 The total mean error is reduced by \num{-0.130}.
@@ -226,8 +226,7 @@ In comparison to \textcite{gosmann216}, the total simulation time has been halve
 These numbers are still sufficient to give highly significant results.
 
 The results for a 64-dimensional representation are shown in \cref{fig:spaopt-repr}.
-All the mean RMSEs for one value of $\dims_q$ are significantly different ($p \approx 0$,
-% TODO unusual p value reporting way
+All the mean RMSEs for one value of $\dims_q$ are significantly different ($p < 0.0001$,
 determined with bootstrapping), with the exception of the radius adjustment method compared to the default parameters when $\dims_q = \dims = 64$ ($p > 0.93$).
 This latter result is expected because for $\dims_q = \dims$, the radius adjustment method keeps a unit radius and has no effect.
 Further, the previous result of the radius method increasingly reducing the error as $\dims_q \rightarrow 1$ is reproduced.
