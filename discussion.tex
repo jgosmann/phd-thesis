@@ -208,12 +208,12 @@ and is caused by the discrete approximation of the derivative that relies on $t^
 \begin{figure}
     \centering
     \includegraphics{figures/fuzzy-mem-noise-example}
-    \caption[Example of the effect of noise on the fuzzy temporal memory]{Examples of the effect of noise in the leaky integrators $c_i$ of the fuzzy temporal memory on the reconstruction $\hat{f}$. (a) Gaussian noise with mean zero and a constant standard deviation is added to the output of all integrators. (b) Gaussian noise with mean zero and standard deviation scaled by $s_i^{-1}$ is added to the output of all integrators.}\label{fig:fuzzy-mem-noise-example}
+    \caption[Example of the effect of noise on the fuzzy temporal memory.]{Examples of the effect of noise in the leaky integrators $c_i$ of the fuzzy temporal memory on the reconstruction $\hat{f}$. (a) Gaussian noise with mean zero and a constant standard deviation is added to the output of all integrators. (b) Gaussian noise with mean zero and standard deviation scaled by $s_i^{-1}$ is added to the output of all integrators.}\label{fig:fuzzy-mem-noise-example}
 \end{figure}
 \begin{figure}
     \centering
     \includegraphics{figures/fuzzy-mem-noise-ts}
-    \caption[Noise amplification and timescales in fuzzy temporal memory]{(a) Noise amplification $g_{\eta,\ped{NEF}}$ in the fuzzy temporal memory. (b) Timescale $\tau_1$ for the $t^*_1$ reconstruction of the fuzzy temporal memory.}\label{fig:fuzzy-mem-noise-ts}
+    \caption[Noise amplification and timescales in fuzzy temporal memory.]{(a) Noise amplification $g_{\eta,\ped{NEF}}$ in the fuzzy temporal memory. (b) Timescale $\tau_1$ for the $t^*_1$ reconstruction of the fuzzy temporal memory.}\label{fig:fuzzy-mem-noise-ts}
 \end{figure}
 
 Based on these equations, the total number of neurons $N_{\ped{tot}}$ required can be estimated as (\cref{apdx:fuzzymem-neurons})
@@ -237,7 +237,7 @@ For an implementation with a realistic limit on the neuron number, $t^*_1$, but 
 \begin{figure}
     \centering
     \includegraphics{figures/fuzzy-mem-n-neurons}
-    \caption[Number of neurons required to implement a fuzzy temporal memory]{Number of neurons required to implement a fuzzy temporal memory with a lower timescale of $\tau_1 = \SI{1}{\second}$ and a timespan of $t^*_{\max} = \SI{10}{\second}$. The white contours give the approximate number of neurons in the human entorhinal cortex (\num{13e6}) and human brain (\num{86e9}). See text for further details.}\label{fig:fuzzy-mem-n-neurons}
+    \caption[Number of neurons required to implement a fuzzy temporal memory.]{Number of neurons required to implement a fuzzy temporal memory with a lower timescale of $\tau_1 = \SI{1}{\second}$ and a timespan of $t^*_{\max} = \SI{10}{\second}$. The white contours give the approximate number of neurons in the human entorhinal cortex (\num{13e6}) and human brain (\num{86e9}). See text for further details.}\label{fig:fuzzy-mem-n-neurons}
 \end{figure}
 
 Unfortunately, choosing small $t^*_1$ and $k$ is also problematic.

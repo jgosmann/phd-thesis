@@ -39,7 +39,7 @@ Finally, modulatory connections do not influence the representation in an ensemb
         };
     \end{tikzpicture}
     \hfill
-    \caption[Graphical elements in NEF network diagrams]{Graphical elements in NEF network diagrams. See text for further explanation.}\label{fig:tikz-nef}
+    \caption[Graphical elements in NEF network diagrams.]{Graphical elements in NEF network diagrams. See text for further explanation.}\label{fig:tikz-nef}
 \end{figure}
 
 
@@ -57,10 +57,10 @@ In this work $\tau_1 = \SI{5}{\milli\second}$ and $\tau_2 = \SI{50}{\milli\secon
 \begin{figure}
     \centering
     \includegraphics{figures/differentiator}
-    \caption[Differentiator]{Differentiator with $\tau_1 = \SI{5}{\milli\second}$ and $\tau_2 = \SI{50}{\milli\second}$. (a) Response of the differentiator to a unit step input. The output has been normalized to the maximum. (b) Magnitude response for sinusoidal inputs with different frequencies.}\label{fig:differentiator}
+    \caption[Differentiator.]{Differentiator with $\tau_1 = \SI{5}{\milli\second}$ and $\tau_2 = \SI{50}{\milli\second}$. (a) Response of the differentiator to a unit step input. The output has been normalized to the maximum. (b) Magnitude response for sinusoidal inputs with different frequencies.}\label{fig:differentiator}
 \end{figure}
 \begin{figure}
-    \begin{captionbeside}[Implementation of a differentiator with the NEF]{Implementation of a differentiator with the NEF\@. The connection labels state the transform and synaptic time constants with $\tau_1 < \tau_2$.\label{fig:differentiator-net}}[i]
+    \begin{captionbeside}[Implementation of a differentiator with the NEF.]{Implementation of a differentiator with the NEF\@. The connection labels state the transform and synaptic time constants with $\tau_1 < \tau_2$.\label{fig:differentiator-net}}[i]
         \begin{tikzpicture}[nef]
             \graph {
                 x/"$\vc x$" [ens] -> ["$+1, \syntau=\tau_1$", bend left] y/"$\vc y$" [ens];
@@ -88,7 +88,7 @@ Adding more neurons to an integrator makes it more stable as the spiking noise i
 Similarly, a longer recurrent synaptic time constant also makes the integrator more stable.
 Increasing the number of represented dimensions makes the integrator less stable because there are fewer fixed points.
 \begin{figure}
-    \begin{captionbeside}{Implementation of an integrator with the NEF\label{fig:integrator-net}}[i]
+    \begin{captionbeside}{Implementation of an integrator with the NEF\label{fig:integrator-net}.}[i]
         \begin{tikzpicture}[nef]
             \path[use as bounding box] (-0.25, -0.6) rectangle (3, 0.6);
             \graph {
@@ -101,7 +101,7 @@ Increasing the number of represented dimensions makes the integrator less stable
 \begin{figure}
     \centering
     \includegraphics{figures/integrator}
-    \caption[Neural integrator]{Neural integrator with \num{100} neurons and a recurrent synaptic time constant of $\syntau = \SI{100}{\milli\second}$. (a) Example input $u(t)$ and output $x(t)$ of the neural integrator. (b) Distortion error (blue curve) and fixed points. Stable fixed points are marked by filled circles, unstable fixed points by unfilled circles.}\label{fig:integrator}
+    \caption[Neural integrator.]{Neural integrator with \num{100} neurons and a recurrent synaptic time constant of $\syntau = \SI{100}{\milli\second}$. (a) Example input $u(t)$ and output $x(t)$ of the neural integrator. (b) Distortion error (blue curve) and fixed points. Stable fixed points are marked by filled circles, unstable fixed points by unfilled circles.}\label{fig:integrator}
 \end{figure}
 
 
@@ -114,7 +114,7 @@ Note that feeding a null vector to the difference ensemble clears out the memory
 Thus, the input the integrator needs to be gated.
 This can be done by inhibiting the neurons of the difference ensemble to keep the current value in the integrator.
 \begin{figure}
-    \begin{captionbeside}[Gated memory buffer network]{A gated memory buffer network. The \pop{store} input controls whether the input $\vc u(t)$ is allowed to overwrite the stored value $\vc x(t)$.\label{fig:gated-mem}}[i]
+    \begin{captionbeside}[Gated memory buffer network.]{A gated memory buffer network. The \pop{store} input controls whether the input $\vc u(t)$ is allowed to overwrite the stored value $\vc x(t)$.\label{fig:gated-mem}}[i]
     \begin{tikzpicture}[nef]
         \graph [branch down=40pt] {
             u/"$\vc u$" -> diff/"$\vc u - \vc x$" [ens] -> ["$g \syntau$" above, bend left] x/"$\vc x$" [ens];
@@ -157,7 +157,7 @@ To adjust the threshold to a non-zero value a constant bias term can be fed into
 \begin{figure}
     \centering
     \includegraphics{figures/thresholding}
-    \caption[Thresholding ensemble]{Thresholding ensemble with 25 neurons. (a) Decoded rectified and Heaviside output.  (b) Tuning curves in the upper part; probability density function of the exponential intercept distribution with inverted y-axis (i.e.\ probability density increases downward).}\label{fig:thresholding}
+    \caption[Thresholding ensemble.]{Thresholding ensemble with 25 neurons. (a) Decoded rectified and Heaviside output.  (b) Tuning curves in the upper part; probability density function of the exponential intercept distribution with inverted y-axis (i.e.\ probability density increases downward).}\label{fig:thresholding}
 \end{figure}
 
 
@@ -169,7 +169,7 @@ A \SI{37}{\percent} more accurate implementation (with the same number of neuron
 \end{equation}
 The neural implementation of this equation is straight-forward (\cref{fig:product-net}).
 \begin{figure}
-    \begin{captionbeside}{Implementation of an accurate product with the NEF}[i]
+    \begin{captionbeside}{Implementation of an accurate product with the NEF.}[i]
         \begin{tikzpicture}[nef, x=2cm, y=2cm]
             \graph [no placement] {
                 x/"$x$" [at={(0, 1)}] -> sum/"$a$" [ens, at={(1, 1)}] -> ["$a^2/4$"] prod/"" [pnode, at={(2, 0.5)}] -> out/"$xy$" [at={(3, 0.5)}];

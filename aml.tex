@@ -56,7 +56,7 @@ Those ensembles can then be connected up to modulate the synaptic strengths from
             uv -> [modulatory, "$\mdec\Tr$" right] mod,
         };
     \end{tikzpicture}
-    \caption{Explicit neural calculation of the AML weight change}\label{fig:aml-explicit}
+    \caption{Explicit neural calculation of the AML weight change.}\label{fig:aml-explicit}
 \end{figure}
 
 It might be surprising that the change in the connection weights between the pre and post ensemble does not depend on their own activity, but is controlled externally.
@@ -94,7 +94,7 @@ As we generally assume, in the context of the NEF, that there is some mechanism 
             u/$\vc u$ [ext, at={(-3, -3)}] -> pre,
         };
     \end{tikzpicture}
-    \caption{Explicit neural calculation of the AML weight change avoiding weight sharing}\label{fig:aml-explicit-no-sym}
+    \caption{Explicit neural calculation of the AML weight change avoiding weight sharing.}\label{fig:aml-explicit-no-sym}
 \end{figure}
 
 However, it is not possible to state the function to obtain the decoders $\mdec_*$ because the function itself depends on the encoding by the neurons.
@@ -129,12 +129,12 @@ This might be due to the random input not sufficiently covering the representati
 \begin{figure}
     \centering
     \includegraphics{figures/aml-grad-err}
-    \caption{Error $\lVert \mdec\Tr\mdec - \mdec_*\rVert$}\label{fig:aml:grad-err}
+    \caption{Error $\lVert \mdec\Tr\mdec - \mdec_*\rVert$.}\label{fig:aml:grad-err}
 \end{figure}
 \begin{figure}
     \centering
     \includegraphics{figures/aml-decode}
-    \caption[Example of two outputs decoded with the symmetric weights being learned]{Example of two outputs decoded with the symmetric weights being learned. The output dimensions on the left quickly aligns with the target, while this does not happen (within the shown time frame) for the output dimension on the right.}\label{fig:aml:grad-decode}
+    \caption[Example of two outputs decoded with the symmetric weights being learned.]{Example of two outputs decoded with the symmetric weights being learned. The output dimensions on the left quickly aligns with the target, while this does not happen (within the shown time frame) for the output dimension on the right.}\label{fig:aml:grad-decode}
 \end{figure}
 
 Again, the pure derivation of a learning rule does not ensure its biological plausibility.
@@ -160,12 +160,12 @@ The observed decrease demonstrates the basic viability of this approach, but the
             combine -> [modulatory, out=270, in=90] mod,
         };
     \end{tikzpicture}
-    \caption{Neural computation of the error signal necessary for learning symmetric decoders with gradient descent}\label{fig:aml-grad-desc}
+    \caption{Neural computation of the error signal necessary for learning symmetric decoders with gradient descent.}\label{fig:aml-grad-desc}
 \end{figure}
 \begin{figure}
     \centering
     \includegraphics{figures/aml-neural-grad-err}
-    \caption{Error $\lVert \mdec\Tr\mdec - \mdec_*\rVert$ with neural gradient calculation}\label{fig:aml:neural-grad-err}
+    \caption{Error $\lVert \mdec\Tr\mdec - \mdec_*\rVert$ with neural gradient calculation.}\label{fig:aml:neural-grad-err}
 \end{figure}
 
 
@@ -229,7 +229,7 @@ It is still possible to learn associations with PES, but it requires the present
 \begin{figure}
     \centering
     \includegraphics{figures/aml}
-    \caption[Learning and recall testing of five cue-target pairs with the AML and PES]{Learning and recall testing of five cue-target pairs with the AML and PES\@. Each colored trace is the dot product with one of the vectors used. The cue vectors $\vc u(t)$ and target vectors $\vc v(t)$ differ.}\label{fig:aml}
+    \caption[Learning and recall testing of five cue-target pairs with the AML and PES.]{Learning and recall testing of five cue-target pairs with the AML and PES\@. Each colored trace is the dot product with one of the vectors used. The cue vectors $\vc u(t)$ and target vectors $\vc v(t)$ differ.}\label{fig:aml}
 \end{figure}
 
 This ability for one-shot learning with the AML is due to the $\mdec_*$ matrix, which accounts for the interference between neurons.
@@ -283,7 +283,7 @@ The dimensionality of the ensembles and semantic pointers was set to \num{32}.
             post -> output/"" [x=6, y=-1, ext];
         };
     \end{tikzpicture}
-    \caption{NEF network for associating two stimuli (persons with landmarks here) with the AML}\label{fig:aml-net}
+    \caption{NEF network for associating two stimuli (persons with landmarks here) with the AML.}\label{fig:aml-net}
 \end{figure}
 
 This NEF network is isolated and does not have random unrelated background firing as occurred in the original experiment.
@@ -307,7 +307,7 @@ A better quantitative fit might be achievable with more careful parameter select
 
     \vspace*{0.34cm}
     \subcaptionbox{Model data}{\includegraphics{figures/aml-spikes}}
-    \caption[Change in spiking behaviour when learning associations]{Change in spiking behaviour when learning associations. (a) Exemplary spikes recorded from human hippocampus for the preferred (P) and non-preferred (NP) stimulus. Task 1 (blue) is before, task 2 (red) after learning the P-NP association. The black line marks the stimulus onset. Figure adopted from \textcite{ison2015} under the Creative Commons Attribution 4.0 International license. (b) Spikes recorded from the NEF model learning the P-NP association with the AML\@.}\label{fig:aml-spikes}
+    \caption[Change in spiking behaviour when learning associations.]{Change in spiking behaviour when learning associations. (a) Exemplary spikes recorded from human hippocampus for the preferred (P) and non-preferred (NP) stimulus. Task 1 (blue) is before, task 2 (red) after learning the P-NP association. The black line marks the stimulus onset. Figure adopted from \textcite{ison2015} under the Creative Commons Attribution 4.0 International license. (b) Spikes recorded from the NEF model learning the P-NP association with the AML\@.}\label{fig:aml-spikes}
 \end{figure}
 \begin{figure}
     \centering
@@ -315,7 +315,7 @@ A better quantitative fit might be achievable with more careful parameter select
 
     \vspace*{.75cm}
     \subcaptionbox{Model data}{\includegraphics{figures/aml-population-response}}
-    \caption[Population response for pair-coding units]{Population response for pair-coding units to the preferred (P), non-preferred (NP), and non-associated (NA) stimuli before and after learning. Times are relative to stimulus onset. Shaded regions indicate the standard error of mean. (a) Normalized population activity from experimental data. Adopted from \textcite{ison2015} under the Creative Commons Attribution 4.0 International license. (b) Mean firing rates from model data.}\label{fig:aml-population-response}
+    \caption[Population response for pair-coding units.]{Population response for pair-coding units to the preferred (P), non-preferred (NP), and non-associated (NA) stimuli before and after learning. Times are relative to stimulus onset. Shaded regions indicate the standard error of mean. (a) Normalized population activity from experimental data. Adopted from \textcite{ison2015} under the Creative Commons Attribution 4.0 International license. (b) Mean firing rates from model data.}\label{fig:aml-population-response}
 \end{figure}
 
 

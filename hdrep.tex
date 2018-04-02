@@ -56,7 +56,7 @@ Furthermore, with the Nengo default parameters the increase in the noise error w
 \begin{figure}
     \centering
     \includegraphics{figures/noise-error}
-    \caption[Mean noise error with $\csdist(\dims + 2)$ distributed intercepts]{The mean noise error $\errnoise$ in dependence of (a) the number of neurons and (b) the number of dimensions. Scatter points show empirically determined values with \SI{95}{\percent} confidence intervals smaller than the marker size. Solid lines in (a) are extrapolated from the mean values for \num{1000} neurons assuming the noise error is in $\bO(n)$. The solid gray line in (b) is a linear regression through all shown data points.}\label{fig:noise-error}
+    \caption[Mean noise error with $\csdist(\dims + 2)$ distributed intercepts.]{The mean noise error $\errnoise$ in dependence of (a) the number of neurons and (b) the number of dimensions. Scatter points show empirically determined values with \SI{95}{\percent} confidence intervals smaller than the marker size. Solid lines in (a) are extrapolated from the mean values for \num{1000} neurons assuming the noise error is in $\bO(n)$. The solid gray line in (b) is a linear regression through all shown data points.}\label{fig:noise-error}
 \end{figure}
 
 When looking at the error along a line through the hyperball (\cref{fig:error-linecut}), it becomes apparent that the distortion is mostly flat, but increases near the surface.
@@ -76,17 +76,17 @@ While this makes the distortion more even (mean distortion reduced by \num{0.011
 \begin{figure}
     \centering
     \includegraphics{figures/error-linecut}
-    \caption[Mean error along line cut through hyperball]{Mean error along a line cut through the $d$-dimensional hyperball with $50\dims$ neurons. The (a) noise error component, (b) distortion error component, and (c) the total error are shown. The shaded regions indicate \SI{95}{\percent} confidence intervals.}\label{fig:error-linecut}
+    \caption[Mean error along line cut through hyperball.]{Mean error along a line cut through the $d$-dimensional hyperball with $50\dims$ neurons. The (a) noise error component, (b) distortion error component, and (c) the total error are shown. The shaded regions indicate \SI{95}{\percent} confidence intervals.}\label{fig:error-linecut}
 \end{figure}
 \begin{figure}
-    \begin{captionbeside}[Covering of the unit-circle with evaluation points]{Covering of the two-dimensional unit-circle with 50~uniformly sampled evaluation points. The orange, shaded region shows the convex hull which fails to cover the area close to the circle boundary.}[i]
+    \begin{captionbeside}[Covering of the unit-circle with evaluation points.]{Covering of the two-dimensional unit-circle with 50~uniformly sampled evaluation points. The orange, shaded region shows the convex hull which fails to cover the area close to the circle boundary.}[i]
         \includegraphics{figures/circle-covering}
     \end{captionbeside}\label{fig:circle-covering}
 \end{figure}
 \begin{figure}
     \centering
     \includegraphics{figures/error-radius-scale}
-    \caption[Mean error along line cut through hyperball with scaled evaluation point radius]{Mean error along a line cut through the \num{64}-dimensional hyperball with \num{3200} neurons and different radii $r$ from which evaluation points are picked. The shaded regions indicate \SI{95}{\percent} confidence intervals.}\label{fig:error-radius-scale}
+    \caption[Mean error along line cut through hyperball with scaled evaluation point radius.]{Mean error along a line cut through the \num{64}-dimensional hyperball with \num{3200} neurons and different radii $r$ from which evaluation points are picked. The shaded regions indicate \SI{95}{\percent} confidence intervals.}\label{fig:error-radius-scale}
 \end{figure}
 
 Vectors in the SPA are often of unit-length and thus a good, low-distortion representation of the hyperball surface is desirable.
@@ -106,7 +106,7 @@ The mapping of a small change in the represented value to a large change in firi
 \begin{figure}
     \centering
     \includegraphics{figures/act-proportion}
-    \caption[Distribution of the proportion of active neurons]{The histogram (shaded bar plot) and kernel-density estimate (line) of the proportion of neurons active for uniformly sampled 64-dimensional vectors.}\label{fig:act-proportion}
+    \caption[Distribution of the proportion of active neurons.]{The histogram (shaded bar plot) and kernel-density estimate (line) of the proportion of neurons active for uniformly sampled 64-dimensional vectors.}\label{fig:act-proportion}
 \end{figure}
 
 Thus, a better intercept distribution should have fewer neurons that are barely ever active, but should also distribute the intercepts so that there is an even distribution of the fraction of space a neuron is active for.
@@ -123,12 +123,12 @@ For the standard uniform distribution, this fraction rises to above \num{0.35}, 
 \begin{figure}
     \centering
     \includegraphics{figures/cosine-sim}
-    \caption{PDF $\pcs(x; d_{\csdist})$ of the cosine similarity distribution}\label{fig:cosine-sim}
+    \caption{PDF $\pcs(x; d_{\csdist})$ of the cosine similarity distribution.}\label{fig:cosine-sim}
 \end{figure}
 \begin{figure}
     \centering
     \includegraphics{figures/act-cs}
-    \caption[Proportion of inactive neurons and its distribution]{(a) Proportion of neurons inactive for all \num{10000} uniformly sampled $\dims$-dimensional vectors. The proportion is plotted for neural ensembles with a uniform intercept distribution (blue) and intercepts distributed according to $\csdist(\dims + 2)$ (orange). The shaded areas denote \SI{95}{\percent} confidence intervals. (b) Histogram (shaded bar plot) and kernel-density estimate (line) of the proportion of neurons active for uniformly sampled 64-dimensional vectors when distributing intercepts according to $\csdist(\dims + 2)$.}\label{fig:act-cs}
+    \caption[Proportion of inactive neurons and its distribution.]{(a) Proportion of neurons inactive for all \num{10000} uniformly sampled $\dims$-dimensional vectors. The proportion is plotted for neural ensembles with a uniform intercept distribution (blue) and intercepts distributed according to $\csdist(\dims + 2)$ (orange). The shaded areas denote \SI{95}{\percent} confidence intervals. (b) Histogram (shaded bar plot) and kernel-density estimate (line) of the proportion of neurons active for uniformly sampled 64-dimensional vectors when distributing intercepts according to $\csdist(\dims + 2)$.}\label{fig:act-cs}
 \end{figure}
 
 While this gives a mathematical motivation to choose this intercept distribution, it must be shown empirically that it performs better than a uniform intercept distribution.
@@ -157,7 +157,7 @@ In particular, there is a ring of higher distortion between the center and the s
 \begin{figure}
     \centering
     \includegraphics{figures/error-cs-intercepts}
-    \caption[Mean error along line cut with different intercept distributions]{Mean error along a line cut through the 64-dimensional hyperball with \num{3200}~neurons, different intercept distributions (pink vs.\ turquoise) and different synaptic time constants (solid vs.\ dotted line). The shaded regions indicate \SI{95}{\percent} confidence intervals.}\label{fig:error-cs-intercepts}
+    \caption[Mean error along line cut with different intercept distributions.]{Mean error along a line cut through the 64-dimensional hyperball with \num{3200}~neurons, different intercept distributions (pink vs.\ turquoise) and different synaptic time constants (solid vs.\ dotted line). The shaded regions indicate \SI{95}{\percent} confidence intervals.}\label{fig:error-cs-intercepts}
 \end{figure}
 
 In general, there is a noise-distortion trade-off.
@@ -171,14 +171,14 @@ The opposite effects are observed with less regularization.
 \begin{figure}
     \centering
     \includegraphics{figures/error-cs-intercepts-reg}
-    \caption[Mean error along line cut with different regularization]{Mean error along a line cut through the 64-dimensional hyperball with \num{3200}~neurons and different regularization $\reg$. The shaded regions indicate \SI{95}{\percent} confidence intervals.}\label{fig:error-cs-intercepts-reg}
+    \caption[Mean error along line cut with different regularization.]{Mean error along a line cut through the 64-dimensional hyperball with \num{3200}~neurons and different regularization $\reg$. The shaded regions indicate \SI{95}{\percent} confidence intervals.}\label{fig:error-cs-intercepts-reg}
 \end{figure}
 
 Interestingly, the cosine intercept distribution not only reduces the noise by a constant factor compared to the uniform distribution, it also improves the scaling of the noise error from $\bO(d/\sqrt{n})$ to $\bO(d^{3/4}/\sqrt{n})$ (\cref{fig:cs-error-scaling}).
 \begin{figure}
     \centering
     \includegraphics{figures/cs-error-scaling}
-    \caption[Mean noise error with uniform intercepts]{The mean noise error $\errnoise$ with $\csdist(\dims + 2)$ distributed intercepts in dependence of the number of dimensions. Scatter points show empirically determined values with \SI{95}{\percent} confidence intervals smaller than the marker size. The solid gray line in is a linear regression fitted to $\dims^{3/4}$.}\label{fig:cs-error-scaling}
+    \caption[Mean noise error with uniform intercepts.]{The mean noise error $\errnoise$ with $\csdist(\dims + 2)$ distributed intercepts in dependence of the number of dimensions. Scatter points show empirically determined values with \SI{95}{\percent} confidence intervals smaller than the marker size. The solid gray line in is a linear regression fitted to $\dims^{3/4}$.}\label{fig:cs-error-scaling}
 \end{figure}
 
 So far we only considered spiking neurons, but the NEF also allows the use of rate neuron models.
@@ -236,7 +236,7 @@ Overall, setting the intercepts and evaluation points gives a significant improv
 \begin{figure}
     \centering
     \includegraphics{figures/spaopt-repr}
-    \caption[Distribution of the RMSE in the representation of unit-vectors]{Distribution of the RMSE in the representation of 64-dimensional unit-vectors. The violinplots visualize the distribution with a kernel-density estimate mirrored horizontally. The midline of shows a box plot with mean (white) and quartiles (thick black). Results obtained with the Nengo default parameters are blue, with the radius adjustment method from \textcite{gosmann216} are orange, and using the $\csdist(\dims + 2)$ distribution for intercepts and evaluation points are green. Along the y-axis the number of subdimensions $\dims_q$ represented in a single ensemble are arranged.}\label{fig:spaopt-repr}
+    \caption[Distribution of the RMSE in the representation of unit-vectors.]{Distribution of the RMSE in the representation of 64-dimensional unit-vectors. The violinplots visualize the distribution with a kernel-density estimate mirrored horizontally. The midline of shows a box plot with mean (white) and quartiles (thick black). Results obtained with the Nengo default parameters are blue, with the radius adjustment method from \textcite{gosmann216} are orange, and using the $\csdist(\dims + 2)$ distribution for intercepts and evaluation points are green. Along the y-axis the number of subdimensions $\dims_q$ represented in a single ensemble are arranged.}\label{fig:spaopt-repr}
 \end{figure}
 
 In addition to pure representation, it is common to compute dot products in the context of the SPA\@.
@@ -250,7 +250,7 @@ It is also only minimally worse than the previous radius adjustment method.
 \begin{figure}
     \centering
     \includegraphics{figures/spaopt-dot}
-    \caption[Distribution of the RMSE in dot product calculations]{Distribution of the RMSE in the calculation of dot products and vector lengths. The violinplots visualize the distribution with a kernel-density estimate. The midline of shows a box plot with mean (white) and quartiles (thick black).}\label{fig:spaopt-dot}
+    \caption[Distribution of the RMSE in dot product calculations.]{Distribution of the RMSE in the calculation of dot products and vector lengths. The violinplots visualize the distribution with a kernel-density estimate. The midline of shows a box plot with mean (white) and quartiles (thick black).}\label{fig:spaopt-dot}
 \end{figure}
 
 %Finally, one might ask whether the cosine similarity distribution can also improve the calculation of circular convolutions.

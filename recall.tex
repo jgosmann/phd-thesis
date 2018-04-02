@@ -27,7 +27,7 @@ Other choices of $\lambda$ affect the effective integration time-constant $\tau$
 By means of principle 3 of the NEF, the prescribed dynamics can be exactly implemented in the NEF\@.
 Here, one ensemble per state variable is used (\cref{fig:lca}) and the gains and biases of the neurons are distributed as described in \cref{sec:thresholding} to ensure the rectification of the state variables.
 \begin{figure}
-    \begin{captionbeside}{Leaky, competing accumulator (LCA) network\label{fig:lca}}
+    \begin{captionbeside}{Leaky, competing accumulator (LCA) network\label{fig:lca}.}
         \begin{tikzpicture}[nef, every path/.style={-{Latex}}]
             \matrix [column sep=20, row sep=18] {
                 \node (rho1) {$\rho_1$}; & \node (x1) [ens] {$x_1$}; &[20] \node (out1) {}; \\
@@ -69,7 +69,7 @@ The first layer consists of independent accumulators representing the state vari
 This layer projects to the second layer that performs the computation of $\bar{x}_i$ (i.e.\ the Heaviside function).
 The second layer projects back to first layer and can be used to read out the output of the network.
 \begin{figure}
-    \begin{captionbeside}[Independent accumulator (IA) network]{The independent accumulator (IA) network. The second layer is used to compute the function $\bar{x}_i = \Heavi(x_i - \vartheta)$.\label{fig:ia}}
+    \begin{captionbeside}[Independent accumulator (IA) network.]{The independent accumulator (IA) network. The second layer is used to compute the function $\bar{x}_i = \Heavi(x_i - \vartheta)$.\label{fig:ia}}
         \begin{tikzpicture}[nef, every path/.style={-{Latex}}]
 
             \matrix [column sep=20, row sep=18] {
@@ -147,7 +147,7 @@ Interestingly, the IA network does not fail to reach a clear decision in any of 
 \begin{figure}
     \centering
     \includegraphics{figures/ia-clear}
-    \caption[Proportion of trials with a clear decision for the LCA network]{Proportion of trials with a clear decision for the LCA network. The data for correct trials is exactly the same. Each plot shows a different input magnitude $u$ and each curve is for a different target separation $s$. The optimum is marked with the gray horizontal line and coincides with the performance of the IA network for clear decisions. Error bars show \SI{95}{\percent} confidence intervals.}\label{fig:ia-clear}
+    \caption[Proportion of trials with a clear decision for the LCA network.]{Proportion of trials with a clear decision for the LCA network. The data for correct trials is exactly the same. Each plot shows a different input magnitude $u$ and each curve is for a different target separation $s$. The optimum is marked with the gray horizontal line and coincides with the performance of the IA network for clear decisions. Error bars show \SI{95}{\percent} confidence intervals.}\label{fig:ia-clear}
 \end{figure}
 
 Moving on to correct decisions, the LCA network always produced the correct output given it produced a clear decision.
@@ -157,7 +157,7 @@ Note that the feedforward integration time-constant can be increased to integrat
 \begin{figure}
     \centering
     \includegraphics{figures/ia-correct}
-    \caption[Proportion of correct trials for the IA network]{Proportion of correct trials for the IA network. Each plot shows a different combination of input magnitude $u$ and integration time constant $\tau_1$. Each curve shows a different target separation $s$. The optimum is marked with the gray horizontal line. Error bars show \SI{95}{\percent} confidence intervals.}\label{fig:ia-correct}
+    \caption[Proportion of correct trials for the IA network.]{Proportion of correct trials for the IA network. Each plot shows a different combination of input magnitude $u$ and integration time constant $\tau_1$. Each curve shows a different target separation $s$. The optimum is marked with the gray horizontal line. Error bars show \SI{95}{\percent} confidence intervals.}\label{fig:ia-correct}
 \end{figure}
 
 This, however, increases the decision times.
@@ -168,7 +168,7 @@ In other words, noise in the LCA network influences whether a decision can be re
 \begin{figure}
     \centering
     \includegraphics{figures/ia-time}
-    \caption[Mean WTA decisions times]{Mean decision times for the (a) LCA and (b) IA network. Data for the LCA network is shown as depending on the input magnitude $u$ and is averaged over all noise levels $\sigma$ because noise had a minimal effect on decision times. Data fro the IA network is shown as depending on the noise standard deviation $\sigma$ for two input magnitudes of $u = 1$ (dashed lines) and $u = 0.2$ (solid lines). Target separation is indicated by color. Error bars show \SI{95}{\percent} confidence intervals.}\label{fig:ia-time}
+    \caption[Mean WTA decisions times.]{Mean decision times for the (a) LCA and (b) IA network. Data for the LCA network is shown as depending on the input magnitude $u$ and is averaged over all noise levels $\sigma$ because noise had a minimal effect on decision times. Data fro the IA network is shown as depending on the noise standard deviation $\sigma$ for two input magnitudes of $u = 1$ (dashed lines) and $u = 0.2$ (solid lines). Target separation is indicated by color. Error bars show \SI{95}{\percent} confidence intervals.}\label{fig:ia-time}
 \end{figure}
 
 Finally, both networks might produce a transient response that gets worse with increased noise (\cref{fig:ia-transient}).
@@ -178,7 +178,7 @@ By increasing the feedforward time-constant, this transient response gets reduce
 \begin{figure}
     \centering
     \includegraphics{figures/ia-transient}
-    \caption[Transient WTA responses]{Transient responses (i.e.\ highest output of a non-winning choice) for the WTA networks as depending on the noise standard deviation $\sigma$. Data from the IA network is shown for two integration constants. Each curves shows a different target separation $s$. Error bars show \SI{95}{\percent} confidence intervals.}\label{fig:ia-transient}
+    \caption[Transient WTA responses.]{Transient responses (i.e.\ highest output of a non-winning choice) for the WTA networks as depending on the noise standard deviation $\sigma$. Data from the IA network is shown for two integration constants. Each curves shows a different target separation $s$. Error bars show \SI{95}{\percent} confidence intervals.}\label{fig:ia-transient}
 \end{figure}
 
 
@@ -293,7 +293,7 @@ By subtracting \num{0.1} from the input utilities provided by the OSE output, in
         \node (stage2) [fit={(m4) (g4) (2, -4.25)}, draw, dashed, gray, rounded corners=0.5em, inner sep=0.5em] {};
         \node [below=0cm of stage2.north, anchor=south, gray, font={\lato}] {recall inhibition stage 2};
     \end{tikzpicture}    
-    \caption[Recall network]{Recall network. See text for details.}\label{fig:recall}
+    \caption[Recall network.]{Recall network. See text for details.}\label{fig:recall}
 \end{figure}
 
 The IA network does not produce an output during the evidence accumulation phase.

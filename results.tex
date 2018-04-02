@@ -17,7 +17,7 @@ These are the values reported as best fitting by \textcite{Sederberg2008} and \t
 Some other parameters, like the OSE scaling $\oseepisscale$ for episodic memory and the TCM ratio $\gamma$ for updating $\mft$, are not present in the CUE model.
 \begin{table}
     \centering
-    \caption[Summary of free parameter values]{Summary of free parameters values for distractor rate $\drate$, probability $\psi$ of using the serial recall strategy in free recall, bias of the null choice $\minev$ in recall, standard deviation of the input noise $\recnoise$ in recall, and the AML learning rate $\eta$. See text for discussion of the parameter choices.}\label{tbl:params}
+    \caption[Summary of free parameter values.]{Summary of free parameters values for distractor rate $\drate$, probability $\psi$ of using the serial recall strategy in free recall, bias of the null choice $\minev$ in recall, standard deviation of the input noise $\recnoise$ in recall, and the AML learning rate $\eta$. See text for discussion of the parameter choices.}\label{tbl:params}
     \begin{tabular}{lSSSSS}
         \toprule
         Experimental condition & $\drate / \si{\second^{-1}}$ & $\psi$ & $\minev$ & $\recnoise$ & $\eta$ \\
@@ -48,7 +48,7 @@ In general, few transposition errors are made, but for those that occur, transpo
 \begin{figure}
     \centering
     \includegraphics{figures/results/serial}
-    \caption[Serial position curve and transpositions for serial recall with the CUE model]{Serial position curve (left) and transpositions (right) for the serial recall of a \num{10}~item list with the CUE model. The experimental data from \textcite{Jahnke1968} is shown for comparison in the serial position curve (blue squares). The error bars show \SI{95}{\percent} confidence intervals.}\label{fig:results-serial}
+    \caption[Serial position curve and transpositions for serial recall with the CUE model.]{Serial position curve (left) and transpositions (right) for the serial recall of a \num{10}~item list with the CUE model. The experimental data from \textcite{Jahnke1968} is shown for comparison in the serial position curve (blue squares). The error bars show \SI{95}{\percent} confidence intervals.}\label{fig:results-serial}
 \end{figure}
 
 The model allows selective disabling of the recall from the STM or LTM component.
@@ -58,7 +58,7 @@ This might be the case either because the input to the recall network might need
 \begin{figure}
     \centering
     \includegraphics{figures/results/no_xtm}
-    \caption[Serial position curves with disabled STM/LTM]{Serial position curves when either (a) STM recall or (b) LTM recall is disabled in the model.}\label{fig:results-no_xtm}
+    \caption[Serial position curves with disabled STM/LTM.]{Serial position curves when either (a) STM recall or (b) LTM recall is disabled in the model.}\label{fig:results-no_xtm}
 \end{figure}
 
 
@@ -83,7 +83,7 @@ Thus, no significant difference for the most essential moments is shown, which i
 \begin{figure}
     \centering
     \includegraphics{figures/results/free}
-    \caption[Comparison of experimental and model free recall data]{Comparison of experimental and model free recall data. The columns show data from the immediate, delayed, and continuous distractor conditions respectively. The rows show from top to bottom: distribution of the number of successful recalls (mean marked by vertical line), serial positions curves, probability of first recall, and the conditional response probability. The error bars show \SI{95}{\percent} confidence intervals. Experimental data by \textcite{Howard1999}.}\label{fig:results-free}
+    \caption[Comparison of experimental and model free recall data.]{Comparison of experimental and model free recall data. The columns show data from the immediate, delayed, and continuous distractor conditions respectively. The rows show from top to bottom: distribution of the number of successful recalls (mean marked by vertical line), serial positions curves, probability of first recall, and the conditional response probability. The error bars show \SI{95}{\percent} confidence intervals. Experimental data by \textcite{Howard1999}.}\label{fig:results-free}
 \end{figure}
 
 Second, the serial position curves are given.
@@ -129,7 +129,7 @@ Moreover, the serial position curve for the scopolamine condition shows no prima
 \begin{figure}
     \centering
     \includegraphics{figures/results/scopolamine-serial}
-    \caption{Serial position curve with a scopolamine injection predicted by the CUE model}\label{fig:scopolamine-serial}
+    \caption{Serial position curve with a scopolamine injection predicted by the CUE model.}\label{fig:scopolamine-serial}
 \end{figure} 
 
 
@@ -146,5 +146,5 @@ The LTM for $\mtf$ (and $\mft$, but not shown) is encoded in neural weights that
 \begin{figure}
     \centering
     \includegraphics{figures/spikes}
-    \caption[Memory encoding in the CUE model]{Memory encoding in the CUE model. From top to bottom: weights encoding $\mtf$ in LTM, spiking activity of a subset of STM neurons, and spiking activity of a subset of neurons encdoing the context signal $\ctx$. The colored bars at the top mark the presentation of four list different list items.}\label{fig:spikes}
+    \caption[Memory encoding in the CUE model.]{Memory encoding in the CUE model. From top to bottom: weights encoding $\mtf$ in LTM, spiking activity of a subset of STM neurons, and spiking activity of a subset of neurons encdoing the context signal $\ctx$. The colored bars at the top mark the presentation of four list different list items.}\label{fig:spikes}
 \end{figure}

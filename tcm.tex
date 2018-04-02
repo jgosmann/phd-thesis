@@ -141,7 +141,7 @@ As long as the threshold is not exceeded $\ctx_{\downarrow}$ is inhibited.
             integrator -> ["$1 - \norm{\ctx}$" {anchor=south west}] length -> [inhibit] downscale
         };
     \end{tikzpicture}
-    \caption{Bounded integrator network}\label{fig:ctx-bounded-integrator}
+    \caption{Bounded integrator network.}\label{fig:ctx-bounded-integrator}
 \end{figure}
 
 To investigate the behaviour of the network, it was fed with new context vectors $\ctxin$ at rate of one vector per second.
@@ -154,7 +154,7 @@ Note that it is not sufficient to simply adjust $\tcmbeta$ as depending on the s
 \begin{figure}
     \centering
     \includegraphics{figures/context-analysis/bounded-integrator}
-    \caption[Decay in context similarity with the bounded integrator network]{
+    \caption[Decay in context similarity with the bounded integrator network.]{
         Decay in context similarity with the bounded integrator network given almost orthogonal inputs and inputs with a similarity of approximately \num{0.6}.
         The desired similarity is given by the gray line. Shaded regions indicate \SI{95}{\percent} confidence intervals.}\label{fig:bounded-integrator}
 \end{figure}
@@ -179,7 +179,7 @@ Such a network is shown in \cref{fig:ctx-alt-update}.
             old -> [bend right, "$-1$" below] oldgate
         };
     \end{tikzpicture}
-    \caption{Alternating update of memory buffers}\label{fig:ctx-alt-update}
+    \caption{Alternating update of memory buffers.}\label{fig:ctx-alt-update}
 \end{figure}
 
 Unfortunately, this still does not work for non-orthogonal input vectors (\cref{fig:amb}).
@@ -187,7 +187,7 @@ In that case the dot product of the updated context and current context are alre
 \begin{figure}
     \centering
     \includegraphics{figures/context-analysis/amb}
-    \caption[Decay in context similarity with the alternating update of two memories]{
+    \caption[Decay in context similarity with the alternating update of two memories.]{
         Decay in context similarity with the alternating update of two memories given almost orthogonal inputs and inputs with a similarity of approximately \num{0.6}.
         The desired similarity is given by the gray line. Shaded regions indicate \SI{95}{\percent} confidence intervals.}\label{fig:amb}
 \end{figure}
@@ -210,12 +210,12 @@ If we take the alternating memory buffer network, but control the updating exter
             old -> [bend right, "$-1$" below] oldgate
         };
     \end{tikzpicture}
-    \caption{Alternating update of memory buffers with external control}\label{fig:ctx-ext-ctrl}
+    \caption{Alternating update of memory buffers with external control.}\label{fig:ctx-ext-ctrl}
 \end{figure}
 \begin{figure}
     \centering
     \includegraphics{figures/context-analysis/ext-amb}
-    \caption[Decay in context similarity with the alternating update of two memories and external control]{
+    \caption[Decay in context similarity with the alternating update of two memories and external control.]{
         Decay in context similarity with the alternating update of two memories and external control given almost orthogonal inputs and inputs with a similarity of approximately \num{0.6}.
         The desired similarity is given by the gray line. Shaded regions indicate \SI{95}{\percent} confidence intervals.}\label{fig:ext-amb}
 \end{figure}

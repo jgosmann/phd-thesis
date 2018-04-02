@@ -37,7 +37,7 @@ Both the current list item and position are input to the $\mft$ and \pop{OSE} ne
             recall -> [out=162, in=-15] mfc;
         };
     \end{tikzpicture}
-    \caption[General information flow in the CUE model]{General information flow in the CUE model. The routing of information depending on the task, and task phase is not shown in this figures. Thus, not all shown connections are active at all times.}\label{fig:general-routing}
+    \caption[General information flow in the CUE model.]{General information flow in the CUE model. The routing of information depending on the task, and task phase is not shown in this figures. Thus, not all shown connections are active at all times.}\label{fig:general-routing}
 \end{figure}
 
 Within the \pop{OSE} network, the list item and position Semantic Pointers are bound together and added into the representation of the current list in a neural integrator.
@@ -97,7 +97,7 @@ During free recall, instead, the output of $\mft$ is used to update the context 
             recall -> [out=162, in=-15] mfc;
         };
     \end{tikzpicture}
-    \caption{Information flow during the presentation phase}\label{fig:pres-routing}
+    \caption{Information flow during the presentation phase.}\label{fig:pres-routing}
 \end{figure}
 \begin{figure}
     \subcaptionbox{Serial recall}{
@@ -145,7 +145,7 @@ During free recall, instead, the output of $\mft$ is used to update the context 
             };
         \end{tikzpicture}
     }
-    \caption{Information flow during the recall phase}\label{fig:recall-routing}
+    \caption{Information flow during the recall phase.}\label{fig:recall-routing}
 \end{figure}
 
 The main control problem for each item is to regulate the context update because (as discussed in \cref{sec:ctx-update}) this cannot be done based on the context signal alone, but requires an external control signal.
@@ -209,7 +209,7 @@ The thresholded dot product signal is also used to control three other aspects o
             bias1/"$-1$" [ext, x=3.5, y=-3.5] -> procdone;
         };
     \end{tikzpicture}
-    \caption{Generation of control signals from the currently presented or recalled item}\label{fig:simth-ctrl}
+    \caption{Generation of control signals from the currently presented or recalled item.}\label{fig:simth-ctrl}
 \end{figure}
 
 Special control and information routing is also necessary during the distractor tasks or when no list item stimulus is present.
