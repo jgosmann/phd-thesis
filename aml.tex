@@ -270,8 +270,10 @@ After learning (AL), those same units showed an elevated firing rate only to the
 This can also be observed qualitatively for associations learned with the AML\@.
 \Cref{fig:aml-net} shows a NEF network that implements the learning of associations between persons and landmarks to reproduce the experiment by \textcite{ison2015}.
 The connections weights from both pre-ensembles $\vc l$ and $\vc p$ are initialized with the identity transform.
-To achieve firing rates closer to the recorded data, the maximum firing rates of the ensembles were sampled uniformly for \SIrange{10}{20}{\second^{-1}} (instead of \SIrange{200}{400}{\second^{-1}} used in the CUE model) and intercepts were sampled uniformly from \numrange{0.3}{1}.
+To achieve firing rates closer to the recorded data, the maximum firing rates of the ensembles were sampled uniformly for \SIrange{10}{20}{\second^{-1}} (instead of \SIrange{200}{400}{\second^{-1}} used in the CUE model) and intercepts were sampled uniformly from \numrange{0.1}{1}.
 The dimensionality of the ensembles and semantic pointers was set to \num{32}.
+Furthermore, Gaussian white noise with a mean of \num{0.01} and standard deviation of \num{0.05}, low-pass filtered with a time-constant of \SI{0.1}{\second}, was injected into the neurons to account for neural background firing.
+The recorded spikes were analyzed analogous to \textcite{ison2015}.
 \begin{figure}
     \centering
     \begin{tikzpicture}[nef]
@@ -285,12 +287,6 @@ The dimensionality of the ensembles and semantic pointers was set to \num{32}.
     \end{tikzpicture}
     \caption{NEF network for associating two stimuli (persons with landmarks here) with the AML.}\label{fig:aml-net}
 \end{figure}
-
-This NEF network is isolated and does not have random unrelated background firing as occurred in the original experiment.
-Thus, it is not necessary to run multiple trials to pick out the actual firing rate change from the background noise.
-Any change in firing rate is caused deterministically by the inputs.
-Based on this, visually active units were defined as neurons that had a firing rate of more than \SI{2}{\second^{-1}} for the preferred stimulus and less than \SI{2}{\second^{-1}} for all other stimuli.
-The cutoff value corresponds to the value used in analysis of the data recorded from the human subjects.
 
 The main results obtained from the experimental and model data are shown in Figs.~\ref{fig:aml-spikes} and~\ref{fig:aml-population-response}.
 Based on the selection criteria for pairwise coding units, they show increased firing for the preferred stimulus, but no other stimuli.
