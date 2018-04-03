@@ -1,7 +1,7 @@
 \chapter{The complete model}
 
-Now we have all the essential components to construct the complete context-unified encoding (CUE) model.
-\Cref{fig:general-routing} gives an overview of the information flow between the different components.
+Now we have all the essential components to construct the complete context-unified encoding (CUE) model.\footnote{The complete model and evaluation source code is available from \url{https://github.com/ctn-archive/cue-model}.}
+\Cref{fig:general-routing} gives an overview of the information flow between the different components, and \cref{tbl:nneurons} states the neuron count for different model components.
 The Semantic Pointers $\vc v$ for the presented items are the input to the model and the recalled items $\hat{\vc v}$ of the \pop{item recall} network are the model output.
 The part of the model corresponding to the TCM consists mainly of the $\mft$, $\mtf$, and \pop{context} networks, whereas \pop{OSE} and \pop{position} correspond to the OSE\@.
 The \pop{position} network (\cref{sec:posnet}) stores a Semantic Pointer $\vc p$ indicating the current list position.
@@ -40,6 +40,31 @@ Both the current list item and position are input to the $\mft$ and \pop{OSE} ne
     \end{tikzpicture}
     \caption[General information flow in the CUE model.]{General information flow in the CUE model. The routing of information depending on the task, and task phase is not shown in this figures. Thus, not all shown connections are active at all times.}\label{fig:general-routing}
 \end{figure}
+\begin{table}
+    \centering
+    \caption[Neuron count in the CUE model.]{Neuron count in the cue model with up to 20 positions (each additional position adds \num{120}~neurons).}\label{tbl:nneurons}
+    \sisetup{
+        table-figures-integer=6,
+        table-figures-decimal=0,
+        table-number-alignment=right,
+    }
+    \begin{tabular}{lS}
+        \toprule
+        Component & {Neuron count} \\
+        \midrule
+        LTM (TCM) & 205125 \\
+        \hspace{1em} thereof for context & 51225 \\
+        STM (OSE) & 360000 \\
+        Position network & 2860 \\
+        Recall networks & 189350 \\
+        \hspace{1em} thereof for items & 94875 \\
+        \hspace{1em} thereof for positions & 94475 \\
+        Other & 129170 \\
+        \addlinespace
+        \textbf{Total} & 886505 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
 
 Within the \pop{OSE} network, the list item and position Semantic Pointers are bound together and added into the representation of the current list in a neural integrator.
 The inputted position is also used to unbind an item from the list representation and feed it to the \pop{item recall} network.

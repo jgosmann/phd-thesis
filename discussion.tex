@@ -248,6 +248,7 @@ In conclusion, the fuzzy temporal memory has only a small parameter space that a
 This parameters space suffers from large relative errors unrelated to noise in the approximation of the inverse Laplace transform and discretized derivative.
 Currently, it is not clear whether these non-noise related errors are sufficiently small to allow the fuzzy temporal memory to be used as a context signal in the CUE model.
 At the same time it would require an increased number of neurons compared to the current implementation as each dimensions requires a set of leaky integrators, i.e.\ additional values have to be stored for each dimensions.
+In comparison, the context network for 256~dimensional vectors uses only \num{51225} neurons, and even when adjusting by a factor of \num{10}, this is many fewer neurons than found in the entorhinal cortex.
 
 
 \section{Advances in large-scale cognitive modeling}
