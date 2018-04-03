@@ -83,8 +83,8 @@ These results are not only of interest for the CUE and TCM models, but many othe
 
 One potential criticism of the CUE model could target the way of position counting (\cref{sec:posnet}).
 Only a limited number of positions can be represented, even though this number can be configured as large as permitted by neural resources.
-If the number of positions is exceeded, the representation wraps around back to the first position.
-Thus, the model does not fail catastrophically, but a specific pattern of recall errors could be introduced by encoding different sequences of items to the same positions.
+If the number of positions is exceeded, the representation can be made to wrap around back to the first position.
+Thus, the model does not need to fail catastrophically, but a specific pattern of recall errors could be introduced by encoding different sequences of items to the same positions.
 However, an experimental test of such predictions will be hard, as long lists are likely required, and thus for most position no item at is recalled.
 It is worth to highlight that the position counting network in the CUE model can be replaced easily to test other hypotheses.
 But it seems unlikely that the limited number of positions can be eliminated completely, because there will always be a limited number of almost orthogonal Semantic Pointers that fit into a vector space of given dimensionality.

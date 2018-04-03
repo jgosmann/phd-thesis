@@ -157,3 +157,9 @@ Once the threshold (decoded as Heaviside step function) is exceeded, the previou
         \vdots & \vdots & \ddots & \vdots & \vdots
     \end{array}} \text{.}
 \end{equation}
+An example of how these component interact to advance the represented position is given in \cref{fig:pos-example}.
+\begin{figure}
+    \centering
+    \includegraphics{figures/pos-example}
+    \caption[Position increment in the position counting network.]{Position increment in the position counting network. The top-most plot shows the input signal and output of the differentiator. The following plots from top to bottom show: Heaviside output of the network, representation in the \pop{state} ensembles, transformed input to the \pop{state} ensembles from the \pop{advance threshold} ensembles, and transformed input from the \pop{inhibit threshold} ensembles.}\label{fig:pos-example}
+\end{figure}
