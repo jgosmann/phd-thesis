@@ -256,3 +256,25 @@ Finally, the recall networks might fail to recall an item (or position) if the i
 While these networks will restart the recall process internally, some global actions are necessary for the failed recall of items.
 The context network is provided with a signal to update the current context to then use the updated context for the next recall attempt.
 Also, for serial recall, the position network is provided with a signal to increment the current position to attempt recalling the next serial position in the list.
+
+
+\section{Extension to the Hebb repetition effect}
+The CUE model as presented so far is unable to reproduce the Hebb repetition effect.
+Two different extensions, but both involving an additional type of learned, weight-based associative memory, make it possible to reproduce the effect.
+First, it is possible to learn the direct association between Semantic Pointers for positions and the presented items (TODO fig).
+The associations for the repeated list become stronger than the associations for the other lists over time.
+This will bias the recall towards items in that repeated list.
+
+A second alternative, is to learn learn the association from $\tcmitem_i \circledast \vc p_i$ to $\tcmitem_{i+1}$ (TODO fig).
+This is essentially learning of foward associations.
+The binding to the position vector disambiguates between lists $\tcmitem_i \circledast \vc p_i$ is only the same vector if the same item is presented in the same position.
+In the recall phase, a previously recalled item and its serial position can be used as cue to support the recall of the next item with this additional learned association matrix.
+
+Furthermore, a weight-decay for the $\mtf$ and $\mft$ association matrices needs to be introduced.
+This prevents the weights in these matrices from growing too large which were to induce saturation effects in other parts of the model.
+It also prevents previously learned associations to provide noise overpowering the associations from the current list.
+
+These extensions should have minimal influence on the single-trial CUE model.
+The additional learned association matrices use a learning rate much lower than the $\mtf$ and $\mft$ matrics.
+Thus, the single-trial performance is dominated by those latter matrices.
+The added decay requires adjustment of the recall parameters, but will also play a more significant role on longer timescales, i.e., when new associations are learned after a recall phase, but not when items a presented in quick succession.
