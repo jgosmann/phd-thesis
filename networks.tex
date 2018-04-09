@@ -4,19 +4,7 @@ In the following, I briefly discuss how to create a differentiator, an integrato
 
 Often it is helpful to use a graphic representation to understand NEF networks.
 The graphical primitives used in the network diagrams in this thesis are shown in \cref{fig:tikz-nef}.
-Normal ensembles are marked with a circle.
-Sometimes the dimensions of a vector is split across multiple ensembles, called an \emph{ensemble array}, and marked by a stack of circles.
-Multiple NEF components that constitute a network not shown in full detail, are identified with rectangles with rounded corners.
-Sometimes it is useful to combine decoded representations before transmitting them to the destination neurons in a \emph{pass-through} node.
-Such nodes are marked by filled circles.
-Note that such pass-through nodes could be replaced with the actual neuron-to-neuron connections and are not biological implausible.
-\emph{Rectification ensembles} are useful enough to warrant a special symbol: a rectified linear plot in its circle.
-These ensembles are discussed in detail in \cref{sec:thresholding}.
-Normal NEF connections are represented by arrows and typically have a synaptic time constant of \SI{5}{\milli\second}, which is is in the range of experimentally measured values for AMPA-type glutamate receptors \parencite{jonas1993,spruston1995-1}.
-Linear transforms or functions computed across the connection are denoted along the arrow.
-Inhibitory connections bypass the encoders of the target ensemble and use a negative transform to suppress firing in the target ensemble.
-Finally, modulatory connections do not influence the representation in an ensemble directly, but the connection weights of another connection, and are indicated with a half open circle terminating the connection.
-\begin{figure}
+\begin{figure}[b!]
     \hfill
     \begin{tikzpicture}[nef,every node/.style={font={\small}}]
         \matrix [row sep=4pt, column sep=4pt] {
@@ -41,24 +29,41 @@ Finally, modulatory connections do not influence the representation in an ensemb
     \hfill
     \caption[Graphical elements in NEF network diagrams.]{Graphical elements in NEF network diagrams. See text for further explanation.}\label{fig:tikz-nef}
 \end{figure}
+Normal ensembles are marked with a circle.
+Sometimes the dimensions of a vector is split across multiple ensembles, called an \emph{ensemble array}, and marked by a stack of circles.
+Multiple NEF components that constitute a network not shown in full detail, are identified with rectangles with rounded corners.
+Sometimes it is useful to combine decoded representations before transmitting them to the destination neurons in a \emph{pass-through} node.
+Such nodes are marked by filled circles.
+Note that such pass-through nodes could be replaced with the actual neuron-to-neuron connections and are not biological implausible.
+\emph{Rectification ensembles} are useful enough to warrant a special symbol: a rectified linear plot in its circle.
+These ensembles are discussed in detail in \cref{sec:thresholding}.
+Normal NEF connections are represented by arrows and typically have a synaptic time constant of \SI{5}{\milli\second}, which is is in the range of experimentally measured values for AMPA-type glutamate receptors \parencite{jonas1993,spruston1995-1}.
+Linear transforms or functions computed across the connection are denoted along the arrow.
+Inhibitory connections bypass the encoders of the target ensemble and use a negative transform to suppress firing in the target ensemble.
+Finally, modulatory connections do not influence the representation in an ensemble directly, but the connection weights of another connection, and are indicated with a half open circle terminating the connection.
 
 
 \section{Differentiator}\label{sec:differentiator}
 While a perfect differentiator is not physically realizable (it would require infinite gain), it is often sufficient to detect a sudden change in a signal.
-For this an approximation can be constructed out of two synaptic low pass filters $\syn_1(t) =  \tau_1^{-1} \exp(t/\tau_1)$ and $\syn_2(t) = \tau_2^{-1} \exp(t/\tau_2)$ with time constants $\tau_1 < \tau_2$ as
+For this an approximation can be constructed out of two synaptic low pass filters
+\begin{equation*}
+    \syn_1(t) =  \tau_1^{-1} \exp({-t}/\tau_1)\quad \text{and}\quad \syn_2(t) = \tau_2^{-1} \exp({-t}/\tau_2)
+\end{equation*}
+with time constants $\tau_1 < \tau_2$ as
 \begin{equation}
-    \od{\vc x}{t} \approx \vc y(t) = \vc x * h_1 - \vc x * h_2 = \vc x * \del{h_1 - h_2} \text{.}
+    \begin{split}
+        \od{\vc x}{t} \approx \vc y(t) &= \vc x * h_1 - \vc x * h_2 \\&= \vc x * \del{h_1 - h_2} \text{.}
+    \end{split}
 \end{equation}
 \cref{fig:differentiator} shows the impulse and the magnitude response of a differentiator constructed this way.
-The attenuation of low frequency is desired as this corresponds to the differentiation.
-The attenuation of high-frequencies above the pass-band is undesired, but given appropriate $\tau_1$ and $\tau_2$ unproblematic in a neural network because signals will in general be subject to synaptic filtering of high frequencies.
-The implementation of such a differentiator is straight-forward with the NEF (\cref{fig:differentiator-net}) by feeding the same input with two different synaptic time constants into an ensemble.
-In this work $\tau_1 = \SI{5}{\milli\second}$ and $\tau_2 = \SI{50}{\milli\second}$ were used, which are in the range of experimentally observed neurotransmitter decay constants \parencite{sah1990-1,moreno-bote2005}.
 \begin{figure}
     \centering
     \includegraphics{figures/differentiator}
     \caption[Differentiator.]{Differentiator with $\tau_1 = \SI{5}{\milli\second}$ and $\tau_2 = \SI{50}{\milli\second}$. (a) Response of the differentiator to a unit step input. The output has been normalized to the maximum. (b) Magnitude response for sinusoidal inputs with different frequencies.}\label{fig:differentiator}
 \end{figure}
+The attenuation of low frequencies is desired as this corresponds to the differentiation.
+The attenuation of high-frequencies above the pass-band is undesired, but given appropriate $\tau_1$ and $\tau_2$ unproblematic in a neural network because signals will in general be subject to synaptic filtering of high frequencies. The implementation of such a differentiator is straight-forward with the NEF (\cref{fig:differentiator-net}) by feeding the same input with two different synaptic time constants into an ensemble.
+In this work $\tau_1 = \SI{5}{\milli\second}$ and $\tau_2 = \SI{50}{\milli\second}$ were used, which are in the range of experimentally observed neurotransmitter decay constants \parencite{sah1990-1,moreno-bote2005}.
 \begin{figure}
     \begin{captionbeside}[Implementation of a differentiator with the NEF.]{Implementation of a differentiator with the NEF\@. The connection labels state the transform and synaptic time constants with $\tau_1 < \tau_2$.\label{fig:differentiator-net}}[i]
         \begin{tikzpicture}[nef]
