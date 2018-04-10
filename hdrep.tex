@@ -38,8 +38,8 @@ The isotropy property allows us to cut through the center of the hyperball with 
 Measuring the error $\err(x) = \err(\vc x)$ at $m$ regularly spaced points $\vc x_i = (x_i, 0, \dotsc, 0)\Tr$ with $x_i = i * \Delta x - \Delta x/2,\ \Delta x = 1/m,\ 1 \leq i \leq m$ along such a line, the mean error for the hyperball can be estimated as
 \begin{align}
     \err &= \frac{\sa_{\dims}}{\ballvol} \sum_{i=1}^{m} \err(x_i) \cdot \Delta x \cdot r(x_i) \\
-    \sa_{\dims} &= \frac{2 \pi^{\dims/2}}{\gammafn(\dims/2)} \\
-    \ballvol &= \frac{\pi^{\dims/2}}{\gammafn\!\del{\frac{\dims}{2} + 1}} \\
+    \sa_{\dims} &= \frac{2 \pi^{\frac{\dims}{2}}}{\gammafn\!\del{\frac{\dims}{2}}} \\
+    \ballvol &= \frac{\pi^{\frac{\dims}{2}}}{\gammafn\!\del{\frac{\dims}{2} + 1}} \\
     r(x) &= \frac{1}{q} \sum_{i=1}^{q} \abs{x - \del{1 + \frac{1}{q}} \frac{\Delta x}{2} + i \frac{\Delta x}{q}}^{\dims - 1}
 \end{align}
 where $\sa_{\dims}$ is the $\dims$-dimensional solid angle, $\ballvol$ the volume of a $\dims$-ball with radius $\radius = 1$, and $r(x)$ estimates the radius to the power of $\dims-1$ for an $x$ with $q$ evaluation points.
@@ -99,15 +99,15 @@ Ultimately, the problem of distortion is minor, as for spiking neurons the error
 \section{Effect of the intercept distribution on noise and distortion}
 The intercepts in Nengo are chosen to be distributed uniformly by default.
 In higher dimensions, this has the effect that most neurons are either almost never or almost always active for values in the representational space (\cref{fig:act-proportion}).
-Neurons that are always silent do not contribute to the representation as they provide no information about the represented value.
-But also always active neurons only contribute minimally to the representation.
-Even though the firing rate still varies a bit over the representational space, the response curve is steepest and carries the most information closest to the intercept for most neuron models.
-The mapping of a small change in the represented value to a large change in firing rate also allows for a less noisy decoding as a single spike changes the decoded value less.
 \begin{figure}
     \centering
     \includegraphics{figures/act-proportion}
     \caption[Distribution of the proportion of active neurons.]{The histogram (shaded bar plot) and kernel-density estimate (line) of the proportion of neurons active for uniformly sampled 64-dimensional vectors.}\label{fig:act-proportion}
 \end{figure}
+Neurons that are always silent do not contribute to the representation as they provide no information about the represented value.
+But also always active neurons only contribute minimally to the representation.
+Even though the firing rate still varies a bit over the representational space, the response curve is steepest and carries the most information closest to the intercept for most neuron models.
+The mapping of a small change in the represented value to a large change in firing rate also allows for a less noisy decoding as a single spike changes the decoded value less.
 
 Thus, a better intercept distribution should have fewer neurons that are barely ever active, but should also distribute the intercepts so that there is an even distribution of the fraction of space a neuron is active for.
 The latter criterion can be achieved by distributing the intercepts according to $\csdist(\dims+2)$ where $\csdist(d_{\csdist})$ is the distribution of cosine similarities between random uniformly distributed $d_{\csdist}$-dimensional unit-vectors.
@@ -116,20 +116,20 @@ Its probability density function is given by (also see \cref{fig:cosine-sim}, de
 \pcs(x; d_{\csdist}) = \frac{1}{B\!\del{\frac{1}{2}, \frac{d_{\csdist} - 1}{2}}} \cdot \del{1 - x^2}^{\del{d_{\csdist} - 3} / 2},\quad x \in [-1, 1] \text{.}\label{eqn:pcs}
 \end{equation}
 $\csdist(\dims+2)$ is equivalent to the distribution of single coordinates of points uniformly sampled from within the $\dims$-dimensional unit-ball \parencite{voelker2017}.
-Thus, by using this intercept distribution, the frequency of intercepts corresponds to the distribution of $\langle \vc x, \enc \rangle,\ \vc x \in \repspace$, i.e., values in the representational space projected onto the (uniformly distributed) neuron encoders.
-Note that for $\dims = 1$, $\csdist(\dims + 2)$ is the uniform distribution.
-\Cref{fig:act-cs} compares the relative number of neurons that do not fire for any of the evaluation points.
-For the standard uniform distribution, this fraction rises to above \num{0.35}, but is close to zero with the cosine similarity intercept distribution.
 \begin{figure}
     \centering
     \includegraphics{figures/cosine-sim}
     \caption{PDF $\pcs(x; d_{\csdist})$ of the cosine similarity distribution.}\label{fig:cosine-sim}
 \end{figure}
+Thus, by using this intercept distribution, the frequency of intercepts corresponds to the distribution of $\langle \vc x, \enc \rangle,\ \vc x \in \repspace$, i.e., values in the representational space projected onto the (uniformly distributed) neuron encoders.
+Note that for $\dims = 1$, $\csdist(\dims + 2)$ is the uniform distribution.
+\Cref{fig:act-cs} compares the relative number of neurons that do not fire for any of the evaluation points.
 \begin{figure}
     \centering
     \includegraphics{figures/act-cs}
     \caption[Proportion of inactive neurons and its distribution.]{(a) Proportion of neurons inactive for all \num{10000} uniformly sampled $\dims$-dimensional vectors. The proportion is plotted for neural ensembles with a uniform intercept distribution (blue) and intercepts distributed according to $\csdist(\dims + 2)$ (orange). The shaded areas denote \SI{95}{\percent} confidence intervals. (b) Histogram (shaded bar plot) and kernel-density estimate (line) of the proportion of neurons active for uniformly sampled 64-dimensional vectors when distributing intercepts according to $\csdist(\dims + 2)$.}\label{fig:act-cs}
 \end{figure}
+For the standard uniform distribution, this fraction rises to above \num{0.35}, but is close to zero with the cosine similarity intercept distribution.
 
 While this gives a mathematical motivation to choose this intercept distribution, it must be shown empirically that it performs better than a uniform intercept distribution.
 In the following I present a number of experiments to make this case and give an intuition about the effect of this particular intercept distribution.
@@ -148,17 +148,17 @@ Any stated differences in error are based on the aforementioned parameters.
 Furthermore, all stated differences have been found to be statistically highly significant with $p < 0.0001$ using bootstrapping.
 
 The basic effects of the $\csdist(\dims + 2)$ intercept distribution can be seen in \cref{fig:error-cs-intercepts}.
+\begin{figure}
+    \centering
+    \includegraphics[trim=0 4 0 0]{figures/error-cs-intercepts}
+    \caption[Mean error along line cut with different intercept distributions.]{Mean error along a line cut through the 64-dimensional hyperball with \num{3200}~neurons, different intercept distributions (pink vs.\ turquoise) and different synaptic time constants (solid vs.\ dotted line). The shaded regions indicate \SI{95}{\percent} confidence intervals.}\label{fig:error-cs-intercepts}
+\end{figure}
 The total mean error is reduced by \num{-0.130}.
 This is mainly due to a reduction in the noise error.
 The distortion seemingly increases, but because most of the volume of the space is near the surface and the distortion there ends up a little bit lower, the total mean distortion also decreases (\num{-0.020}).
 However, where the space is distorted changes.
 While the uniform distribution leads to an even distortion except towards the hypersphere surface, the cosine similarity distribution gives a distortion that varies more across the space.
 In particular, there is a ring of higher distortion between the center and the surface of the hyperball and another such ring around the surface.
-\begin{figure}
-    \centering
-    \includegraphics{figures/error-cs-intercepts}
-    \caption[Mean error along line cut with different intercept distributions.]{Mean error along a line cut through the 64-dimensional hyperball with \num{3200}~neurons, different intercept distributions (pink vs.\ turquoise) and different synaptic time constants (solid vs.\ dotted line). The shaded regions indicate \SI{95}{\percent} confidence intervals.}\label{fig:error-cs-intercepts}
-\end{figure}
 
 In general, there is a noise-distortion trade-off.
 Reducing the noise error by changing the intercept distribution, leads to a more uneven distortion and can potentially increase the total distortion.
@@ -166,15 +166,15 @@ For spiking neurons with short synaptic time constants, the noise error is usual
 Longer synaptic time constants shift this trade-off as the noise error is lower.
 Still, for biologically realistic time constants of up to \SI{0.1}{\second}, the cosine similarity intercept distribution performs better.
 It is also worth noting that this trade-off is slightly affected by the regularization term when solving for the decoders (\cref{fig:error-cs-intercepts-reg}).
-A higher regularization decreases the noise as the decoders get less sensitive to small fluctuations, but increases the distortion towards the hypersphere surface.
-The opposite effects are observed with less regularization.
 \begin{figure}
     \centering
     \includegraphics{figures/error-cs-intercepts-reg}
     \caption[Mean error along line cut with different regularization.]{Mean error along a line cut through the 64-dimensional hyperball with \num{3200}~neurons and different regularization $\reg$. The shaded regions indicate \SI{95}{\percent} confidence intervals.}\label{fig:error-cs-intercepts-reg}
 \end{figure}
+A higher regularization decreases the noise as the decoders get less sensitive to small fluctuations, but increases the distortion towards the hypersphere surface.
+The opposite effects are observed with less regularization.
 
-Interestingly, the cosine intercept distribution not only reduces the noise by a constant factor compared to the uniform distribution, it also improves the scaling of the noise error from $\bO(d/\sqrt{n})$ to $\bO(d^{3/4}/\sqrt{n})$ (\cref{fig:cs-error-scaling}).
+Interestingly, the cosine intercept distribution not only reduces the noise by a constant factor compared to the uniform distribution, it also improves the scaling of the noise error from $\bO(d/\sqrt{n})$ to $\bO\big(d^{3/4}/\sqrt{n}\big)$ as shown in \cref{fig:cs-error-scaling}.
 \begin{figure}
     \centering
     \includegraphics{figures/cs-error-scaling}

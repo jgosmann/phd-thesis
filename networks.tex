@@ -85,13 +85,6 @@ An integrator is described by the differential equation
 where $\vc u(t)$ is the external input to the integrator.
 Applying principle 3 of the NEF tells us that the input has to be scaled by the synaptic time constant $\syntau$.
 Furthermore, a recurrent connection feeding the output of the integrator back to itself is needed (\cref{fig:integrator-net}).
-To get a stable representations over a sufficient time window, it is best to use a long time constant like $\syntau = \SI{0.1}{\second}$ which is the range measured for the NMDA neurotransmitter \parencite{sah1990-1,moreno-bote2005}.
-Due to neural noise and distortion error, the represented value can drift over time (\cref{fig:integrator}).
-The distortion in the decoded representation leads to a finite number of fixed points and the represented value will shift to one of the stable fixed points.
-The neural noise prevents the representation from staying in an unstable fixed point and can make the representation move out of the basin of attraction of a stable fixed point.
-Adding more neurons to an integrator makes it more stable as the spiking noise is decreased.
-Similarly, a longer recurrent synaptic time constant also makes the integrator more stable.
-Increasing the number of represented dimensions makes the integrator less stable because there are fewer fixed points.
 \begin{figure}
     \begin{captionbeside}{Implementation of an integrator with the NEF\label{fig:integrator-net}.}[i]
         \begin{tikzpicture}[nef]
@@ -103,6 +96,13 @@ Increasing the number of represented dimensions makes the integrator less stable
         \end{tikzpicture}
     \end{captionbeside}
 \end{figure}
+To get a stable representations over a sufficient time window, it is best to use a long time constant like $\syntau = \SI{0.1}{\second}$ which is the range measured for the NMDA neurotransmitter \parencite{sah1990-1,moreno-bote2005}.
+Due to neural noise and distortion error, the represented value can drift over time (\cref{fig:integrator}).
+The distortion in the decoded representation leads to a finite number of fixed points and the represented value will shift to one of the stable fixed points.
+The neural noise prevents the representation from staying in an unstable fixed point and can make the representation move out of the basin of attraction of a stable fixed point.
+Adding more neurons to an integrator makes it more stable as the spiking noise is decreased.
+Similarly, a longer recurrent synaptic time constant also makes the integrator more stable.
+Increasing the number of represented dimensions makes the integrator less stable because there are fewer fixed points.
 \begin{figure}
     \centering
     \includegraphics{figures/integrator}

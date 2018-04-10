@@ -6,7 +6,7 @@ The cosine similarity distribution performs slightly worse for rate neurons (LIF
 The only other case with slightly worse performance is when computing pairwise products $y_i = x_{2i - 2} x_{2i - 1},\ 1 \leq i \leq i/2$, but note that no further optimization for this sort of function has been done and the high dimensionality makes this a hard function to compute.
 On the simpler squaring, the cosine similarity distribution performs better.
 \begin{table}
-    \begin{addmargin*}[0mm]{-26pt}
+    \begin{addmargin*}[0mm]{-31pt}
         \caption[Comparison of uniformly and $\csdist(\dims + 2)$ distributed intercepts.]{Change in representational error in the NEF when switching from uniformly distributed intercepts to $\csdist(\dims + 2)$ distributed intercepts for different dimensionalities $\dims$, neuron numbers $n$, synaptic time constants $\syntau$, decoded functions, regularization $\reg$, and neuron types.
     A negative change in error (highlighted red) means that the cosine similarity distribution performed better.
     Statistical significance, determined with bootstrapping, is marked with **** for $p < 0.0001$ and * for $p < 0.05$.}\label{tbl:csdist}
