@@ -261,16 +261,64 @@ Also, for serial recall, the position network is provided with a signal to incre
 \section{Extension to the Hebb repetition effect}
 The CUE model as presented so far is unable to reproduce the Hebb repetition effect.
 Two different extensions, but both involving an additional type of learned, weight-based associative memory, make it possible to reproduce the effect.
-First, it is possible to learn the direct association between Semantic Pointers for positions and the presented items (TODO fig).
+First, it is possible to learn the direct association between Semantic Pointers for positions and the presented items with the AML.
 The associations for the repeated list become stronger than the associations for the other lists over time.
 This will bias the recall towards items in that repeated list.
 
-A second alternative, is to learn learn the association from $\tcmitem_i \circledast \vc p_i$ to $\tcmitem_{i+1}$ (TODO fig).
-This is essentially learning of foward associations.
-The binding to the position vector disambiguates between lists $\tcmitem_i \circledast \vc p_i$ is only the same vector if the same item is presented in the same position.
-In the recall phase, a previously recalled item and its serial position can be used as cue to support the recall of the next item with this additional learned association matrix.
+A second alternative, is to learn the association from $\tcmitem_i \circledast \vc p_i$ to $\tcmitem_{i+1}$ (\cref{fig:hebb-forward}).
+\begin{figure}
+    \centering
+    \begin{tikzpicture}[nef]
+        \graph [no placement] {
+            stim/"item input" [ext, x=-3, y=0];
+            g1/"" [ea, x=0, y=0];
+            i1/"$\tcmitem_{i+1}$" [ea, x=2, y=0];
+            g2/"" [ea, x=4, y=0];
+            i2/"$\tcmitem_i$" [ea, x=6, y=0];
+            cc/"$\circledast$" [net, x=8, y=0];
 
-Furthermore, a weight-decay for the $\mtf$ and $\mft$ association matrices needs to be introduced.
+            inhcmb/"" [pnode, x=0, y=1.5];
+            simth/"" [rect, x=0, y=2.5];
+            sim/"dot" [net, x=0, y=3.5];
+            new/"new item" [ext, x=2, y=3.5];
+
+            recallphase/"recall phase" [ext, x=4, y=3.5];
+            prevpos/"previous position $\vc p_i$" [ext, x=8, y=3.5];
+
+            m/"$\mat M^{\ped{fw}}$" [net, x=8, y=-1.25];
+            recall [ext, x=8, y=-2.5];
+
+            stim -> g1 -> i1 -> g2 -> i2 -> cc;
+            i1 -> [bend right, "$-1$"] g1;
+            i2 -> [bend right, "$-1$"] g2;
+
+            stim -> sim -> simth -> inhcmb -> [inhibit] g1;
+            i1 -> sim;
+            bias/"$1$" [ext, x=-1, y=1.5] -> inhcmb;
+            new -> [bend left] inhcmb;
+            new -> [inhibit, bend right] g2;
+
+            prevpos -> cc -> m -> recall;
+            stim -> [bend right, modulatory] m;
+        };
+
+        \node (delay) [fit=(g1) (i1) (g2) (i2), net, inner sep=0.5cm, dashed] {};
+        \draw [inhibit] (recallphase) -- (recallphase |- delay.north);
+    \end{tikzpicture}
+    \caption{Extending the CUE model with forward associations.}\label{fig:hebb-forward}
+\end{figure}
+This is essentially learning of foward associations.
+The binding to the position vector disambiguates between lists as $\tcmitem_i \circledast \vc p_i$ is only the same vector if the same item is presented in the same position.
+In the recall phase, a previously recalled item and its serial position can be used as cue to support the recall of the next item with this additional learned association matrix.
+Besides the networks for binding and learning the associations, the previous item needs to be stored.
+This is done with two chained gated memory networks.
+When the stimulus switches, the first memory network still stores the previous stimulus and transmits it to the second memory network.
+Once the update finished, the gate of the second memory network gets inhibited while the first memory network is allowed to receive the current item as input.
+The required control signal \pop{new item} is provided by the rectified dot product in \cref{fig:simth-ctrl}.
+To prevent premature overwriting of the first memorized item, a secondary dot product inhibiting that gate is used.
+The Semantic Pointer for previous position can be trivially decoded from the position network.
+
+Furthermore, a weight-decay for the $\mtf$ and $\mft$ association matrices needs to be introduced for either approach.
 This prevents the weights in these matrices from growing too large which were to induce saturation effects in other parts of the model.
 It also prevents previously learned associations to provide noise overpowering the associations from the current list.
 

@@ -33,6 +33,7 @@ Some other parameters, like the OSE scaling $\oseepisscale$ for episodic memory 
         \textbf{Scopolamine} & & & & \\
         \hspace{1em}Placebo & {\textemdash} & 0.1 & 0.02 & 0.015 & 10 \\
         \hspace{1em}Scopolamine & {\textemdash} & 0.1 & 0.02 & 0.015 & 0.1 \\
+        \textbf{Hebb repetition} & {\textemdash} & 1 & 0.015 & 0.009 & 10 \\
         \bottomrule
     \end{tabular}
 \end{table}
@@ -138,10 +139,13 @@ The simulations for the Hebb repetition effect where modelled after \textcite{He
 A total of \num{25} model instances, equivalent to the \num{25} experimental subjects, were run for \num{24} consecutive trials each.
 Each trial consisted out of a nine item list (of the digits from one to nine in random order) and starting with the third trial every third list was identical.
 
-While the model performance seems to slightly worse overall, the qualitive Hebb repetititon effect is reproduced (TODO fig).
+While the model performance seems to slightly worse overall, the qualitive Hebb repetititon effect is reproduced (\cref{fig:hebb}).
+\begin{figure}
+    \centering
+    \includegraphics{figures/hebb}
+    \caption[Hebb repetition effect.]{Experimental and model data showing the Hebb repetition effect. Nine item lists were presented and one list was repeated on every third trial. From left to right: experimental data \parencite{Hebb1961}, model data with direct learning of position to item associations, and model data with learning of forward associations. The error bars denote \SI{95}{\percent} confidence intervals.}\label{fig:hebb}
+\end{figure}
 In both, the experimental and all sets of model data, the number of correct recalls increases by about three items on the repeated list.
-
-TODO decline, param values
 
 
 \section{Memory encoding}
