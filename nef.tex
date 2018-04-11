@@ -28,7 +28,7 @@ Furthermore, the gain factor $\gain_i$ and bias term $\jbias_i$ can be used to a
 However, it is also common to use higher maximal firing rates to use fewer neurons in simulations while achieving an similar accuracy.
 While this is not entirely adhering to biological constraints, in most cases NEF models behave similarly when lowering the firing rates and increasing neuron numbers accordingly \parencite[e.g.,][]{gosmann2015}.
 As it is rare to have detailed information about the tuning curves in many parts of the brain, those values are usually not directly set in the NEF\@.
-Instead a representational space $\repspace$ is defined, usually as the $\dims$-dimensional $\dims$-hyperball with radius $\radius$.
+Instead a representational space $\repspace$ is defined, usually as the $\dims$-dimensional hyperball with radius $\radius$.
 Furthermore, for each neuron a maximum firing rate $\act_{\max, i}$ and an intercept point $p_i$ are sampled from random distributions.
 These values are used to calculate the gain and bias so that the neuron starts firing at $p_i \enc_i$ when $\vc x$ varies along the encoder $\enc_i$ and that the maximum $\act_{\max,i}$ is not exceeded across the representational space $\repspace$.
 \begin{figure}
@@ -80,7 +80,7 @@ Given these two matrices the decoding weights can be obtained with the regulariz
 \end{equation}
 where $\reg$ is the regularization scale (usually $\reg = 0.1$).
 
-The encoders and decoders not only allow us to encode information into a neural ensembles and decode it back out, but also to transmit that information from one neural population to another.
+The encoders and decoders not only allow us to encode information into a neural ensemble and decode it back out, but also to transmit that information from one neural population to another.
 By decoding from the pre-synaptic ensemble and encoding into the post-synaptic ensemble, the connection weights required between the two populations can be obtained as
 \begin{equation}
     \weights_{ij} = \enc_i\Tr \mat T \dec_j
@@ -133,7 +133,7 @@ With help of the Laplace transform one can obtain $\mat A'$ and $\mat B'$ from $
     \mat B' &= \syntau \mat B  \text{.}
 \end{align}
 This implies that to implement a dynamical system with a neural ensemble, the input has to be multiplied by $\syntau$ to account for the synaptic filtering.
-In addition, one needs to add a recurrent transformation implementing the function $f(\vc x) = \syntau \mat A \vc x + \vc x$.
+In addition, one needs to add a recurrent connection implementing the function $f(\vc x) = \syntau \mat A \vc x + \vc x$.
 Note that combining this third principle with the principle of transfomation, allows the implementation of nonlinear dynamics in a spiking neural network.
 \begin{figure}
     \centering

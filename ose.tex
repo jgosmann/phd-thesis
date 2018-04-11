@@ -13,7 +13,7 @@ The memory traces $\osestm$ and $\oseepis$ represent the short-term and episodic
 The binding operation $\bind$ used here is circular convolution, but it could be worth exploring the effect of other binding operations in the future.
 The recall of an item is given by unbinding the corresponding position vector as
 \begin{equation}
-    \vc v_i \approx \bind^+(\osestm + \oseepis, \vc p_i) \text{.}
+    \vc v_i \approx \bind^+\big(\osestm + \oseepis, \vc p_i\big) \text{.}
 \end{equation}
 These encoding equations produce the primacy and recency effect due to the differential effect of the decay and scaling factors $\osestmdecay$ and $\oseepisscale$.
 
@@ -81,7 +81,7 @@ Furthermore, a recurrent connection with $\syntau = \SI{0.1}{\second}$ decoding 
             red/"" [x=2, y=0, rect] ->
             reg/"" [x=4, y=0, rect];
 
-            inputinc -> [bend left, "\small $\syntau = \SI{50}{\milli\second}$"] red;
+            inputinc -> [bend left, "\small $-1,\ \syntau = \SI{50}{\milli\second}$"] red;
             adv/"" [x=6, y=-1, ea, inner sep=0.25ex];
             advrect/"" [x=6, y=-1, rect];
             advlbl/"{\lato advance threshold}" [anchor=west, x=6.4, y=-1];

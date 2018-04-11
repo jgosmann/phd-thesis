@@ -35,12 +35,12 @@ Most of the time, though, we can treat the space as an isotropic hyperball, i.e.
 This requires that the NEF ensemble's encoders are uniformly sampled from the hypersphere surface, which is usually the case (but there are some exceptions like certain implementations of a product network,~\cite{gosmann2015-1}, or thresholding ensembles, \cref{sec:thresholding}).
 Without loss of generality, we assume the representational radius of the hyperball to be $r = 1$ (as it is purely a scaling factor).
 The isotropy property allows us to cut through the center of the hyperball with a one-dimensional line.
-Measuring the error $\err(x) = \err(\vc x)$ at $m$ regularly spaced points $\vc x_i = (x_i, 0, \dotsc, 0)\Tr$ with $x_i = i * \Delta x - \Delta x/2,\ \Delta x = 1/m,\ 1 \leq i \leq m$ along such a line, the mean error for the hyperball can be estimated as
+Measuring the error $\err(x) = \err(\vc x)$ at $m$ regularly spaced points $\vc x_i = (x_i, 0, \dotsc, 0)\!\Tr$ with $x_i = i * \Delta x - \Delta x/2,\ \Delta x = 1/m,\ 1 \leq i \leq m$ along such a line, the mean error for the hyperball can be estimated as
 \begin{align}
     \err &= \frac{\sa_{\dims}}{\ballvol} \sum_{i=1}^{m} \err(x_i) \cdot \Delta x \cdot r(x_i) \\
     \sa_{\dims} &= \frac{2 \pi^{\frac{\dims}{2}}}{\gammafn\!\del{\frac{\dims}{2}}} \\
     \ballvol &= \frac{\pi^{\frac{\dims}{2}}}{\gammafn\!\del{\frac{\dims}{2} + 1}} \\
-    r(x) &= \frac{1}{q} \sum_{i=1}^{q} \abs{x - \del{1 + \frac{1}{q}} \frac{\Delta x}{2} + i \frac{\Delta x}{q}}^{\dims - 1}
+    r(x) &= \frac{1}{q} \sum_{i=1}^{q}\ \abs{x - \del{\!1 + \frac{1}{q}} \frac{\Delta x}{2} + i \frac{\Delta x}{q}}^{\dims - 1}
 \end{align}
 where $\sa_{\dims}$ is the $\dims$-dimensional solid angle, $\ballvol$ the volume of a $\dims$-ball with radius $\radius = 1$, and $r(x)$ estimates the radius to the power of $\dims-1$ for an $x$ with $q$ evaluation points.
 This latter estimation of the radius across the $\Delta x$ interval is necessary to not under- or overestimate the integral by a large amount.
@@ -51,8 +51,8 @@ This would happen if only the radius at the exact evaluation point was used.
 When looking at the representation of a spiking neural network, the noise error is the main factor to consider.
 It goes down by $\bO(1/\sqrt{n})$ where $n$ is the number of neurons (\cref{fig:noise-error}a), whereas the distortion error decreases by $\bO(1/n)$.
 The total error is thus dominated by the noise error for a sufficient number of neurons \parencite[Fig.~2.6]{eliasmith2003}.
-In contrast, for rate neurons without spiking noise ($\errnoise = 0$) and only the distortion error is relevant.
-Furthermore, with the Nengo default parameters the increase in the noise error with dimensions $\dims$ is of $\bO(d)$ (\cref{fig:noise-error}b).
+In contrast, for rate neurons without spiking noise ($\errnoise = 0$) only the distortion error is relevant.
+Furthermore, with the Nengo default parameters, the increase in the noise error with dimensions $\dims$ is of $\bO(d)$ (\cref{fig:noise-error}b).
 \begin{figure}
     \centering
     \includegraphics{figures/noise-error}
@@ -79,9 +79,9 @@ While this makes the distortion more even (mean distortion reduced by \num{0.011
     \caption[Mean error along line cut through hyperball.]{Mean error along a line cut through the $d$-dimensional hyperball with $50\dims$ neurons. The (a) noise error component, (b) distortion error component, and (c) the total error are shown. The shaded regions indicate \SI{95}{\percent} confidence intervals.}\label{fig:error-linecut}
 \end{figure}
 \begin{figure}
-    \begin{captionbeside}[Covering of the unit-circle with evaluation points.]{Covering of the two-dimensional unit-circle with 50~uniformly sampled evaluation points. The orange, shaded region shows the convex hull which fails to cover the area close to the circle boundary.}[i]
+    \begin{captionbeside}[Covering of the unit-circle with evaluation points.]{Covering of the two-dimensional unit-circle with \num{50}~uniformly sampled evaluation points. The orange, shaded region shows the convex hull which fails to cover the area close to the circle boundary.\label{fig:circle-covering}}[i]
         \includegraphics{figures/circle-covering}
-    \end{captionbeside}\label{fig:circle-covering}
+    \end{captionbeside}
 \end{figure}
 \begin{figure}
     \centering
@@ -132,11 +132,11 @@ Note that for $\dims = 1$, $\csdist(\dims + 2)$ is the uniform distribution.
 For the standard uniform distribution, this fraction rises to above \num{0.35}, but is close to zero with the cosine similarity intercept distribution.
 
 While this gives a mathematical motivation to choose this intercept distribution, it must be shown empirically that it performs better than a uniform intercept distribution.
-In the following I present a number of experiments to make this case and give an intuition about the effect of this particular intercept distribution.
+In the following, I present a number of experiments to make this case and give an intuition about the effect of this particular intercept distribution.
 Further evidence is presented in \cref{apdx:hdrep}.
 All experiments have been performed with $\dims = 64$ dimensional representations and $50 \dims = 3200$ spiking LIF neurons unless otherwise noted.
-For each experiment 15 samples using different random number seeds were obtained.
-The benefit of choosing the $\csdist(\dims + 2)$ intercept distribution is larger for increasing dimensionality, but 64 dimensions is sufficient to see a clear effect.
+For each experiment \num{15}~samples using different random number seeds were obtained.
+The benefit of choosing the $\csdist(\dims + 2)$ intercept distribution is larger for increasing dimensionality, but \num{64}~dimensions is sufficient to see a clear effect.
 For fewer dimensions the benefit is less, but not worse than the uniform intercept distribution (\cref{apdx:hdrep}).
 This is consistent with the $\csdist(\dims + 2)$ distribution approaching a uniform distribution for $\dims \rightarrow 1$.
 The asymptotic scaling of the noise error component with the number of neurons does not change for the given choices of the intercept distribution.
@@ -181,7 +181,7 @@ Interestingly, the cosine intercept distribution not only reduces the noise by a
     \caption[Mean noise error with uniform intercepts.]{The mean noise error $\errnoise$ with $\csdist(\dims + 2)$ distributed intercepts in dependence of the number of dimensions. Scatter points show empirically determined values with \SI{95}{\percent} confidence intervals smaller than the marker size. The solid gray line in is a linear regression fitted to $\dims^{3/4}$.}\label{fig:cs-error-scaling}
 \end{figure}
 
-So far we only considered spiking neurons, but the NEF also allows the use of rate neuron models.
+So far, we only considered spiking neurons, but the NEF also allows the use of rate neuron models.
 In that case, the noise error is zero because the firing rate can be represented with arbitrary precision.
 With the default parameters, the cosine similarity distribution still gives a slightly lower total distortion (\num{-0.020}).
 However, due to the non-existent noise, the default regularization of $\reg = 0.1$ is too large and a lower error can be obtained by reducing the regularization to $\reg = 0.01$.
@@ -202,7 +202,7 @@ The NEF only requires multiple vector dimensions to be represented in a single e
 Such interactions are rarely needed in the Semantic Pointer Architecture and there are a number of reasons to split up the $\dims$-dimensional vector into $q$ vectors of $\dims_q = \dims / q$ dimensions.
 
 First of all, solving for decoders requires the inversion of an $n \times n$ matrix with a runtime complexity of $\bO\bigl(n^3\bigr)$ where $n$ is the total number of neurons in the ensemble.
-When instead using $q$ ensembles with $n/q$ neurons each to represent $\dims_q$ segments of the vector, only $q$ inversions of $n/q \times n/q$ matrices are required, which give a runtime complexity of only $\bO\bigl(n^3/q^2\bigr)$.
+When instead using $q$ ensembles with $n/q$ neurons each to represent $\dims_q$-dimensional segments of the vector, only $q$ inversions of $n/q \times n/q$ matrices are required, which give a runtime complexity of only $\bO\bigl(n^3/q^2\bigr)$.
 Thus, solving for the decoders can be a lot more efficient when splitting up a vector into multiple ensembles for the representation.
 Second, the noise error grows only in $\bO\bigl(\!\sqrt{q/n}\bigr)$ if $\dims_q$ is kept constant.
 In other words, adding $\dims_q$ more dimensions, requires only $n/q$ additional neurons to keep the noise error constant.

@@ -83,7 +83,7 @@ It combines and integrates activity-based short-term memory with weight-based lo
 The implementation with spiking neurons ensures biological plausibility and allows for predicitions on the neural level.
 At the same time, the model produces behavioural outputs that have been matched to human data from serial and free recall experiments.
 In particular, well known results such as primacy, recency, transposition error gradients, and forward recall bias have been reproduced with good quantitative matches.
-Additionally, the model accounts for the effect of the acetylcholine antagonist scopolamine.
+Additionally, the model accounts for the effect of the acetylcholine antagonist scopolamine and the Hebb repetition effect.
 
 To construct the CUE model, the Neural Enineering Framework (NEF) and Semantic Pointer Architecture (SPA) have been utilized.
 This thesis makes novel contributions to both.
@@ -94,9 +94,9 @@ These results are applied to achieve improved Semantic Pointer representations i
 Furthermore, the vector-derived transformation binding (VTB) is investigated as an alternative to circular convolution in the SPA with promising results.
 
 The CUE model combines and extends the ordinal serial encoding (OSE) model, a spiking neuron model of short-term memory, and the temporal context model (TCM), a mathematical model of free recall.
-To the former a neural mechanism for tracking the list position is added.
-The latter is converted into a spiking neural network under considerations of the main features and simplifying equations where appropriate.
-Previous models of the recall process in the TCM are replaced by a new independent accumulator recall process that is more suited to the integration in a large-scale network.
+To the former, a neural mechanism for tracking the list position is added.
+The latter is converted into a spiking neural network under considerations of the main features and simplification of equations where appropriate.
+Previous models of the recall process in the TCM are replaced by a new independent accumulator recall process that is more suited to the integration into a large-scale network.
 To implement the modification of the required association matrices, a novel learning rule, the association matrix learning rule (AML), is derived that allows for one-shot learning without catastrophic forgetting.
 Its biological plausibility is discussed and it is shown that it accounts for changes in neural firing observed in human recordings from an association learning experiment.
 Furthermore, I discuss a recent proposal of an optimal fuzzy temporal memory as replacement for the TCM context signal and show it to be likely to require more neurons than the human brain consits of.
@@ -112,13 +112,13 @@ I would like to thank my supervisor, Chris Eliasmith, for his continued support 
 I am also grateful to my colleagues at the Centre for Theoretical Neuroscience, in particular Terrance Stewart and Aaron Voelker, for their invaluable knowledge and helpful discussions.
 The research in this thesis would have not been possible without the excellent and continuously improving work of the Nengo development team, spearheaded by Trevor Bekolay.
 This research was also enabled in part by support provided by SHARCNET\footnote{\href{https://www.sharcnet.ca}{www.sharcnet.ca}} and Compute Canada\footnote{\href{https://www.computecanada.ca}{www.computecanada.ca}}.
-Many CPU cycles were burned on their hardware simulating iterations of the CUE model.
+Many CPU cycles were burned on their hardware, simulating iterations of the CUE model.
 I also would like to acknowledge the financial support for this research by the Canada Research Chairs program, the NSERC Discovery garnt 261453, the Air Force Office of Scientific Research grant FA8655-13-1-3084, CFI, and OIT\@.  % chktex 8
 
 A special mention is deserved by the Interdisciplinary College, a unique annual spring-school at the Lake Möhne in Germany.
 It is the place where I met Chris Eliasmith for the first time and ultimately made me pursue this research direction.
 
-Finally, I would like to thank all the people I climbed with over the years as they helped me to stay sane during this period.
+Finally, I would like to thank all the people I climbed with over the years as they helped me to stay sane during the work on this thesis.
 
 
 \cleardoublepage

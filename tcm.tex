@@ -3,7 +3,7 @@ The temporal context model (TCM) was proposed by \textcite{Howard2002} as a mode
 It matched data of immediate, delayed, and continuous distractor recall tasks.
 As the distractor task used in the delayed and continuous distractor condition is designed to prevent active rehearsal, this model is likely to address more long-term, synaptic storage as opposed to the short-term OSE model.
 Similar to a number of other memory models, the TCM assumes a time varying context signal that items are associated with.
-But unlike those other models, this context is based on the items itself rather than being randomly generated.
+But unlike those other models, this context is based on the items themselves rather than being randomly generated.
 
 In particular, items in the TCM are represented as orthogonal vectors $\tcmitem_i$ and the context signal is also a vector $\ctx$.
 If we relax the orthogonality constraint on the items to almost (instead of perfectly) orthogonal, we can use Semantic Pointers for these vectors.
@@ -96,14 +96,14 @@ The dynamics can be described by
 \begin{equation}
     \vc x_s = \vc x_{s - 1} + \frac{1}{\tau} \del{\vc u - \kappa \vc x_{s - 1} - \lambda \mat L \vc x_{s - 1}} + \vc\eta
 \end{equation}
-where $\vc u$ is the scaled vector of inputs determined from $\mtf \ctx$ from the current context, $\kappa$ the leak rate, $\lambda$ the lateral inhibition, ${[\mat L]}_{ij} = 1 - \krond_{ij}$ the lateral inhibition matrix, and $\vc\eta$ normal distributed random noise.
+where $\vc u$ is the scaled vector of inputs determined from $\mtf \ctx$ with the current context, $\kappa$ the leak rate, $\lambda$ the lateral inhibition, ${[\mat L]}_{ij} = 1 - \krond_{ij}$ the lateral inhibition matrix, and $\vc\eta$ normal distributed random noise.
 This is a more detailed description of how the brain might actually decide for a single item.
 However, it is problematic to incorporate within a larger scale neural model under noisy conditions as detailed in \cref{sec:recall}.
 For this reason, a different winner-take-all process described in that chapter is used.
 
 
 \section{Neural context update}\label{sec:ctx-update}
-A neural implementation of the TCM needs to implement the updating of $\mft$ and $\mtf$ matrices discussed in \cref{sec:aml}, the recall of items discussed in \cref{sec:recall}, and updating of the context given by \cref{eqn:ctx-update}, discussed in the remainder of this chapter.
+A neural implementation of the TCM needs to implement the updating of the $\mft$ and $\mtf$ matrices discussed in \cref{sec:aml}, the recall of items discussed in \cref{sec:recall}, and updating of the context given by \cref{eqn:ctx-update}, discussed in the remainder of this chapter.
 Despite being a simple equation, a number of different implementation approaches are potentially viable.
 However, only one of these methods was successful in matching the human data when incorporated into the complete model.
 It is still instructive to compare these different approaches and consider why they fail.
@@ -111,7 +111,7 @@ It is still instructive to compare these different approaches and consider why t
 \subsection{Boundend integrator}
 \Cref{eqn:ctx-update} assumes discrete steps, but for a neural implementation a continuous formulation is more natural and given by
 \begin{equation}
-    \od{\ctx}{t} = (\bar{\rho} - 1) \ctx + \bar{\tcmbeta} \ctxin\,\text{.}
+    \od{\ctx}{t} = \big(\bar{\theta} - 1\big) \ctx + \bar{\tcmbeta} \ctxin\,\text{.}
 \end{equation}
 This equation is easily implemented with a neural integrator for a constant $\bar{\theta}$ and $\bar{\tcmbeta}$.
 However, there is no limit on the integration of $\ctxin$ anymore so that the proportion of $\ctxin$ added into $\ctx$ can exceed $\tcmbeta$.
@@ -129,7 +129,7 @@ After thresholding the dot product at $\tcmbeta$, it can be used to suppress the
             in -> gate,
             in -> dot -> threshold -> [inhibit, "$\Heavi(x - \tcmbeta)$" {rotate=90}] gate,
             integrator -> dot,
-            integrator -> [recurrent, "$\bar{\rho}$" above] integrator,
+            integrator -> [recurrent, "$\bar{\theta}$" above] integrator,
             integrator -> [bend right, out=340] downscale -> [bend right, "$\zeta$" {xshift=-2mm}] integrator,
             integrator -> ["$1 - \norm{\ctx}$" {anchor=south west}] length -> [inhibit] downscale
         };
@@ -154,7 +154,7 @@ These vectors were either orthogonal or had a cosine similarity of \num{0.6} bet
         The desired similarity is given by the gray line. Shaded regions indicate \SI{95}{\percent} confidence intervals.}\label{fig:bounded-integrator}
 \end{figure}
 For (almost) orthogonal vectors $\ctxin$, the similarity between the context vectors is close under the target.
-For non-orthogonal vectors with $\langle\ctxin_i, \ctxin_{i+1}\rangle \approx 0.6$, however, the similarity of the context vectors is by far larger than the target.
+For non-orthogonal vectors with $\big\langle\ctxin_i, \ctxin_{i+1}\big\rangle \approx 0.6$, however, the similarity of the context vectors is by far larger than the target.
 This is caused by the input already being similar to the context and thus stopping the update too early.
 Note that it is not sufficient to simply adjust $\tcmbeta$ as depending on the similarity of the inputs it needs to either be incremented or decremented.
 
@@ -169,7 +169,7 @@ Such a network is shown in \cref{fig:ctx-alt-update}.
     \centering
     \begin{tikzpicture}[nef, x=2cm, y=2cm]
         \graph [no placement] {
-            in/\ctxin [ext, at={(0,0)}] -> ["$\tcmbeta$"] new/ [pnode, at={(1,0)}] -> cgate/ [ea, at={(2, 1)}] -> current/\ctx [ea, at={(3, 1)}] -> oldgate/ [ea, at={(3, -1)}] -> old/$\ctx'$ [ea, at={(2, -1)}] -> ["$\rho$"] new,
+            in/\ctxin [ext, at={(0,0)}] -> ["$\tcmbeta$"] new/ [pnode, at={(1,0)}] -> cgate/ [ea, at={(2, 1)}] -> current/\ctx [ea, at={(3, 1)}] -> oldgate/ [ea, at={(3, -1)}] -> old/$\ctx'$ [ea, at={(2, -1)}] -> ["$\theta$"] new,
             current -> [bend right, "$-1$"] cgate,
             new -> [out=0, in=225] dot [net, at={(4, 1)}], current -> dot [net],
             dot -> rectification/ [rect, at={(4.5, 0.5)}] -> ["$\Heavi(x)$" anchor=west] heavi/ [pnode, at={(4.5, -0.5)}] -> [inhibit, bend left] cgate,
@@ -201,7 +201,7 @@ If we take the alternating memory buffer network, but control the updating exter
     \centering
     \begin{tikzpicture}[nef, x=2cm, y=2cm]
         \graph [no placement] {
-            in/\ctxin [ext, at={(0,0.5)}] -> ["$\tcmbeta$"] new/ [pnode, at={(1,0.5)}] -> cgate/ [ea, at={(2, 1)}] -> current/\ctx [ea, at={(3,1)}] -> oldgate/ [ea, at={(3, -1)}] -> old/$\ctx'$ [ea, at={(2, -1)}] -> ["$\rho$" {very near start, below}] new,
+            in/\ctxin [ext, at={(0,0.5)}] -> ["$\tcmbeta$"] new/ [pnode, at={(1,0.5)}] -> cgate/ [ea, at={(2, 1)}] -> current/\ctx [ea, at={(3,1)}] -> oldgate/ [ea, at={(3, -1)}] -> old/$\ctx'$ [ea, at={(2, -1)}] -> ["$\theta$" {very near start, below}] new,
             current -> [bend right, "$-1$"] cgate,
             keep/"keep context" [ext, at={(0,-.5)}] -> ctrl/ [pnode, at={(1,-.5)}] -> [inhibit] cgate,
             ctrl -> ["$-1$" near end] invert/ [pnode, at={(2.5, -0.5)}] -> [inhibit] oldgate,

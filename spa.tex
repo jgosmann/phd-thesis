@@ -13,7 +13,7 @@ First, a measure of similarity
 \end{equation}
 for which I use the normalized dot product (also known as cosine similarity)
 \begin{equation}
-    \simmeasure(\vc x, \vc y) := \frac{\left\langle \vc x, \vc y \right\rangle}{\norm{\vc x} \cdot \norm{\vc y}}
+    \simmeasure(\vc x, \vc y) := \frac{\left\langle \vc x, \vc y \right\rangle}{\|\vc x\| \cdot \|\vc y\|}
 \end{equation}
 for the remainder of this thesis.
 Second, a superposition operator
@@ -84,7 +84,7 @@ The binding operator classically used in the SPA is circular convolution, and wa
     \end{equation}
     and has the approximate inverse \parencite{plate2003}
     \begin{equation}
-        \bind^+_{\circledast}(\vc x, \vc y) = \vc x \circledast \vc y^+\ \text{with}\ \vc y^+ := \del{y_0, y_{d-1}, y_{d-2}, \dotsc, y_1}\Tr \text{.}
+        \bind^+_{\circledast}(\vc x, \vc y) = \vc x \circledast \vc y^+\ \text{with}\ \vc y^+ := {\del{y_0, y_{d-1}, y_{d-2}, \dotsc, y_1}\!}\Tr \text{.}
     \end{equation}
 \end{defn}
 
@@ -117,7 +117,7 @@ Circular convolution can be interpreted as moving one of the operands around in 
 This leads to the question, whether there are other ways to project one vector to a new location based on the other vector.
 One such way is what I call \emph{vector-derived transformation binding (VTB)}, which to my knowledge has not been described before.
 \begin{defn}[vector-derived transformation binding, VTB]
-    Given a $\dims' = \dims^{\frac{1}{2}} \in \posnum$, the vector-derived transformation binding operator $\vtb: \mathbb{R}^{\dims} \times \mathbb{R}^{\dims} \longrightarrow \mathbb{R}^{\dims}$ is defined as
+    Given a $\dims' = \dims^{1/2} \in \posnum$, the vector-derived transformation binding operator $\vtb: \mathbb{R}^{\dims} \times \mathbb{R}^{\dims} \longrightarrow \mathbb{R}^{\dims}$ is defined as
     \begin{equation}
         \vtb(\vc x, \vc y) := \bar{\mat V}_{\vc y} \vc x = \begin{bmatrix}
             \mat V_{\vc y} & 0 & 0 \\
@@ -147,7 +147,7 @@ This binding method is based on the fact that in the SPA vectors are usually ran
 In that case each subvector (e.g., each row in $\mat V_{\vc y}$) is also uniformly distributed with identically distributed components.
 Furthermore, for high-dimensional vector spaces almost all (uniformly sampled) vectors are orthogonal and semantic pointers are usually picked to have unit-length.
 Thus, the matrix $\bar{\mat V}_{\vc y}$ is almost orthogonal with the implication $\bar{\mat V}_{\vc y}\Tr \bar{\mat V}_{\vc y} \approx \imat$.
-Vectors $\vc y$ that give a perfectly orthogonal matrix $\mat V_{\vc y}$, are unitary.
+Vectors $\vc y$, that give a perfectly orthogonal matrix $\mat V_{\vc y}$, are unitary.
 One special unitary vector is the identity vector.
 \begin{corollary}[VTB identity vector]
     The identity vector for VTB is given by
@@ -161,7 +161,7 @@ One special unitary vector is the identity vector.
         By writing $\bid_{\ped{V}}$ as $\mat V_{\bid_{\ped{V}}}$ one can easily verify that $\mat V_{\bid_{\ped{V}}} = \imat\ \Rightarrow\ \bar{\mat V}_{\bid_{\ped{V}}} = \imat$.
     \end{proof}
 \end{corollary}
-Example for $d = 9$: $\bid_{\ped{V}}^{(9)} = (1, 0, 0, 0, 1, 0, 0, 0, 1)\Tr$.
+\noindent Example for $d = 9$: $\bid_{\ped{V}}^{(9)} = (1, 0, 0, 0, 1, 0, 0, 0, 1)\Tr$.
 
 \begin{corollary}[VTB distributivity]
     VTB is distributive:
@@ -179,7 +179,7 @@ Example for $d = 9$: $\bid_{\ped{V}}^{(9)} = (1, 0, 0, 0, 1, 0, 0, 0, 1)\Tr$.
     \end{itemize}
     \end{proof}
 \end{corollary}
-In contrast to circular convolution, VTB is neither commutative
+\noindent In contrast to circular convolution, VTB is neither commutative
 \begin{equation}
     \vtb(\vc x, \vc y) = \bar{\mat V}_{\vc y} \vc x \neq \bar{\mat V}_{\vc x} \vc y = \vtb(\vc y, \vc x) \text{,}
 \end{equation}
@@ -188,16 +188,16 @@ nor associative
     \vtb(\vc x, \vtb(\vc y, \vc z)) = \bar{\mat V}_{\bar{\mat V}_{\vc z} \vc y} \vc x \neq \bar{\mat V}_{\vc z} \bar{\mat V}_{\vc y} \vc x = \vtb(\vtb(\vc x, \vc y), \vc z) \text{.}
 \end{equation}
 This implies that unlike circular convolution, multiple bindings cannot be undone in a single step, but a separate unbinding step is required for each binding.
-Despite the non-commutativity, it is possible to flip the operands in the bound state $\vtb(\vc x, \vc y) = \mat V_{\leftrightarrow} \vtb(\vc y, \vc x)$ with the matrix
+Despite the non-commutativity, it is possible to flip the operands in the bound state $\vtb(\vc x, \vc y) = \mat V_{\!\leftrightarrow} \vtb(\vc y, \vc x)$ with the matrix
 \begin{equation}
-    \sbr{\mat V_{\leftrightarrow}}_{ij} = \left\{ \begin{array}{ll}
+    \sbr{\mat V_{\!\leftrightarrow}}_{ij} = \left\{ \begin{array}{ll}
             1 & j = 1 + \left\lfloor \frac{i - 1}{\dims'} \right\rfloor + \dims' \sbr{\del{i - 1} \bmod \dims'} \\
             0 & \text{otherwise}
         \end{array}\right. \text{.}
 \end{equation}
 Example for $d = 4$:
 \begin{equation*}
-    \mat V_{\leftrightarrow}^{(4)} = \sbr{\begin{array}{cccc}
+    \mat V_{\!\leftrightarrow}^{(4)} = \sbr{\begin{array}{cccc}
             1 & 0 & 0 & 0 \\
             0 & 0 & 1 & 0 \\
             0 & 1 & 0 & 0 \\
@@ -263,7 +263,7 @@ So far VTB looks like the better choice for a binding operation.
 But it does not come not without downsides.
 In contrast to circular convolution, it is not associative or commutative.
 While the desirability of commutativity depends on the employed representation scheme, the non-associativity implies that each binding has to be undone in an individual step, while circular convolution allows us to undo a chain of bindings in a single step, if the vector representing that chain is available.
-Thus, circular convolution can allows the recovery of information more quickly.
+Thus, circular convolution might allow the recovery of information more quickly.
 Ultimately, this is a question of what binding operations the brain applies for different forms of processing (if such binding is at all related to what the brain does).
 Potentially, the binding operations lead to different timing predictions, as unbinding with the VTB may take more time.
 Deriving such predictions and testing them experimentally is, however, out of the scope of this thesis.
@@ -271,16 +271,16 @@ Deriving such predictions and testing them experimentally is, however, out of th
 Finally, we have to consider the neural implementation of these binding operations.
 Both essentially require a set of multiplication networks.
 For the circular convolution, the DFT (and inverse DFT) can be implemented in feed-forward connection weights that do not require any additional neurons.
-For each of the input vectors $\dims$ Fourier complex coefficients are produced, but as the inputs are real-valued, half of these are the complex conjugate of the other half.
+For each of the input vectors, $\dims$ complex Fourier coefficients are produced, but as the inputs are real-valued, half of these are the complex conjugate of the other half.
 Thus, only $\dims / 2$ coefficients have to be considered.
 Each coefficient is a complex number multiplied with one coefficient of the other vector.
 That results in four real-valued multiplies per coefficient.
 In total, $2\dims$ multiplications are required for a circular convolution.
 For VTB, there are $\dims^{1/2}$ multiplications of $\dims^{1/2} \times \dims^{1/2}$ matrices with a vector, resulting in a total of $\dims^{3/2}$ multiplications.
 However, each column vector in $\bar{\mat V}_{\vc y}$ gets scaled by the same component of $\vc x$.
-That would allow, to store each of these column vectors in a single NEF ensemble with the respective $x_i$ in an additional dimension, and then decode the scaled column vector.
-This requires only $\dims$ ensembles to decode from, but each ensemble needs to represent $\dims^{1/2} + 1$ dimensions, and to keep the noise error constant (as discussed in the next chapter), the number of neurons in each ensemble then needs to be scaled by ${(\dims^{1/2} + 1)}^{3/2} \approx \dims^{3/4}$.
-Overall ensembles this amounts to a scaling by $\dims^{7/4}$.
+That would allow to store each of these column vectors in a single NEF ensemble with the respective $x_i$ in an additional dimension, and then decode the scaled column vector.
+This requires only $\dims$ ensembles to decode from, but each ensemble needs to represent $\dims^{1/2} + 1$ dimensions, and to keep the noise error constant (as discussed in the next chapter), the number of neurons in each ensemble then needs to be scaled by $(\dims^{1/2} + 1)^{3/2} \approx \dims^{3/4}$.
+Across all ensembles this amounts to a scaling by $\dims^{7/4}$.
 Thus, the VTB requires more neural resources.
 It should be noted, that for either binding method, the binding with a fixed vector can be implemented purely in the connection weights as it reduces to a simple matrix multiplication in either case.
 
@@ -299,7 +299,7 @@ One possible encoding would be
 \end{equation}
 We could then recover the color of the square as
 \begin{align}
-    \bind^+(\vc s, \spc{color}) &= \bind^+(\bind(\spc{red}, \spc{square}), \spc{square}) + \bind^+(\bind(\spc{blue}, \spc{circle}), \spc{square}) \\
+    \bind^+(\vc s, \spc{square}) &= \bind^+(\bind(\spc{red}, \spc{square}), \spc{square}) + \bind^+(\bind(\spc{blue}, \spc{circle}), \spc{square}) \\
     &\approx \spc{red} + \mathrm{noise} \text{.}
 \end{align}
 Note, however, that the binding operation needs to be commutative to recover the shape from the color with this encoding scheme.
@@ -328,12 +328,11 @@ While most concrete encoding schemes make use of encoding with binding, at least
         \vc m = \sum_{i=1}^k \mat M^{2i-1} \del{\vc y_i + \mat M \vc x_i} = \sum_{i=1}^k \mat M^{2i-1} \vc y_i + \mat M^{2i} \vc x_i \text{.}
     \end{equation}
 \end{defn}
-The retrieval of an $\vc x_i \approx \hat{\vc x}_i$ is accomplished with
+\noindent The retrieval of an $\vc x_i \approx \hat{\vc x}_i$ is accomplished with
 \begin{align}
-    \hat{\vc x}_i &:= \del{\mat M^{2c}}^+ \vc m \\
-    c &= \argmax_{j \in \sbr{1, k}}\ \simmeasure\!\del{\vc y_i, \del{\mat M^{2j-1}}^{\!+} \vc m} \text{.}
+    \hat{\vc x}_i &:= \del{\mat M^{2c}}^{\!+} \vc m \\
+    c &= \argmax_{j \in \sbr{1,\ k}}\ \simmeasure\!\del{\vc y_i, \del{\mat M^{2j-1}}^{\!+} \vc m} \text{.}
 \end{align}
-
 There are a number of sensible choices for the matrix $\mat M$.
 \begin{itemize}
     \item First of all, for both, circular convolution and VTB, binding with a \emph{fixed} vector $\vc v$ can be expressed as a matrix multiplication.
@@ -342,7 +341,7 @@ There are a number of sensible choices for the matrix $\mat M$.
         These are unitary and an exact inverse is given by the transpose.
     \item A special permutation matrix is the matrix that shifts all vector components by one.
         For a given permutation matrix, the vector space dimensions can be reordered such that the permutation matrix becomes the shift by one.
-        Interestingly, the shift by one is also equivalent to a circular convolution with the vector $(0, 1, 0, 0, \dotsc)\Tr$.
+        Interestingly, the shift by one is also equivalent to a circular convolution with the vector $(0, 1, 0, 0, \dotsc)\!\Tr$.
     \item Other good candidates for $M$, that have not been considered to my knowledge, are (random) orthogonal matrices.
         These are unitary operators on $\mathbb{R}^{\dims}$ and thus have an exact inverse given by the transpose.
 \end{itemize}
@@ -360,8 +359,8 @@ Due to the combination of these two facts, these vectors are called Semantic Poi
 
 
 \subsection{Comparison of encoding methods}
-Based on experiment~1 from \textcite{recchia2015}, the encoding methods can be compared by measuring the pairwise binding capacity.
-To do so, a set of \num{1000}~vectors with normally distributed components $x_i \sim \ndist\!\del{\!0, \sqrt{1/\dims}}$ are created (note that $\expected\!\sbr{\,\norm{\vc x}} = 1$).
+Based on the first experiment from \textcite{recchia2015}, the encoding methods can be compared by measuring the pairwise binding capacity.
+To do so, a set of \num{1000}~vectors with normally distributed components $x_i \sim \ndist\!\del[1]{0, \sqrt{1/\dims}}$ are created (note that $\expected\!\sbr{\,\norm{\vc x}} = 1$).
 From this set \num{500}~pairs are sampled with replacement.
 Then $k$ of these pairs are encoded into a single vector and it is tested whether the $\vc x$ of a random encoded pair $(\vc x, \vc y)$ can recovered with the cue $\vc y$.
 A vector counts a successfully recovered if $\hat{\vc x}$ is more similar to $\vc x$ than any other vector in the initial set of vectors.
@@ -386,7 +385,7 @@ Intuitively, this can be explained by the fact that encoding with binding is a s
 In other words, encoding with binding has a pairwise binding capacity about twice as high as encoding with tagging.
 In the plots, the retrieval accuracies for encoding with binding at $2k$ matches roughly with the retrieval accuracy with tagging at $k$, illustrating this fact.
 
-Finally, we can observe (\cref{fig:encoding-nonunitary-tagging}) that encoding with tagging completely fails with fixed non-unitary circular convolution matrices and does not do much better with non-unitary VTB matrices either.
+Finally, we can observe that encoding with tagging completely fails with fixed non-unitary circular convolution matrices and does not do much better with non-unitary VTB matrices either (\cref{fig:encoding-nonunitary-tagging}).
 This is likely due to the fact that repeated circular convolution with the same (non-unitary) vector leads to a super-exponential increase in length.
 That causes one pair (or even one vector of that pair) to be much stronger than all the other pairs, preventing their recovery.
 \begin{figure}

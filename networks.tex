@@ -30,14 +30,14 @@ The graphical primitives used in the network diagrams in this thesis are shown i
     \caption[Graphical elements in NEF network diagrams.]{Graphical elements in NEF network diagrams. See text for further explanation.}\label{fig:tikz-nef}
 \end{figure}
 Normal ensembles are marked with a circle.
-Sometimes the dimensions of a vector is split across multiple ensembles, called an \emph{ensemble array}, and marked by a stack of circles.
+Sometimes the dimensions of a vector are split across multiple ensembles, called an \emph{ensemble array}, and marked by a stack of circles.
 Multiple NEF components that constitute a network not shown in full detail, are identified with rectangles with rounded corners.
 Sometimes it is useful to combine decoded representations before transmitting them to the destination neurons in a \emph{pass-through} node.
 Such nodes are marked by filled circles.
 Note that such pass-through nodes could be replaced with the actual neuron-to-neuron connections and are not biological implausible.
 \emph{Rectification ensembles} are useful enough to warrant a special symbol: a rectified linear plot in its circle.
 These ensembles are discussed in detail in \cref{sec:thresholding}.
-Normal NEF connections are represented by arrows and typically have a synaptic time constant of \SI{5}{\milli\second}, which is is in the range of experimentally measured values for AMPA-type glutamate receptors \parencite{jonas1993,spruston1995-1}.
+Normal NEF connections are represented by arrows and typically have a synaptic time constant of \SI{5}{\milli\second}, which is in the range of experimentally measured values for AMPA-type glutamate receptors \parencite{jonas1993,spruston1995-1}.
 Linear transforms or functions computed across the connection are denoted along the arrow.
 Inhibitory connections bypass the encoders of the target ensemble and use a negative transform to suppress firing in the target ensemble.
 Finally, modulatory connections do not influence the representation in an ensemble directly, but the connection weights of another connection, and are indicated with a half open circle terminating the connection.
@@ -86,7 +86,7 @@ where $\vc u(t)$ is the external input to the integrator.
 Applying principle 3 of the NEF tells us that the input has to be scaled by the synaptic time constant $\syntau$.
 Furthermore, a recurrent connection feeding the output of the integrator back to itself is needed (\cref{fig:integrator-net}).
 \begin{figure}
-    \begin{captionbeside}{Implementation of an integrator with the NEF\label{fig:integrator-net}.}[i]
+    \begin{captionbeside}{Implementation of an integrator with the NEF.\label{fig:integrator-net}}[i]
         \begin{tikzpicture}[nef]
             \path[use as bounding box] (-0.25, -0.6) rectangle (3, 0.6);
             \graph {
@@ -153,8 +153,8 @@ The Heaviside function is even discontinuous at that spot.
 These properties make it problematic to implement this function with a standard NEF ensemble.
 Nevertheless, a good approximations of these functions can be achieved by aligning the neuron's tuning curves according to the shape of these functions.
 
-Instead of choosing encoders randomly as $-1$ and $1$, all encoders are set to $1$ and all intercepts of the neuron tuning curves are chosen from $x \in [0; 1]$.
-Choosing the intercept distribution of this interval appropriately can further increase the accuracy.
+Instead of choosing encoders randomly as $-1$ and $1$, all encoders are set to $1$ and all intercepts of the neuron tuning curves are chosen from $x \in \big[0; 1\big]$.
+Choosing the intercept distribution in this interval appropriately can further increase the accuracy.
 An exponential distribution that clusters intercepts close to zero performs best (\cref{fig:thresholding}).
 Note that this is even better than setting all intercepts to zero as this gives more variation in the tuning curves.
 The uniform distribution often does not produce intercepts close enough to the threshold value which leads to an increased effective threshold compared to the desired threshold.
@@ -174,17 +174,17 @@ A \SI{37}{\percent} more accurate implementation (with the same number of neuron
 \end{equation}
 The neural implementation of this equation is straight-forward (\cref{fig:product-net}).
 \begin{figure}
-    \begin{captionbeside}{Implementation of an accurate product with the NEF.}[i]
+    \begin{captionbeside}{Implesbrmentation of an accurate product with the NEF.\label{fig:product-net}}[i]
         \begin{tikzpicture}[nef, x=2cm, y=2cm]
             \graph [no placement] {
                 x/"$x$" [at={(0, 1)}] -> sum/"$a$" [ens, at={(1, 1)}] -> ["$a^2/4$"] prod/"" [pnode, at={(2, 0.5)}] -> out/"$xy$" [at={(3, 0.5)}];
-                y [at={(0, 0)}] -> ["-1" below] diff/"$b$" [ens, at={(1, 0)}];
+                y [at={(0, 0)}] -> ["$-1$" below] diff/"$b$" [ens, at={(1, 0)}];
                 y/"$y$" -> sum;
                 x -> diff;
                 diff -> ["$b^2/4$" below] prod;
             };
         \end{tikzpicture}
-    \end{captionbeside}\label{fig:product-net}
+    \end{captionbeside}
 \end{figure}
 
 Multiple scalar product networks can be combined to compute element-wise vector products.

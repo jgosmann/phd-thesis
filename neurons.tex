@@ -27,10 +27,10 @@ It models a single membrane voltage $V(t)$ described by the differential equatio
     \taurc \od{V}{t} = -V(t) + R J(t)
 \end{equation}
 where $R$ is the membrane resistance, $J(t)$ the input current, and $\taurc$ the membrane time constant.
-Whenever the membrane voltage reaches a certain threshold $V_{\ped{th}}$, the LIF neuron transmits a spike and its membrane voltage is reset for a refractory period of $\tauref$.
+Whenever the membrane voltage reaches a certain threshold $V_{\!\ped{th}}$, the LIF neuron transmits a spike and its membrane voltage is reset for a refractory period of $\tauref$.
 This type of neuron model allows the firing rate to be derived for a given constant input current $J$ as
 \begin{equation}
-    \act(J) = \frac{1}{\tauref - \taurc \ln\!\del{1 - \frac{V_{\ped{th}}}{R J}}} \text{.}
+    \act(J) = \frac{1}{\tauref - \taurc \ln\!\del{1 - \frac{V_{\!\ped{th}}}{R J}}} \text{.}
 \end{equation}
 
 The LIF neuron model is a good choice for the undertaking of this thesis as it captures many aspects of neuron behaviour.
