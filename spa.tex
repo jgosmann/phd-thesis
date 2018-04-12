@@ -279,7 +279,7 @@ In total, $2\dims$ multiplications are required for a circular convolution.
 For VTB, there are $\dims^{1/2}$ multiplications of $\dims^{1/2} \times \dims^{1/2}$ matrices with a vector, resulting in a total of $\dims^{3/2}$ multiplications.
 However, each column vector in $\bar{\mat V}_{\vc y}$ gets scaled by the same component of $\vc x$.
 That would allow to store each of these column vectors in a single NEF ensemble with the respective $x_i$ in an additional dimension, and then decode the scaled column vector.
-This requires only $\dims$ ensembles to decode from, but each ensemble needs to represent $\dims^{1/2} + 1$ dimensions, and to keep the noise error constant (as discussed in the next chapter), the number of neurons in each ensemble then needs to be scaled by $(\dims^{1/2} + 1)^{3/2} \approx \dims^{3/4}$.
+This requires only $\dims$ ensembles to decode from, but each ensemble needs to represent $\dims^{1/2} + 1$ dimensions, and to keep the noise error constant (as discussed in the next chapter), the number of neurons in each ensemble then needs to be scaled by $(\dims^{1/2} + 1)^{3/2} \approx \dims^{3/4}$.  % chktex 3
 Across all ensembles this amounts to a scaling by $\dims^{7/4}$.
 Thus, the VTB requires more neural resources.
 It should be noted, that for either binding method, the binding with a fixed vector can be implemented purely in the connection weights as it reduces to a simple matrix multiplication in either case.
