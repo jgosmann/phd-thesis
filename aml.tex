@@ -289,14 +289,6 @@ The recorded spikes were analyzed analogous to \textcite{ison2015}.
 \end{figure}
 
 The main results obtained from the experimental and model data are shown in Figs.~\ref{fig:aml-spikes} and~\ref{fig:aml-population-response}.
-Based on the selection criteria for pairwise coding units, they show increased firing for the preferred stimulus, but no other stimuli.
-The response to the preferred stimulus stays about the same after learning, but is increased for the non-preferred stimulus.
-The response to non-associated (NA) stimuli, i.e., non-preferred stimuli that are not associated to the preferred stimulus, did not show a significant change in the experimentally recorded data.
-For the model data, no increase in firing in response to the stimulus is observed, but in contrast to the experimental data a general increase in firing rate is observed.
-This difference might be caused by a mechanism normalizing the synaptic weights or neural firing rates that is not modelled with the pure AML\@.
-Approaches to weight normalization are further discussed in the next section.
-Apart from that, AML qualitatively reproduces the experimentally observed data.
-A better quantitative fit might be achievable with more careful parameter selection in the model.
 \begin{figure}
     \centering
     \subcaptionbox{Experimental data}{\includegraphics[width=9cm]{figures/ison2015-spikes}}
@@ -313,6 +305,14 @@ A better quantitative fit might be achievable with more careful parameter select
     \subcaptionbox{Model data}{\includegraphics{figures/aml-population-response}}
     \caption[Population response for pair-coding units.]{Population response for pair-coding units to the preferred (P), non-preferred (NP), and non-associated (NA) stimuli before and after learning. Times are relative to stimulus onset. Shaded regions indicate the standard error of mean. (a) Normalized population activity from (a) experimental and (b) model data. Figure (a) adopted from \textcite{ison2015} under the Creative Commons Attribution 4.0 International license.}\label{fig:aml-population-response}
 \end{figure}
+Pairwise coding units, showing elevated firing in response to the preferred stimulus before learning and the non-preferred stimulus after learning without an increased response to any other stimuli, have been selected.
+The normalized population activity in response to the preferred stimulus shows no or only a minimal change with learning in both the experimental and model data.
+For the non-preferred stimulus the population activity increases slightly on stimulus onset which is more pronounced in the model data.
+This might be explained by the model not including any visual processing that could delay and smooth out that response.
+After learning, this population response is increased in both sets of data.
+For non-associated stimuli the model shows a minimal decrease in the normalized population activity with learning, while the experimental data shows no significant change.
+Overall, the model matches the main aspects of the experimental observations.
+A better quantitative fit might be achievable with more careful parameter selection in the model.
 
 
 \section{Weight normalization}

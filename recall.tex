@@ -1,7 +1,7 @@
 \chapter{Recalling items}\label{sec:recall}
 In the original TCM model \parencite{Howard2002} the activations $a_i$ of items in the memory is mapped to a recall probability by a softmax function
 \begin{equation}
-    P(\tcmitem_i | \ctx) = \frac{\exp(2a_i/\tau)}{\sum_j \exp(2a_j/\tau)}
+    P\big(\tcmitem_i | \ctx\big) = \frac{\exp\big(2a_i/\tau\big)}{\sum_j \exp\big(2a_j/\tau\big)}
 \end{equation}
 with a free parameter $\tau$ controlling for the sensitivity.
 While this does well in capturing the recall probabilities, it does not provide much insight in how this recall process might be realized neurally.
@@ -19,7 +19,7 @@ Given $D$ choices, the leaky, competing accumulator (LCA) model proposed by \tex
 \end{equation}
 where $u_i(t)$ are the external inputs, $\kappa$ is the leak rate, $\lambda$ the lateral inhibition, and $\tau$ the integration time-constant.
 Each state variable $x_i$ is kept non-negative by setting negative values to zero.
-Intuitively, each state variable integrates its input with leak term of $-\kappa x_i$ and provides lateral inhibition to all other state variables.
+Intuitively, each state variable integrates its input with a leak term of $-\kappa x_i$ and provides lateral inhibition to all other state variables.
 Given one input $u_i > u_j$ for all $j \neq i$, the state variable $x_i$ will converge to $u_i$ while all other state variables $x_j,\ j \neq i$ will converge to $0$ if $\kappa = \lambda = 1$ (\cref{sec:apdx-wta}).
 In the following analysis, $\kappa = \lambda = 1$ will be fixed.
 Other choices of $\lambda$ affect the effective integration time-constant $\tau$ and gain on the input, while changing $\beta$ results in undesired behaviour where the history of inputs influences the current choice.
@@ -55,7 +55,7 @@ Here, one ensemble per state variable is used (\cref{fig:lca}) and the gains and
 \section{Independent accumulator model}\label{sec:ia}
 The dynamics of the independent accumulator (IA) model are given by
 \begin{align}
-    \od{x_i}{t} &= \frac{1}{\tau_1} u_i(t) + \frac{1}{\tau_2} \del{\bar{x}_i - \bar{\lambda} \sum_{j \neq i} \bar{x}_j}, \quad x_i \geq 0 \\
+    \dod{x_i}{t} &= \frac{1}{\tau_1} u_i(t) + \frac{1}{\tau_2} \del{\bar{x}_i - \bar{\lambda} \sum_{j \neq i} \bar{x}_j}, \quad x_i \geq 0 \\
     \bar{x}_i &= \Heavi(x_i - \vartheta)
 \end{align}
 where $u_i(t)$ again gives the external input, $\tau_1$ and $\tau_2$ are feedforward and feedback time-constants, $\bar{\lambda}$ is an inhibition constant, $\Heavi$ is the Heaviside step function, and $\vartheta$ is a threshold.
@@ -104,8 +104,8 @@ The second layer projects back to first layer and can be used to read out the ou
 
 \section{Comparisons of the WTA networks}
 The pure analytical description does not tell us which network is better suited for certain tasks.
-To compare these networks, I simulate them with an input of $u_i = u - s\del{1 - \krond_{1i}} + \eta_i$, where $u$ is the magnitude of the largest input, $s > 0$ is the target separation, $\krond$ is the Kronecker delta, and $\eta_i$ is Gaussian white noise with a standard deviation of $\sigma$.  (without loss of generality as we can reorder the indices).
-The first input is always set to be the target and all other inputs are set to be lower by $s$.
+To compare these networks, I simulate them with an input of $u_i = u - s\del{1 - \krond_{1i}} + \eta_i$, where $u$ is the magnitude of the largest input, $s > 0$ is the target separation, $\krond$ is the Kronecker delta, and $\eta_i$ is Gaussian white noise with a standard deviation of $\sigma$.
+The first input is always set to be the target and all other inputs are set to be lower by $s$ (without loss of generality as we can reorder the indices).
 The rationale behind this is that it should present the hardest case because every choice is close to the largest input.
 As $s \rightarrow 0$, the problem gets more difficult as the separation to the target shrinks.
 Note, that $u$ determines the general baseline of inputs in addition to the value of the largest input.
@@ -115,10 +115,10 @@ As the input lists to the CUE model are about ten to twelve items, I compare the
 To make a fair comparison \num{200}~LIF neurons are used per choice in either model.
 In the IA model this means, that the number of neurons is split between the first and second layer.
 Here I use \num{150} neurons in the first, and \num{50} neurons in the second layer.
-As the first layer is performing the evidence accumulation it needs to more accurate and requires more neural resources.
+As the first layer is performing the evidence accumulation it needs to be more accurate and requires more neural resources.
 Due to the lower number of neurons in the output layer, the decoded output has a higher variance.
-This, however, is not as relevant as variation of the highest output.
-If all other choices do not produce an output, the winning choice can still be clearly identified despite the variance.
+This, however, is not as relevant as variation of index of the highest output.
+If all other choices do not produce an output, the winning choice can still be clearly identified despite the variance decoded output.
 
 Given this basic setup of the comparison, a number of metrics give insight in the performance of the networks.
 First, we want the network to reach a \emph{clear decision} which I define as exactly one output being above a threshold of \num{0.15} during the time interval from \SIrange{1}{2}{\second} simulation time, while all other outputs remain below the threshold.
@@ -157,15 +157,15 @@ The IA network, may produce incorrect outputs despite a clear decision (\cref{fi
     \includegraphics{figures/ia-correct}
     \caption[Proportion of correct trials for the IA network.]{Proportion of correct trials for the IA network. Each plot shows a different combination of input magnitude $u$ and integration time constant $\tau_1$. Each curve shows a different target separation $s$. The optimum is marked with the gray horizontal line. Error bars show \SI{95}{\percent} confidence intervals.}\label{fig:ia-correct}
 \end{figure}
-Again, as the problem gets harder either by decreased target separation or increased noise, the network performance on this metric decreases.
-Note that the feedforward integration time-constant can be increased to integrate evidence over a prolonged time period  to increase performance on this metric (right-most panel).
+Again, as the problem gets more difficult either by decreased target separation or increased noise, the network performance on this metric decreases.
+Note that the IA feedforward integration time-constant can be increased to integrate evidence over a prolonged time period to increase performance on this metric (compare \cref{fig:ia-correct}b and c).
 
 This, however, increases the decision times.
 These tend to be already slower for the IA network than for the LCA network (\cref{fig:ia-time}).
 \begin{figure}
     \centering
     \includegraphics{figures/ia-time}
-    \caption[Mean WTA decisions times.]{Mean decision times for the (a) LCA and (b) IA network. Data for the LCA network is shown as depending on the input magnitude $u$ and is averaged over all noise levels $\sigma$ because noise had a minimal effect on decision times. Data fro the IA network is shown as depending on the noise standard deviation $\sigma$ for two input magnitudes of $u = 1$ (dashed lines) and $u = 0.2$ (solid lines). Target separation is indicated by color. Error bars show \SI{95}{\percent} confidence intervals.}\label{fig:ia-time}
+    \caption[Mean WTA decisions times.]{Mean decision times for the (a) LCA and (b) IA network. Data for the LCA network is shown as depending on the input magnitude $u$ and is averaged over all noise levels $\sigma$ because noise had a minimal effect on decision times. Data from the IA network is shown as depending on the noise standard deviation $\sigma$ for two input magnitudes of $u = 1$ (dashed lines) and $u = 0.2$ (solid lines). Target separation is indicated by color. Error bars show \SI{95}{\percent} confidence intervals.}\label{fig:ia-time}
 \end{figure}
 Additional noise can shorten the decision times in the IA network as it increases the likelihood of an integrator randomly accumulating enough evidence to cross the threshold.
 For the LCA network the noise level only has a minor influence on the decision time and was averaged over in the plot.
@@ -193,7 +193,7 @@ Unfortunately, this also makes the network susceptible to noise.
 The IA network is better for a discrete series of decisions.
 It does not produce a continuous output, but waits until the evidence integration threshold is crossed, at which point the network needs to be inhibited to be reset and obtain another decision.
 While this produces sequential and discrete decisions, it has the advantage that evidence can be accumulated over a longer time frame to average out noise.
-Depending on the choice of the integration time-constant, the IA network either be not as quick or as reliable in identifying the correct winner as the LCA network.
+Depending on the choice of the integration time-constant, the IA network may either be not as quick or as reliable in identifying the correct winner as the LCA network.
 However, it will eventually produces a clear decision that a downstream network can act on (as long as at least one input is strictly positive).
 This can be important in a larger scale model where stalling a decision indefinitely can result in a breakdown of model behaviour.
 Or in other words, sometimes it is better to act on a wrong decision than to not act all.
@@ -301,7 +301,7 @@ It is, however, helpful to have a persistent output of the last recalled item (n
 This allows for a simpler analysis and can provide potential future downstream networks with a longer lasting input.
 To achieve this, the output of the IA network is routed through a gated memory that is only updated when the IA network produces an output.
 As the gated memory stores a Semantic Pointer, a transform matrix needs to be applied to the IA output to project the choice back into the Semantic Pointer space.
-The updating is controlled by inhibiting the memory gate by default and disinhibiting it (by inhbiting the inhibitory population) when the IA network produces output.
+The updating is controlled by inhibiting the memory gate by default and disinhibiting it (by inhbiting the inhibitory population) when the IA network produces an output.
 
 Repetition errors are rarely made in recall experiments.
 Thus, it is necessary to inhibit already recalled items.

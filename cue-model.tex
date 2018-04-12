@@ -76,7 +76,7 @@ Via the $\mtf$ network, the context recalls the associated Semantic Pointer and 
 The current item and position are a modulatory input to the $\mtf$ network to create the association from the current context to these Semantic Pointers.
 
 During the recall phase, recalled items and positions are routed back to the $\mft$ network to recall further items.
-The recalled position, also sets the current position in the \pop{position} network to recall that position's item from the \pop{OSE} short-term memory.
+The recalled position sets the current position in the \pop{position} network to recall that position's item from the \pop{OSE} short-term memory.
 The recall networks also store recently recalled items in neural integrators to prevent repetition errors that happen rarely in human experiments.
 
 
@@ -93,7 +93,9 @@ Parts of the recall networks and the input to them are inhibited.
 During the recall phase, the routing of information depends in part on the type of recall task as shown in \cref{fig:recall-routing}.
 For serial recall, the transmission of the recall network outputs is inhibited because the recalled item is not supposed to be a cue for recalling the next item.
 Instead, the output of the \pop{position} network is used as a cue.
-Also, for this cue to be most effective, the output of the $\mft$ network is routed directly to the $\mtf$ network.
+% Also, for this cue to be most effective, the output of the $\mft$ network is 
+% routed directly to the $\mtf$ network.  (NOTE: Does not seem to be the case in 
+% the final version.)
 During free recall, instead, the output of $\mft$ is used to update the context as usual and the updated context acts as input to the $\mtf$ network.
 \begin{figure}
     \centering
@@ -175,11 +177,11 @@ During free recall, instead, the output of $\mft$ is used to update the context 
 \end{figure}
 
 The main control problem for each item is to regulate the context update because (as discussed in \cref{sec:ctx-update}) this cannot be done based on the context signal alone, but requires an external control signal.
-Before the context can be updated, the new input signal \ctxin\ needs to be present at the network, input which requires a delay after a new list item has been presented.
+Before the context can be updated, the new input signal \ctxin\ needs to be present at the network input, which requires a delay after a new list item has been presented.
 Accordingly, as soon as a new item is presented, the context update should be stopped until that input signal is propagated and the current context has been propagated to the buffer for the old context in the context network.
 To achieve this delay, the Semantic Pointer of the new item is fed into an integrator with a slow synaptic time constant of $\tau = \SI{0.1}{\second}$ (\cref{fig:simth-ctrl}).
 Between the input Semantic Pointer and the output of the integrator a dot product is calculated that slowly increases towards one.
-The threshold obtained with a thresholding ensemble gives the required control signal for the presentation phase.
+The threshold, obtained with a thresholding ensemble, gives the required control signal for the presentation phase.
 During the recall phase, the logic is inverted.
 That enables an immediate update of the current context based on the position provided by the \pop{position} network and last recalled item.
 Once an item has been recalled, it is used like a newly presented item and fed to the integrator and dot product.
@@ -258,14 +260,14 @@ The context network is provided with a signal to update the current context to t
 Also, for serial recall, the position network is provided with a signal to increment the current position to attempt recalling the next serial position in the list.
 
 
-\section{Extension to the Hebb repetition effect}
+\section{Extension to the Hebb repetition effect}\label{sec:hebbext}
 The CUE model as presented so far is unable to reproduce the Hebb repetition effect.
 Two different extensions, but both involving an additional type of learned, weight-based associative memory, make it possible to reproduce the effect.
 First, it is possible to learn the direct association between Semantic Pointers for positions and the presented items with the AML.
 The associations for the repeated list become stronger than the associations for the other lists over time.
 This will bias the recall towards items in that repeated list.
 
-A second alternative, is to learn the association from $\tcmitem_i \circledast \vc p_i$ to $\tcmitem_{i+1}$ (\cref{fig:hebb-forward}).
+A second alternative, is to learn the association from $\tcmitem_i \circledast \vc p_i$ to $\tcmitem_{i+1}$, where $\tcmitem_i$ and $\vc p_i$ are the $i$-th list item and position vector (\cref{fig:hebb-forward}).
 \begin{figure}
     \centering
     \begin{tikzpicture}[nef]
@@ -316,7 +318,7 @@ When the stimulus switches, the first memory network still stores the previous s
 Once the update finished, the gate of the second memory network gets inhibited while the first memory network is allowed to receive the current item as input.
 The required control signal \pop{new item} is provided by the rectified dot product in \cref{fig:simth-ctrl}.
 To prevent premature overwriting of the first memorized item, a secondary dot product inhibiting that gate is used.
-The Semantic Pointer for previous position can be trivially decoded from the position network.
+The Semantic Pointer for the previous position can be trivially decoded from the position network.
 
 Furthermore, a weight-decay for the $\mtf$ and $\mft$ association matrices needs to be introduced for either approach.
 This prevents the weights in these matrices from growing too large which were to induce saturation effects in other parts of the model.
@@ -325,4 +327,4 @@ It also prevents previously learned associations to provide noise overpowering t
 These extensions should have minimal influence on the single-trial CUE model.
 The additional learned association matrices use a learning rate much lower than the $\mtf$ and $\mft$ matrics.
 Thus, the single-trial performance is dominated by those latter matrices.
-The added decay requires adjustment of the recall parameters, but will also play a more significant role on longer timescales, i.e., when new associations are learned after a recall phase, but not when items a presented in quick succession.
+The added decay requires adjustment of the recall parameters, but will also play a more significant role on longer timescales, i.e., when new associations are learned after a recall phase, but not when items are presented in quick succession.

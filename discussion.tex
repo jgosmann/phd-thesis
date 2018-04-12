@@ -1,7 +1,7 @@
 \chapter{Discussion}
 In this thesis, I presented the context-unified encoding (CUE) model.
 To my knowledge, it is the first spiking neural network model of human memory that integrates activity-based short-term memory and weight-based long-term memory.
-The same model matches a variety of behavioural data from serial and free recall experiments, but in contrast to previous models provides a neural mechanistic explanation.
+The same model matches a variety of behavioural data from serial and free recall experiments, but in contrast to previous models provides a hypothesis of a neural mechanistic explanation.
 
 The CUE model exhibits many of the hallmark findings in memory research.
 It shows the primacy and recency effect in immediate serial and free recall.
@@ -19,9 +19,10 @@ While in that publication the TCM prediction is closer to the experimental data,
 This makes it likely that the difference is not based on pure statistical chance, but that both the TCM and CUE model do not capture an essential aspect of memory, potentially related to the evolution of the context signal, that leads to reduced forward bias in delayed free recall.
 It remains for future work, to precisely identify the reason for this mismatch and to extend the model.
 
-Extending CUE model with slow learning of either direct position to item associations or forward associations, allowed to reproduce the Hebb repetition effect.
-The involvement of such secondary learning should be considered a model prediction as the effect could not be obtained without this extension.
-Neither the OSE, nor the TCM model attempted to match this data.
+Extending CUE model with slow learning of either direct position to item associations or forward associations, allowed to reproduce the Hebb repetition effect qualitatively.
+The involvement of such secondary learning should be considered a model prediction, as the effect could not be obtained without this extension.
+Modelling the Hebb repetition effect also extends the model to effects across multiple trials of memory experiments.
+This is done by only few memory models, in particular, neither the OSE, nor the TCM model attempted to match this such data.
 
 As opposed to pure math models, the implementation as a spiking neural network allows the comparison and validation of the model against data from neural recordings in addition to the behavioural data.
 In \cref{sec:aml-neural}, it was demonstrated that the proposed mechanism of association learning is able to explain neural data.
@@ -42,15 +43,16 @@ Both account for the fact that the recall network was restricted to recalling th
 For free recall experiments, one additional parameter $\psi$ is added that determines the probability of using the serial recall strategy even for free recall.
 (For serial recall, a fixed values of $\psi = 1$ is implied as no free recall is allowed.)
 Furthermore, in experiments with delay periods, a distractor rate $\drate$ needs to be set.
-Lastly, to simulate the effect of scopolamine the AML learning rate $\eta$ was adjusted.
+To simulate the effect of scopolamine the AML learning rate $\eta$ was adjusted.
 However, in non-scopolamine conditions, it was treated as a fixed parameter and set to a value high enough to learn associations until the threshold for inhibition was achieved within the presentation duration.
 Even higher values would not have any effect as long as it does not largely exceed the inverse of the synaptic time delay of the inhibition.
+Lastly, only two additional parameters (weight decay rate and a separate learning rate) were introduced by the model extension to the Hebb repetition effect.
 
 While few free parameters are desirable with respect to model parsimony, they should also be assigned similar values to model-related experimental conditions.
 This is mostly the case for the CUE model.
 The bias of the null choice in recall ranges from \numrange{0.03}{0.04} and values get monotonously smaller as the task difficulty increases with additional delays.
 This corresponds to plausible longer recall attempts in more difficult experimental conditions.
-Only a small difference is also observed in the distractor rates (\numrange{0.03}{0.04}) and the probability of using a serial recall strategy (zero for delayed recall and \num{0.1} in all other free recall conditions).
+Only a small difference is also observed in the distractor rates (\numrange{0.3}{0.4}) and the probability of using a serial recall strategy (zero for delayed recall and \num{0.1} in all other free recall conditions).
 However, the noise standard deviation $\recnoise$ in recall differs by a factor of more than \num{1.5} without a clear relation to the experimental condition.
 It is hard to hypothesize potential reasons for this difference as the parameter is accounting for things not explicitly modeled in recall.
 
@@ -185,11 +187,11 @@ The amplification of the noise standard deviation is given by \textcite{shankar2
     g_{\eta}(s_i, k) = \frac{\sqrt{2^k} s_i^{k+1}}{\delta_{s_i}^k k!}
 \end{equation}
 where $\delta_{s_i} = s_i - s_{i - 1}$. 
-When following their proposal for optimal spacing of the $s_i$ by picking $t_i^* = {(1 + \nu)}^{i - 1} t_1^*$ for some constant $\nu > 0$, it follows that $\delta_{s_i} / s_i = \nu$ and the formula can be simplified to
+When following their proposal for optimal spacing of the $s_i$ by picking $t_i^* = (1 + \nu)^{i - 1} t_1^*$ for some constant $\nu > 0$, it follows that $\delta_{s_i} / s_i = \nu$ and the formula can be simplified to
 \begin{equation}
     g_{\eta}(s_i, k) = \frac{\sqrt{2^k} s_i}{\nu^k k!} = - \frac{\sqrt{2^k}}{\nu^k (k-1)! t_i^*} \text{.}
 \end{equation}
-Note that, this amplification is not independent of $t_i^* = -k/s_i$, but increases as $t^* \rightarrow 0$.
+Note that this amplification is not independent of $t_i^* = -k/s_i$, but increases as $t^* \rightarrow 0$.
 This can be seen easily when adding some Gaussian noise to all $c_i$ before the reconstruction as done in \cref{fig:fuzzy-mem-noise-example}a.
 It also refutes that ``the signal to noise ratio will remain constant over all timescales'' \parencite{shankar2013}; a statement based on the assumption of a perfect delta impulse.
 However, as stated above, NEF ensembles should use a radius of $\radius = s_i^{-1}$ which scales the noise by the same factor and thus indeed leads to a constant amplification of the noise across timescales (\cref{fig:fuzzy-mem-noise-example}b) given by
@@ -226,10 +228,10 @@ Assuming that the fuzzy temporal memory is to be used for the TCM context signal
 Furthermore, $N = 50$ and $\dims = 64$ can be used as conservative estimates.
 Using \num{50}~neurons with maximum firing rates between \SIrange{200}{400}{\second^{-1}} is sufficient to read out the represented value, but not very precisely.
 This default range of firing rates is much higher than firing rates typically observed in vivo.
-Thus the actual required number of neurons can be expected to be higher.
+Thus, the actual required number of neurons can be expected to be higher.
 A dimensionality of $\dims = 64$ is also on the lower end to be able to fit sufficiently many almost orthogonal vectors into the space.
-The CUE model used four times as much $\dims = 256$ dimensions.
-Ultimately, the choice of $N$ and $\dims$ has only a minor influence on the results as they are just linear factors while the required number of neurons grows exponentially for $t^*_1, k \rightarrow \infty$.
+The CUE model uses four times as much, $\dims = 256$, dimensions.
+Ultimately, the choice of $N$ and $\dims$ has only a minor influence on the results as they are just linear factors while the required number of neurons grows exponentially for $t^*_1,\ k \rightarrow \infty$.
 The results for this choice of parameter values is shown in \cref{fig:fuzzy-mem-n-neurons}.
 For most parameter combinations, the number of about $\num{13e6}$ neurons in the entorhinal cortex \parencite{west1998}, assumed to be the locus of the CUE/TCM context signal, and even the number of about \num{86e9} neurons in the human brain \parencite{azevedo2009} is far exceeded.
 For an implementation with a realistic limit on the neuron number, $t^*_1$, but also $k$, needs to be sufficiently small.
@@ -247,7 +249,7 @@ In conclusion, the fuzzy temporal memory has only a small parameter space that a
 This parameters space suffers from large relative errors unrelated to noise in the approximation of the inverse Laplace transform and discretized derivative.
 Currently, it is not clear whether these non-noise related errors are sufficiently small to allow the fuzzy temporal memory to be used as a context signal in the CUE model.
 At the same time it would require an increased number of neurons compared to the current implementation as each dimensions requires a set of leaky integrators, i.e.\ additional values have to be stored for each dimensions.
-In comparison, the context network for 256~dimensional vectors uses only \num{51225} neurons, and even when adjusting by a factor of \num{10}, this is many fewer neurons than found in the entorhinal cortex.
+In comparison, the context network for \num{256}~dimensional vectors uses only \num{51225} neurons, and even when adjusting by a factor of \num{10}, this is many fewer neurons than found in the entorhinal cortex.
 
 
 \section{Advances in large-scale cognitive modeling}
@@ -258,4 +260,4 @@ A similar benefit is the improved product network \parencite{gosmann2015-1}, as 
 Also a significant improvement to simulation times was achieved by the implementation of an optimization procedure in the Nengo simulator \parencite{gosmann2017}.
 \Cref{sec:spa} described a new method for binding Semantic Pointers, the vector-derived transformation binding.
 Even though it has not been used in the CUE model yet, it might provide a more precise binding and unbinding.
-Finally, the independent accumulator network described in \cref{sec:ia} might not only be useful in recall, but for other large-scale models require clear decisions as part of a cognitive process.
+Finally, the independent accumulator network described in \cref{sec:ia} might not only be useful in recall, but for other large-scale models requiring clear decisions as part of a cognitive process.

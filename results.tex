@@ -1,8 +1,9 @@
 \chapter{Results}
 To validate the CUE model, I matched it against human experimental data of serial and free recall experiments.
-The same model architecture was used in all of these simulations with only small changes in some parameter values across experimental conditions.
+The same model architecture was used in all of these simulations, except for the Hebb repetition effect where the extensions discussed in the previous sections have been used.
+Parameter values were kept constant across conditions as much as possible, but some small changes were necessary in some instances.
 The simulations were designed to replicate the experimental paradigms as closely as possible.
-In particular, the list length, item presentation times, delay times, and recall times were matched.
+In particular, the list length, item presentation times, delay times, and recall times were matched to the actual experiments with human subjects.
 
 To model the effect of distractor tasks during delay phases, non-list items where presented a rate of $\drate$ items per second.
 These were allowed to influence the STM component, but learning in the LTM component was disabled as these items were irrelevant to the main memorization task.
@@ -15,9 +16,13 @@ The values used for free parameters in the different settings are summarized in 
 In addition to these, the context drift parameter was set to $\tcmbeta = 0.62676$ and the OSE short term decay was set to $\osestmdecay = 0.9775$ in all simulations.
 These are the values reported as best fitting by \textcite{Sederberg2008} and \textcite{Choo2010} respectively.
 Some other parameters, like the OSE scaling $\oseepisscale$ for episodic memory and the TCM ratio $\gamma$ for updating $\mft$, are not present in the CUE model.
+The extensions for the Hebb repetition effect introduced two additional parameters.
+The learning rate for the direct or forward associations was set \num{0.05} or \num{0.25} respectively.
+The decay rate for the $\mtf$ and $\mft$ weights was set to \num{0.999973176} which corresponds to a decay to about $0.2$ of the original weight over a period of \SI{60}{\second} with a simulation timestep of \SI{1}{\milli\second}.
+This decay required to adjust the bias of the null choice to $\minev = 0.015$.
 \begin{table}
     \centering
-    \caption[Summary of free parameter values.]{Summary of free parameters values for distractor rate $\drate$, probability $\psi$ of using the serial recall strategy in free recall, bias of the null choice $\minev$ in recall, standard deviation of the input noise $\recnoise$ in recall, and the AML learning rate $\eta$. See text for discussion of the parameter choices.}\label{tbl:params}
+    \caption[Summary of free parameter values.]{Summary of free parameters values for distractor rate $\drate$, probability $\psi$ of using the serial recall strategy, bias of the null choice $\minev$ in recall, standard deviation of the input noise $\recnoise$ in recall, and the AML learning rate $\eta$ for $\mtf$ and $\mft$. See text for discussion of the parameter choices and two additional parameters in the Hebb repetition condition not listed in the table.}\label{tbl:params}
     \begin{tabular}{lSSSSS}
         \toprule
         Experimental condition & $\drate / \si{\second^{-1}}$ & $\psi$ & $\minev$ & $\recnoise$ & $\eta$ \\
@@ -59,7 +64,7 @@ This might be the case either because the input to the recall network might need
 \begin{figure}
     \centering
     \includegraphics{figures/results/no_xtm}
-    \caption[Serial position curves with disabled STM/LTM.]{Serial position curves when either (a) STM recall or (b) LTM recall is disabled in the model.}\label{fig:results-no_xtm}
+    \caption[Serial position curves with disabled STM/LTM.]{Serial position curves when either (a) STM recall or (b) LTM recall is disabled in the model. The error bars show \SI{95}{\percent} confidence intervals.}\label{fig:results-no_xtm}
 \end{figure}
 
 
@@ -73,7 +78,7 @@ After the presentation phase, a recall phase of \SI{45}{\second} followed immedi
 This protocol is changed to a presentation rate of one item every \SI{1.2}{\second} and a recall phase of \SI{60}{\second} in the delayed and continuous distractor conditions.
 In both of these latter conditions, the presentation and recall phase are separated by a \SI{16}{\second} distractor task.
 In addition, in the continuous distractor conditions such a \SI{16}{\second} distractor phase is inserted in between every pair of items.
-A list length of 12 items is used in all conditions.
+A list length of twelve items is used in all conditions.
 The experimental data was obtained from \num{65}~subjects presented with \num{25}~lists each for the immediate recall condition, and from \num{16}~subjects presented with \num{15}~lists each for the remaining conditions.
 
 Four resulting metrics from the model and experimental data are shown in \cref{fig:results-free}.
@@ -115,12 +120,12 @@ However, scopolamine administered in between the presentation and recall phase d
 This indicates that scopolamine prevents encoding of new memories in LTM, but does not prevent recall of already encoded memories.
 More precisely, scopolamine has been shown to attenuate long-term potentiation in hippocampus \parencite{leung2003,ito1988,hirotsu1989-1}.
 
-To model the effect of scopolamine on LTP, A adjusted the AML learning rate for learning the $\mtf$ and $\mft$ matrices.
+To model the effect of scopolamine on LTP, I adjusted the AML learning rate for learning the $\mtf$ and $\mft$ matrices.
 With this approach the experimental results obtained by \textcite{ghoneim1975} from \num{36}~subjects (\num{8} trials each) are reproduced.
 I focus here on the immediate recall experiment with \num{16}~item word lists.
 The simulation protocols were again modeled to replicate the experimental settings, with a presentation time of two seconds per item.
 To obtain a similar effect, the normal AML learning rate was used before the time point of scopolamine injection and in placebo trials.
-After the time point of scopolamine injection it was scaled set to zero.
+After the time point of scopolamine injection it was set to \num{0.1}.
 
 \Textcite{ghoneim1975} reported a recall accuracy of \SI{77.92(494)}{\percent} (mean $\smash{\pm}$ standard error) in the placebo condition and a recall accuracy of \SI{31.67(228)}{\percent} in the scopolamine condition.
 The model produces recall accuracies of \SI{74.18(108)}{\percent} and
@@ -130,12 +135,13 @@ Moreover, the serial position curve for the scopolamine condition shows no prima
 \begin{figure}
     \centering
     \includegraphics{figures/results/scopolamine-serial}
-    \caption{Serial position curve with a scopolamine injection predicted by the CUE model.}\label{fig:scopolamine-serial}
+    \caption[Serial position curve with a scopolamine injection predicted by the CUE model.]{Serial position curve with a scopolamine injection predicted by the CUE model. The error bars show \SI{95}{\percent} confidence intervals.}\label{fig:scopolamine-serial}
 \end{figure} 
 
 
 \section{Hebb repetition effect}
-The simulations for the Hebb repetition effect where modelled after \textcite{Hebb1961}.
+To model the Hebb repetition effect the extensions described in \cref{sec:hebbext} where required.
+The simulations for the effect were modelled after \textcite{Hebb1961}.
 A total of \num{25} model instances, equivalent to the \num{25} experimental subjects, were run for \num{24} consecutive trials each.
 Each trial consisted out of a nine item list (of the digits from one to nine in random order) and starting with the third trial every third list was identical.
 
@@ -143,9 +149,9 @@ While the model performance seems to slightly worse overall, the qualitive Hebb 
 \begin{figure}
     \centering
     \includegraphics{figures/hebb}
-    \caption[Hebb repetition effect.]{Experimental and model data showing the Hebb repetition effect. Nine item lists were presented and one list was repeated on every third trial. From left to right: experimental data \parencite{Hebb1961}, model data with direct learning of position to item associations, and model data with learning of forward associations. The error bars denote \SI{95}{\percent} confidence intervals.}\label{fig:hebb}
+    \caption[Hebb repetition effect.]{Experimental and model data showing the Hebb repetition effect. Nine item lists were presented and one list was repeated on every third trial. From left to right: experimental data \parencite{Hebb1961}, model data with direct learning of position to item associations, and model data with learning of forward associations. The error bars show \SI{95}{\percent} confidence intervals (no confidence intervals were provided for the experimental data).}\label{fig:hebb}
 \end{figure}
-In both, the experimental and all sets of model data, the number of correct recalls increases by about three items on the repeated list.
+In both, the experimental and all sets of model data, the number of correct recalls increases by about two to three items on the repeated list.
 
 
 \section{Memory encoding}

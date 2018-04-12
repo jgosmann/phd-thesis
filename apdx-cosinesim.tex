@@ -25,10 +25,10 @@ The PDF of this distribution is given by \textcite{harman2010,gosmann216}
     p_{\mathcal{SB}}(x; n, m) = \frac{2}{B\!\del{\frac{n}{2}, \frac{m}{2}}} \del{x^2}^{(m-1)/2} \del{1 - x^2}^{n/2 - 1},\quad x \in [-1, 1] \text{.}\label{eqn:psb}
 \end{equation}
 When determining the cosine similarity of two uniformly distributed random vectors $\vc a$ and $\vc b$, we are free to chose any set of basis vectors without loss of generality.
-Let us chose the basis such that $\vc a = (a_1, 0, 0, \dots)\Tr$ is aligned with the first vector of the standard basis.
+Let us chose the basis such that $\vc a = (a_1, 0, 0, \dots)\!\Tr$ is aligned with the first vector of the standard basis.
 The cosine similarity then becomes
 \begin{equation}
-    \cos(\vc a \angle \vc b) = \frac{\langle \vc a, \vc b \rangle}{\norm{\vc a} \cdot \norm{\vc b}} = \frac{a_1 \cdot b_1}{a_1 \cdot \norm{\vc b}} = \frac{b_1}{\norm{\vc b}} \text{.}
+    \cos(\vc a \angle \vc b) = \frac{\langle \vc a, \vc b \rangle}{\big\|\vc a\big\| \cdot \big\|\vc b\big\|} = \frac{a_1 \cdot b_1}{a_1 \cdot \big\|\vc b\big\|} = \frac{b_1}{\big\|\vc b\big\|} \text{.}
 \end{equation}
 The absolute value of this is equal to the length of a one-component subvector of the unit-vector $\vc b/\norm{\vc b}$.
 Thus, we can use \cref{eqn:psb} and divide it by two to account for the symmetry of the absolute value to determine the PDF of the cosine similarity as
