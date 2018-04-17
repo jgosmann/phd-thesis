@@ -311,7 +311,7 @@ A second alternative, is to learn the association from $\tcmitem_i \circledast \
 \end{figure}
 This is essentially learning of foward associations.
 The binding to the position vector disambiguates between lists as $\tcmitem_i \circledast \vc p_i$ is only the same vector if the same item is presented in the same position.
-In the recall phase, a previously recalled item and its serial position can be used as cue to support the recall of the next item with this additional learned association matrix.
+In the recall phase, a previously recalled item and its serial position can be used as a cue to support the recall of the next item with this additional learned association matrix.
 Besides the networks for binding and learning the associations, the previous item needs to be stored.
 This is done with two chained gated memory networks.
 When the stimulus switches, the first memory network still stores the previous stimulus and transmits it to the second memory network.
@@ -321,8 +321,8 @@ To prevent premature overwriting of the first memorized item, a secondary dot pr
 The Semantic Pointer for the previous position can be trivially decoded from the position network.
 
 Furthermore, a weight-decay for the $\mtf$ and $\mft$ association matrices needs to be introduced for either approach.
-This prevents the weights in these matrices from growing too large which were to induce saturation effects in other parts of the model.
-It also prevents previously learned associations to provide noise overpowering the associations from the current list.
+This prevents the weights in these matrices from growing too large which would induce saturation effects in other parts of the model.
+It also prevents previously learned associations from providing noise overpowering the associations from the current list.
 
 These extensions should have minimal influence on the single-trial CUE model.
 The additional learned association matrices use a learning rate much lower than the $\mtf$ and $\mft$ matrics.

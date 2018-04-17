@@ -19,10 +19,10 @@ While in that publication the TCM prediction is closer to the experimental data,
 This makes it likely that the difference is not based on pure statistical chance, but that both the TCM and CUE model do not capture an essential aspect of memory, potentially related to the evolution of the context signal, that leads to reduced forward bias in delayed free recall.
 It remains for future work, to precisely identify the reason for this mismatch and to extend the model.
 
-Extending CUE model with slow learning of either direct position to item associations or forward associations, allowed to reproduce the Hebb repetition effect qualitatively.
+Extending the CUE model with slow learning of either direct position to item associations or forward associations allowed the reproduction of the Hebb repetition effect qualitatively.
 The involvement of such secondary learning should be considered a model prediction, as the effect could not be obtained without this extension.
 Modelling the Hebb repetition effect also extends the model to effects across multiple trials of memory experiments.
-This is done by only few memory models, in particular, neither the OSE, nor the TCM model attempted to match this such data.
+This is done by only few memory models, in particular, neither the OSE, nor the TCM model attempted to match this kind of data.
 
 As opposed to pure math models, the implementation as a spiking neural network allows the comparison and validation of the model against data from neural recordings in addition to the behavioural data.
 In \cref{sec:aml-neural}, it was demonstrated that the proposed mechanism of association learning is able to explain neural data.
@@ -87,12 +87,12 @@ However, I also provided evidence that a symmetric decoder matrix might be learn
 Moreover, using the AML for learning simple pairwise associations, allows the reproduction of changes in firing rates that have been observed in recordings from human hippocampus.
 These results are not only of interest for the CUE and TCM models, but many other cognitive models that assume the storage of associations in a similar association matrix without further explanation of how these associations are learned.
 
-One potential criticism of the CUE model could target the way of position counting (\cref{sec:posnet}).
+One potential criticism of the CUE model could target the method of position counting (\cref{sec:posnet}).
 Only a limited number of positions can be represented, even though this number can be configured as large as permitted by neural resources.
 If the number of positions is exceeded, the representation can be made to wrap around back to the first position.
 Thus, the model does not need to fail catastrophically, but a specific pattern of recall errors could be introduced by encoding different sequences of items to the same positions.
-However, an experimental test of such predictions will be hard, as long lists are likely required, and thus for most position no item at is recalled.
-It is worth to highlight that the position counting network in the CUE model can be replaced easily to test other hypotheses.
+However, an experimental test of such predictions will be hard, as long lists are likely required, and thus for most positions no item is recalled above chance.
+It is worth highlighting that the position counting network in the CUE model can be replaced easily to test other hypotheses.
 But it seems unlikely that the limited number of positions can be eliminated completely, because there will always be a limited number of almost orthogonal Semantic Pointers that fit into a vector space of given dimensionality.
 
 

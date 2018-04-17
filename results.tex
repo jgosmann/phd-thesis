@@ -1,7 +1,7 @@
 \chapter{Results}
 To validate the CUE model, I matched it against human experimental data of serial and free recall experiments.
 The same model architecture was used in all of these simulations, except for the Hebb repetition effect where the extensions discussed in the previous sections have been used.
-Parameter values were kept constant across conditions as much as possible, but some small changes were necessary in some instances.
+Parameter values were kept constant across conditions as much as possible, but some small changes were necessary in some instances as noted when results are discussed.
 The simulations were designed to replicate the experimental paradigms as closely as possible.
 In particular, the list length, item presentation times, delay times, and recall times were matched to the actual experiments with human subjects.
 
@@ -19,7 +19,7 @@ Some other parameters, like the OSE scaling $\oseepisscale$ for episodic memory 
 The extensions for the Hebb repetition effect introduced two additional parameters.
 The learning rate for the direct or forward associations was set \num{0.05} or \num{0.25} respectively.
 The decay rate for the $\mtf$ and $\mft$ weights was set to \num{0.999973176} which corresponds to a decay to about $0.2$ of the original weight over a period of \SI{60}{\second} with a simulation timestep of \SI{1}{\milli\second}.
-This decay required to adjust the bias of the null choice to $\minev = 0.015$.
+This decay required adjusting the bias of the null choice to $\minev = 0.015$.
 \begin{table}
     \centering
     \caption[Summary of free parameter values.]{Summary of free parameters values for distractor rate $\drate$, probability $\psi$ of using the serial recall strategy, bias of the null choice $\minev$ in recall, standard deviation of the input noise $\recnoise$ in recall, and the AML learning rate $\eta$ for $\mtf$ and $\mft$. See text for discussion of the parameter choices and two additional parameters in the Hebb repetition condition not listed in the table.}\label{tbl:params}
@@ -140,10 +140,10 @@ Moreover, the serial position curve for the scopolamine condition shows no prima
 
 
 \section{Hebb repetition effect}
-To model the Hebb repetition effect the extensions described in \cref{sec:hebbext} where required.
+To model the Hebb repetition effect, the extensions described in \cref{sec:hebbext} where required.
 The simulations for the effect were modelled after \textcite{Hebb1961}.
 A total of \num{25} model instances, equivalent to the \num{25} experimental subjects, were run for \num{24} consecutive trials each.
-Each trial consisted out of a nine item list (of the digits from one to nine in random order) and starting with the third trial every third list was identical.
+Each trial consisted of a nine item list (of the digits from one to nine in random order) and starting with the third trial every third list was identical.
 
 While the model performance seems to slightly worse overall, the qualitive Hebb repetititon effect is reproduced (\cref{fig:hebb}).
 \begin{figure}
@@ -151,7 +151,7 @@ While the model performance seems to slightly worse overall, the qualitive Hebb 
     \includegraphics{figures/hebb}
     \caption[Hebb repetition effect.]{Experimental and model data showing the Hebb repetition effect. Nine item lists were presented and one list was repeated on every third trial. From left to right: experimental data \parencite{Hebb1961}, model data with direct learning of position to item associations, and model data with learning of forward associations. The error bars show \SI{95}{\percent} confidence intervals (no confidence intervals were provided for the experimental data).}\label{fig:hebb}
 \end{figure}
-In both, the experimental and all sets of model data, the number of correct recalls increases by about two to three items on the repeated list.
+In both the experimental and all sets of model data, the number of correct recalls increases by about two to three items on the repeated list.
 
 
 \section{Memory encoding}
