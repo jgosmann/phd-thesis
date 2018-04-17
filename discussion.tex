@@ -9,6 +9,7 @@ These effects get attenuated in delayed free recall, but in continuous distracto
 Furthermore, the model was found to make very few transposition errors in serial recall, and if it does so nearby items are transposed.
 In the free recall conditions, the model tends to start with items at the end of the list, recall nearby items together, and favour recall in forward direction.
 Introducing delays and distractors attenuates these effects.
+The inter-response intervals increase with output position in immediate free recall.
 All of these observations match the findings from experiments with human subjects.
 
 Not only are these qualitative effects reproduced, but also the quantitative match to the data is very good.
@@ -18,6 +19,8 @@ Interestingly, this is also highlighted as the least well matched aspect in the 
 While in that publication the TCM prediction is closer to the experimental data, the TCM prediction from a more recent paper \parencite{Sederberg2008} is closer to the CUE model prediction.
 This makes it likely that the difference is not based on pure statistical chance, but that both the TCM and CUE model do not capture an essential aspect of memory, potentially related to the evolution of the context signal, that leads to reduced forward bias in delayed free recall.
 It remains for future work, to precisely identify the reason for this mismatch and to extend the model.
+Despite \textcite{farrell2008-1} criticizing the TCM for being unable to simultaneously match the probability of first recall and CRP curves, \parencite[but see][]{howard2009}, the CUE model matches both forms of the data simultaneously.
+It also uses contextual evolution during the recall process in all simulations addressing another criticism.
 
 Extending the CUE model with slow learning of either direct position to item associations or forward associations allowed the reproduction of the Hebb repetition effect qualitatively.
 The involvement of such secondary learning should be considered a model prediction, as the effect could not be obtained without this extension.
@@ -30,7 +33,7 @@ Unfortunately, neural data recorded from humans in memory experiments is still s
 Nevertheless, implementing models with spiking neurons is worthwhile for several other reasons, despite the more complicated model construction and increased simulations times.
 Drug effects, like scopolamine, can be more readily modelled, as was done with CUE model.
 Also a higher degree of biological plausibility is achieved as one is forced to consider, for example, spiking noise and synaptic time constants.
-This prevents common assumptions like arbitrary precision or perfectly orthogonal vectors made in many math models.
+This prevents common assumptions like arbitrary precision or perfectly orthogonal vectors made in many math models, and forces the consideration of dynamics.
 
 The spiking neural implementation also helps to constrain many parameter values.
 Synaptic time constants, membrane time constants, and similar cellular physical quantities can be set to biologically plausible values reported in experimental findings.
@@ -72,7 +75,8 @@ In particular, it also shows that certain assumptions, like perfectly orthogonal
 In addition, the modified TCM has been extended with a short-term memory component in the CUE model.
 While the TCM has been posited as a single-store model, this has been criticized \parencite{Davelaar2008}.
 The CUE model demonstrates that treating the TCM as part of a multi-store model is not unreasonable, provides good matches to the free recall data, and in addition allows matches to serial recall data.
-Finally, the recall process in the TCM was not modeled in a particularly biologically plausible way and has been replaced with a more plausible spiking neural mechanism (\cref{sec:recall}).
+Finally, the recall process in the TCM has been replaced with a more plausible spiking neural mechanism (\cref{sec:recall}) that qualitatively reproduces the increasing inter-item recall intervals in free recall with output position.
+Existing versions of the TCM used either the much more abstract Luce's choice rule with unclear biological plausibility, or competitive queueing mechanisms that cannot explain the distribution of the inter-item recall intervals \parencite{davelaar2007}.
 
 In the broader context of memory models, the CUE model is unique as providing a low-level spiking network implementation, but matching high-level behavioural data.
 This includes the recall process that is not explicitly modeled in many other models.
