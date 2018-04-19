@@ -9,7 +9,6 @@ These effects get attenuated in delayed free recall, but in continuous distracto
 Furthermore, the model was found to make very few transposition errors in serial recall, and if it does so nearby items are transposed.
 In the free recall conditions, the model tends to start with items at the end of the list, recall nearby items together, and favour recall in forward direction.
 Introducing delays and distractors attenuates these effects.
-The inter-response intervals increase with output position in immediate free recall.
 All of these observations match the findings from experiments with human subjects.
 
 Not only are these qualitative effects reproduced, but also the quantitative match to the data is very good.
@@ -75,8 +74,8 @@ In particular, it also shows that certain assumptions, like perfectly orthogonal
 In addition, the modified TCM has been extended with a short-term memory component in the CUE model.
 While the TCM has been posited as a single-store model, this has been criticized \parencite{Davelaar2008}.
 The CUE model demonstrates that treating the TCM as part of a multi-store model is not unreasonable, provides good matches to the free recall data, and in addition allows matches to serial recall data.
-Finally, the recall process in the TCM has been replaced with a more plausible spiking neural mechanism (\cref{sec:recall}) that qualitatively reproduces the increasing inter-item recall intervals in free recall with output position.
-Existing versions of the TCM used either the much more abstract Luce's choice rule with unclear biological plausibility, or competitive queueing mechanisms that cannot explain the distribution of the inter-item recall intervals \parencite{davelaar2007}.
+Finally, the recall process in the TCM has been replaced with a more plausible spiking neural mechanism (\cref{sec:recall}).
+Existing versions of the TCM used either the much more abstract Luce's choice rule with unclear biological plausibility, or a competitive queueing mechanism that has been shown to be not in accordance with experimental data \parencite{davelaar2007}.
 
 In the broader context of memory models, the CUE model is unique as providing a low-level spiking network implementation, but matching high-level behavioural data.
 This includes the recall process that is not explicitly modeled in many other models.
@@ -209,7 +208,7 @@ This increase in timescale is given by
 \begin{equation}
     \tau_i(\nu) = - {(1 + \nu)}^k t^*_i \label{eqn:fuzzymem-ts}
 \end{equation}
-and is caused by the discrete approximation of the derivative that relies on $t^*_{i - k}$ to $t^*_{i + k}$ for the reconstruction of $\hat{f}_t(t + t^*_i)$ and is dominated by $t^*_{i + k}$ (\cref{apdx:fuzzymem-derivative}).
+and is caused by the discrete approximation of the derivative that relies on unequally spaced $t^*_{i - k}$ to $t^*_{i + k}$ for the reconstruction of $\hat{f}_t(t + t^*_i)$ and is dominated by $t^*_{i + k}$ (\cref{apdx:fuzzymem-derivative}).
 \begin{figure}
     \centering
     \includegraphics{figures/fuzzy-mem-noise-example}
@@ -250,10 +249,10 @@ The error of the approximate inversion of the Laplace transform with Post's form
 \Textcite{shankar2013} also comment themselves that $t^*_1$ needs to be kept sufficiently far from zero as it introduces a relative error in the order of $\bO\big(k^3\nu^2/96 t^{*2}_1\big)$ in the construction of the activity of $c_i$.
 
 In conclusion, the fuzzy temporal memory has only a small parameter space that allows an implementation with feasible neural resources due to noise sensitivity.
-This parameters space suffers from large relative errors unrelated to noise in the approximation of the inverse Laplace transform and discretized derivative.
+This parameters space suffers from large relative errors unrelated to noise in the approximation of the inverse Laplace transform with Post's formula and discretized derivative.
 Currently, it is not clear whether these non-noise related errors are sufficiently small to allow the fuzzy temporal memory to be used as a context signal in the CUE model.
-At the same time it would require an increased number of neurons compared to the current implementation as each dimensions requires a set of leaky integrators, i.e.\ additional values have to be stored for each dimensions.
-In comparison, the context network for \num{256}~dimensional vectors uses only \num{51225} neurons, and even when adjusting by a factor of \num{10}, this is many fewer neurons than found in the entorhinal cortex.
+At the same time it would require an increased number of neurons compared to the current implementation as each dimension requires a set of leaky integrators, i.e.\ additional values have to be stored for each dimension.
+In comparison, the context network for \num{256}~dimensional vectors uses only \num{51225} neurons, and even when adjusting by a factor of \num{10}, this is many fewer neurons than found in the human entorhinal cortex.
 
 
 \section{Advances in large-scale cognitive modeling}
