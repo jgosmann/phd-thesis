@@ -17,6 +17,7 @@
 \usepackage{commath}
 \usepackage[backend=biber,style=authoryear,isbn=false,date=year,uniquename=init,giveninits]{biblatex}
 \usepackage{graphicx}
+\usepackage{scrlayer-scrpage}
 \usepackage{siunitx}
 \usepackage{subcaption}
 \usepackage{tikz}
@@ -99,6 +100,9 @@
 \makeatletter
 \renewcommand{\@pnumwidth}{1.9em}
 \makeatother
+
+\cfoot*{\pagemark}
+\ofoot*{}
 
 \addbibresource{references.bib}
 \addbibresource{proposal-references.bib}
