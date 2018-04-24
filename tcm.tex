@@ -108,7 +108,7 @@ Despite being a simple equation, a number of different implementation approaches
 However, only one of these methods was successful in matching the human data when incorporated into the complete model.
 It is still instructive to compare these different approaches and consider why they fail.
 
-\subsection{Boundend integrator}
+\subsection{Bounded integrator}
 \Cref{eqn:ctx-update} assumes discrete steps, but for a neural implementation a continuous formulation is more natural and given by
 \begin{equation}
     \od{\ctx}{t} = \big(\bar{\theta} - 1\big) \ctx + \bar{\tcmbeta} \ctxin\,\text{.}
