@@ -51,7 +51,7 @@ from which the minimum $M$ for given $t^*_{\max}$ follows as
 To be able to construct the $k$-th discrete derivative an additional $2k$ nodes for a total of $M + 2k$ nodes are required.
 The noise in the output of the leaky accumulators is amplified by $g_{\eta,\ped{NEF}}$.
 As additional neurons will diminish noise by $\bO(1/\sqrt{n})$ (\cref{sec:neural-err}), the number of neurons needs to be scaled by $g_{\eta,\ped{NEF}}^2$ to achieve the same noise level that would be present without the noise amplification.
-Multiplying this factors together with a base number of neurons $N$ used to represent a single dimension and the number of dimensions $d$ yields \cref{eqn:fuzzy-n-neurons}:
+Multiplying these factors together with a base number of neurons $N$ used to represent a single dimension and the number of dimensions $d$ yields \cref{eqn:fuzzy-n-neurons}:
 \begin{equation*}
     N_{\ped{tot}}(t^*_1, k) = N \dims\, g_{\eta,\ped{NEF}}^2(\nu, k) \del{M + 2k} \text{.}
 \end{equation*}
