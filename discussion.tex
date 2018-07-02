@@ -174,7 +174,7 @@ To readout the memory, the Laplace transform is inverted approximately with a li
     \sbr{\mat L_k^{-1}}_{ij} = \frac{{(-1)}^k}{k!} s_i^{k+1} \sbr{\mat D_k}_{ij}
 \end{equation}
 where $\mat D_k$ is a square matrix that computes the $k$-th discrete derivative with respect to $s$.
-The reconstructed $\hat{f}_t(t + t^*) = \sbr{\mat L_k^{-1} \vc c(t)}_i$ with $t^* = -k/s_i < 0$ estimates the values of $f$ at times $t + t_i^*$ in the past.
+The reconstructed $\hat{f}_t(t + t_i^*) = \sbr{\mat L_k^{-1} \vc c(t)}_i$ with $t_i^* = -k/s_i < 0$ estimates the values of $f$ at times $t + t_i^*$ in the past.
 The reconstruction becomes more accurate as $k \rightarrow \infty$.
 
 \Textcite{shankar2013} derive a signal to noise ratio, but use the magnitude of a delta impulse input to do so.
@@ -208,7 +208,7 @@ This increase in timescale is given by
 \begin{equation}
     \tau_i(\nu) = - {(1 + \nu)}^k t^*_i \label{eqn:fuzzymem-ts}
 \end{equation}
-and is caused by the discrete approximation of the derivative that relies on unequally spaced $t^*_{i - k}$ to $t^*_{i + k}$ for the reconstruction of $\hat{f}_t(t + t^*_i)$ and is dominated by $t^*_{i + k}$ (\cref{apdx:fuzzymem-derivative}).
+and is caused by the discrete approximation of the derivative that relies on unequally spaced $s_{i - k}$ to $s_{i + k}$ for the reconstruction of $\hat{f}_t(t + t^*_i)$ and is dominated by $t^*_{i + k}$ (\cref{apdx:fuzzymem-derivative}).
 \begin{figure}
     \centering
     \includegraphics{figures/fuzzy-mem-noise-example}
@@ -234,17 +234,17 @@ This default range of firing rates is much higher than firing rates typically ob
 Thus, the actual required number of neurons can be expected to be higher.
 A dimensionality of $\dims = 64$ is also on the lower end to be able to fit sufficiently many almost orthogonal vectors into the space.
 The CUE model uses four times as much, $\dims = 256$, dimensions.
-Ultimately, the choice of $N$ and $\dims$ has only a minor influence on the results as they are just linear factors while the required number of neurons grows exponentially for $t^*_1,\ k \rightarrow \infty$.
+Ultimately, the choice of $N$ and $\dims$ has only a minor influence on the results as they are just linear factors while the required number of neurons grows exponentially for $|t^*_1|,\ k \rightarrow \infty$.
 The results for this choice of parameter values is shown in \cref{fig:fuzzy-mem-n-neurons}.
 For most parameter combinations, the number of about $\num{13e6}$ neurons in the entorhinal cortex \parencite{west1998}, assumed to be the locus of the CUE/TCM context signal, and even the number of about \num{86e9} neurons in the human brain \parencite{azevedo2009} is far exceeded.
-For an implementation with a realistic limit on the neuron number, $t^*_1$, but also $k$, needs to be sufficiently small.
+For an implementation with a realistic limit on the neuron number, $|t^*_1|$, but also $k$, needs to be sufficiently small.
 \begin{figure}
     \centering
     \includegraphics{figures/fuzzy-mem-n-neurons}
     \caption[Number of neurons required to implement a fuzzy temporal memory.]{Number of neurons required to implement a fuzzy temporal memory with a lower timescale of $\tau_1 = \SI{1}{\second}$ and a timespan of $t^*_{\max} = \SI{10}{\second}$. The white contours give the approximate number of neurons in the human entorhinal cortex (\num{13e6}) and human brain (\num{86e9}). See text for further details.}\label{fig:fuzzy-mem-n-neurons}
 \end{figure}
 
-Unfortunately, choosing small $t^*_1$ and $k$ is also problematic.
+Unfortunately, choosing small $|t^*_1|$ and $k$ is also problematic.
 The error of the approximate inversion of the Laplace transform with Post's formula converges only at a rate of $1/k$ \parencite{vukimtuan2000}.
 \Textcite{shankar2013} also comment themselves that $t^*_1$ needs to be kept sufficiently far from zero as it introduces a relative error in the order of $\bO\big(k^3\nu^2/96 t^{*2}_1\big)$ in the construction of the activity of $c_i$.
 

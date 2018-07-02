@@ -118,7 +118,7 @@ Here I use \num{150} neurons in the first, and \num{50} neurons in the second la
 As the first layer is performing the evidence accumulation it needs to be more accurate and requires more neural resources.
 Due to the lower number of neurons in the output layer, the decoded output has a higher variance.
 This, however, is not as relevant as variation of index of the highest output.
-If all other choices do not produce an output, the winning choice can still be clearly identified despite the variance decoded output.
+If all other choices do not produce an output, the winning choice can still be clearly identified despite the variance in the decoded output.
 
 Given this basic setup of the comparison, a number of metrics give insight in the performance of the networks.
 First, we want the network to reach a \emph{clear decision} which I define as exactly one output being above a threshold of \num{0.15} during the time interval from \SIrange{1}{2}{\second} simulation time, while all other outputs remain below the threshold.
@@ -276,7 +276,7 @@ By subtracting \num{0.1} from the input utilities provided by the OSE output, in
             extproc/"ext.\ processing done" [ext, x=3.5, y=-6] -> [inhibit] g4;
         };
         \draw [inhibit] (xib) |- node [above] {\small $\sum$} (i1);
-        \draw [-{Latex}] (i1) -| (g1);
+        \draw [-{Latex}, inhibit] (i1) -| (g1);
 
         \node (ia) [fit=(xi) (xib), draw, dashed, gray, rounded corners=0.5em, inner sep=0.5em] {};
         \node [above=0cm of ia.north, anchor=south, gray, font={\lato}] {IA};

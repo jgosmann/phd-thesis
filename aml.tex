@@ -191,7 +191,7 @@ All that is needed are additive weight changes proportional to some error signal
 However, it has been proposed that synapses might not simply transmit information, but also perform computations \parencites{abbott2004}[Ch.~5]{koch2004}.
 In particular, \textcite{andreasstockel2018} showed that conductance-based synapses can be used in the NEF to compute nonlinear functions like multiplication.
 That should allow us to roll the explicit outer product, required in the previous two approaches, into the synapses itself.
-This requires the considerably fewer neurons as no neural populations are required for each product.
+This requires considerably fewer neurons as no neural populations are required for each product.
 
 In this thesis, I am using an implementation that corresponds to this implicit error calculation, but implements the required synaptic computation in pure math rather than implementing it with actual synaptic models.
 This is mainly to reduce simulation times and is not meant as a statement that this is likely to correspond to the brain's implementation as there is not enough evidence to make such a strong claim.
@@ -270,7 +270,7 @@ After learning (AL), those same units showed an elevated firing rate only to the
 This can also be observed for associations learned with the AML\@.
 \Cref{fig:aml-net} shows a NEF network that implements the learning of associations between persons and landmarks to reproduce the experiment by \textcite{ison2015}.
 The connections weights from both pre-ensembles $\vc l$ and $\vc p$ are initialized with the identity transform.
-To achieve firing rates closer to the recorded data, the maximum firing rates of the ensembles were sampled uniformly for \SIrange{10}{20}{\second^{-1}} (instead of \SIrange{200}{400}{\second^{-1}} used in the CUE model) and intercepts were sampled uniformly from \numrange{0.1}{1}.
+To achieve firing rates closer to the recorded data, the maximum firing rates of the ensembles were sampled uniformly from \SIrange{10}{20}{\second^{-1}} (instead of \SIrange{200}{400}{\second^{-1}} used in the CUE model) and intercepts were sampled uniformly from \numrange{0.1}{1}.
 The dimensionality of the ensembles and semantic pointers was set to \num{32}.
 Furthermore, Gaussian white noise with a mean of \num{0.01} and standard deviation of \num{0.05}, low-pass filtered with a time-constant of \SI{0.1}{\second}, was injected into the neurons to account for neural background firing.
 The recorded spikes were analyzed analogous to \textcite{ison2015}.
