@@ -69,7 +69,7 @@ The decay factor of $\osestmdecay = 0.9775$ is taken from the original OSE imple
 For the OSE it is necessary to keep track of the ordinal position of the current item.
 The CUE model extends the OSE to do this also in neurons.
 \Cref{fig:posnet} shows the network implementing this functionality.
-All ensembles in this networks are implementing a threshold at zero so that represented values are always positive.
+All ensembles in this network are implementing a threshold at zero so that represented values are always positive.
 The \pop{state} ensemble array has one ensemble for each possible position and only the ensemble for the current position is active.
 This is ensured by providing a small negative bias ($-0.2$) to all ensembles to prevent spontaneous activity.
 Furthermore, a recurrent connection with $\syntau = \SI{0.1}{\second}$ decoding a constant of $1.2$ keeps the current position in a state of stable activity.

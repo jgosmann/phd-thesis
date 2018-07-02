@@ -141,7 +141,7 @@ Again, the pure derivation of a learning rule does not ensure its biological pla
 Thus, let us consider the individual terms in the gradient.
 The term $\vc\act\Tr \mdec_* \vc\act$ is using the current decoders to decode the ensemble's activity in no way different than usually done in the NEF where the existence of these standard decoders is generally assumed.
 The decoded value is then correlated with the ensemble's activity.
-The plausibility of this is somewhat unclear to to the direct interaction of decoded values and neural activities, but to my knowledge there is no data excluding this possibility.
+The plausibility of this is somewhat unclear to the direct interaction of decoded values and neural activities, but to my knowledge there is no data excluding this possibility.
 In particular, the decoded value and activities could be projected to another neural ensembles (see \cref{fig:aml-grad-desc}) that calculates the inner product.
 The same, a projection to neural ensemble calculating the inner product, could happen with the decoded value $\vc x$.
 Alternatively, $\vc x\Tr \vc x$ could directly be decoded (as a square of the individual components all projecting into the same dimension).
@@ -244,7 +244,7 @@ while the AML learning rule can be written as
 \end{equation}
 which is the same, except for $\mdec_* = \mdec\Tr \mdec$.
 
-The one-short learning ability comes with some limitations, though.
+The one-shot learning ability comes with some limitations, though.
 The learning rule is restricted to learn transformations that can be expressed as outer product matrices, while learning rules like PES can learn arbitrary transformation matrices.
 Moreover, the learning rule is essentially trying to learn a look-up table, mapping items to other items.
 Thus, one should not expect the AML to generalize to unseen mappings.

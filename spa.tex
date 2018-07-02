@@ -205,7 +205,7 @@ Example for $d = 4$:
         \end{array}}
 \end{equation*}
 
-\subsection{Comparison of circular convolution and vector-derived transformation binding}
+\subsection{Comparison of circular convolution and vector-derived transformation binding}\label{sec:splen}
 Both circular convolution and VTB are compressed binding operations.
 Because of the lossy compression, we lose some information in each binding which makes it increasingly harder to recover the original unbound vectors.
 To combat this effect (and the effect of neuron noise) clean-up memories like the one by \textcite{stewart2011} are required.
@@ -260,7 +260,7 @@ But it is also worth keeping in mind that achieving the theoretical limit of alm
 Thus, the practical scaling of the number of useable vectors might be less then the exponential scaling for both unitary and non-unitary vectors.
 
 So far VTB looks like the better choice for a binding operation.
-But it does not come not without downsides.
+But it does not come without downsides.
 In contrast to circular convolution, it is not associative or commutative.
 While the desirability of commutativity depends on the employed representation scheme, the non-associativity implies that each binding has to be undone in an individual step, while circular convolution allows us to undo a chain of bindings in a single step, if the vector representing that chain is available.
 Thus, circular convolution might allow the recovery of information more quickly.

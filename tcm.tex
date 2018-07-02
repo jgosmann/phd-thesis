@@ -62,7 +62,7 @@ While the similarity of contexts $\langle\ctx_i, \ctx_j\rangle$ is symmetric for
     \caption{Similarity of the context to itself $\langle \ctx_i, \ctx_j \rangle$ and to the retrieved context $\langle \ctxin_i, \ctx_j \rangle$ for different lags $j-i$.}\label{fig:ctxsim}
 \end{figure}
 
-Finally, the associations from items to context $\mtf$ need to be updated, so that a recalled item can be used to update and partially restore a previous context to retrieve further items.
+Finally, the associations from items to context $\mft$ need to be updated, so that a recalled item can be used to update and partially restore a previous context to retrieve further items.
 In the original TCM, this update is given by
 \begin{align}
     \mft_{i+1} &= \mft_i \tilde{\mat{P}}_{\tcmitem_i} + a_i \mft_i \mat{P}_{\tcmitem_i} + b_i \ctx_i \tcmitem_i\Tr \\

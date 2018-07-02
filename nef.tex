@@ -4,7 +4,7 @@ To construct a large-scale spiking neural network with a certain behaviour, some
 In most cases this method will be a learning algorithm \parencite[e.g.,][]{oreilly2006}.
 However, this requires time-intensive training of the model and is often not viable for large models, complex behaviours, or models combining different behaviours.
 In this work I opt to use the Neural Engineering Framework \parencite[NEF;][]{eliasmith2003} which allows the direct construction of a spiking neural network from the mathematical equations describing the desired dynamics without the time-intensive training.
-As such the final model does not provide an developmental account of how the neural network became organized or learned to perform its task.
+As such the final model does not provide a developmental account of how the neural network became organized or learned to perform its task.
 But, it provides a biologically plausible explanation of how the developed brain might perform that task.
 As well, it allows for the inclusion of biologically plausible online learning rules, to test adaptation in the adult system.
 Furthermore, it allows for manipulations to test known experimental results in the model or obtain new predictions.
@@ -25,7 +25,7 @@ But simpler neuron models (e.g., a rate-based LIF model, or rectified linear uni
 The input current to the neuron is obtained from how well the stimulus aligns with the preferred stimulus as measured by the dot product.
 As this alignment with the preferred stimulus ``encodes'' the stimulus into the neural representational space, $\enc_i$ is usually referred to as \emph{encoder} in the context of the NEF\@.
 Furthermore, the gain factor $\gain_i$ and bias term $\jbias_i$ can be used to adjust the neuron's tuning curve to experimentally observed firing rates.
-However, it is also common to use higher maximal firing rates to use fewer neurons in simulations while achieving an similar accuracy.
+However, it is also common to use higher maximal firing rates to use fewer neurons in simulations while achieving a similar accuracy.
 While this is not entirely adhering to biological constraints, in most cases NEF models behave similarly when lowering the firing rates and increasing neuron numbers accordingly \parencite[e.g.,][]{gosmann2015}.
 As it is rare to have detailed information about the tuning curves in many parts of the brain, those values are usually not directly set in the NEF\@.
 Instead a representational space $\repspace$ is defined, usually as the $\dims$-dimensional hyperball with radius $\radius$.

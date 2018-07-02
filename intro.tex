@@ -246,9 +246,10 @@ That approach is similar to the Semantic Pointer Architecture (SPA) presented in
 An especially influential model based on such random feature vectors was \mbox{TODAM2} \parencite{Murdock1993}.
 It was able to fit a large body of experimental data and, in that regard, aims to be a general theory for item recognition, serial order, and associative memory.
 A neural implementation could very well be possible with the NEF, but has not been attempted so far.
-However, \textcite{Choo2010} pointed out that the dimensionality of the vectors in the model increases with each stored item.
+However, \textcite{Choo2010} pointed out that the dimensionality of the vectors in the model increases with each stored item due to the use of convolution powers.
 Thus, the requirement for neural resources grows in an unbounded manner.
-It also worth noting, that \mbox{TODAM2} does not give an account of how responses are generated.
+Even when using circular convolution in the model, a neural implementation might be problematic because the vector norm can grow without bound (\cref{sec:splen}).
+It is also worth noting, that \mbox{TODAM2} does not give an account of how responses are generated.
 
 Another useful idea, that had its origin in mathematical models, is the idea of a randomly drifting context signal that items get associated to.
 \Textcite{Estes1955} presented the first model of this type and \textcite{Murdock1997} extended the \mbox{TODAM2} model in this way to explain additional data.
@@ -257,7 +258,7 @@ and (2) how the context is advanced in the same way during recall as in the stud
 As the signal drifts randomly, a memory for the context signal itself would be needed.
 The OSCAR model \parencite{Brown2000} solves part of this by using a deterministic context signal that is generated from multidimensional oscillators.
 This allows replay of the exact same context signal once it has been reset.
-It still does not describe how the context is re-instantiated to start the recall, as this still requires knowledge of the oscillator states at begin of the study phase.
+It still does not describe how the context is re-instantiated to start the recall, as this still requires knowledge of the oscillator states at the beginning of the study phase.
 
 All of these context-based models cannot explain the asymmetric CRP curves.
 The temporal context model \parencite{Howard2002}, however, was specifically constructed to explain these free recall data.

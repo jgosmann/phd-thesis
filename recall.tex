@@ -22,7 +22,7 @@ Each state variable $x_i$ is kept non-negative by setting negative values to zer
 Intuitively, each state variable integrates its input with a leak term of $-\kappa x_i$ and provides lateral inhibition to all other state variables.
 Given one input $u_i > u_j$ for all $j \neq i$, the state variable $x_i$ will converge to $u_i$ while all other state variables $x_j,\ j \neq i$ will converge to $0$ if $\kappa = \lambda = 1$ (\cref{sec:apdx-wta}).
 In the following analysis, $\kappa = \lambda = 1$ will be fixed.
-Other choices of $\lambda$ affect the effective integration time-constant $\tau$ and gain on the input, while changing $\beta$ results in undesired behaviour where the history of inputs influences the current choice.
+Other choices of $\lambda$ affect the effective integration time-constant $\tau$ and gain on the input, while changing $\kappa$ results in undesired behaviour where the history of inputs influences the current choice.
 
 By means of principle 3 of the NEF, the prescribed dynamics can be exactly implemented in the NEF\@.
 Here, one ensemble per state variable is used (\cref{fig:lca}) and the gains and biases of the neurons are distributed as described in \cref{sec:thresholding} to ensure the rectification of the state variables.
@@ -194,9 +194,9 @@ The IA network is better for a discrete series of decisions.
 It does not produce a continuous output, but waits until the evidence integration threshold is crossed, at which point the network needs to be inhibited to be reset and obtain another decision.
 While this produces sequential and discrete decisions, it has the advantage that evidence can be accumulated over a longer time frame to average out noise.
 Depending on the choice of the integration time-constant, the IA network may either be not as quick or as reliable in identifying the correct winner as the LCA network.
-However, it will eventually produces a clear decision that a downstream network can act on (as long as at least one input is strictly positive).
+However, it will eventually produce a clear decision that a downstream network can act on (as long as at least one input is strictly positive).
 This can be important in a larger scale model where stalling a decision indefinitely can result in a breakdown of model behaviour.
-Or in other words, sometimes it is better to act on a wrong decision than to not act all.
+Or in other words, sometimes it is better to act on a wrong decision than to not act at all.
 For example, in memory recall it might be better to produce a wrong output and continue to recall the next item than indefinitely be trying to recall an item that cannot be recalled.
 It is also worth pointing out that the IA network allows for dynamic control of the decision speed by adjusting the $\vartheta$ threshold through a bias input to the second layer.
 

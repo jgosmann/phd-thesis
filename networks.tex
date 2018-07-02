@@ -151,7 +151,7 @@ or compute the Heaviside step function
 Both of these functions are non-differentiable at zero.
 The Heaviside function is even discontinuous at that spot.
 These properties make it problematic to implement this function with a standard NEF ensemble.
-Nevertheless, a good approximations of these functions can be achieved by aligning the neuron's tuning curves according to the shape of these functions.
+Nevertheless, good approximations of these functions can be achieved by aligning the neuron's tuning curves according to the shape of these functions.
 
 Instead of choosing encoders randomly as $-1$ and $1$, all encoders are set to $1$ and all intercepts of the neuron tuning curves are chosen from $x \in \big[0; 1\big]$.
 Choosing the intercept distribution in this interval appropriately can further increase the accuracy.
@@ -174,7 +174,7 @@ A \SI{37}{\percent} more accurate implementation (with the same number of neuron
 \end{equation}
 The neural implementation of this equation is straight-forward (\cref{fig:product-net}).
 \begin{figure}
-    \begin{captionbeside}{Implesbrmentation of an accurate product with the NEF.\label{fig:product-net}}[i]
+    \begin{captionbeside}{Implementation of an accurate product with the NEF.\label{fig:product-net}}[i]
         \begin{tikzpicture}[nef, x=2cm, y=2cm]
             \graph [no placement] {
                 x/"$x$" [at={(0, 1)}] -> sum/"$a$" [ens, at={(1, 1)}] -> ["$a^2/4$"] prod/"" [pnode, at={(2, 0.5)}] -> out/"$xy$" [at={(3, 0.5)}];
