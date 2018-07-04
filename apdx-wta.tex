@@ -3,7 +3,7 @@
 The model dynamics for the leaky, competing accumulator (LCA) are given as follows:
 \begin{equation}
     \begin{split}
-        \frac{{\partial x}_i}{\partial t} = \left(\rho_i - \kappa x_i - \lambda \sum_{j \neq i} x_j\right) \frac{1}{\tau}, \quad x_i \ge 0 .
+        \frac{{\partial x}_i}{\partial t} = \left(u_i - \kappa x_i - \lambda \sum_{j \neq i} x_j\right) \frac{1}{\tau}, \quad x_i \ge 0 .
     \end{split}
 \end{equation}
 We now justify our choice of $\kappa = \lambda = 1$ from the text.
@@ -18,13 +18,13 @@ To isolate the `role' of $\kappa$, we consider the case where $\lambda \sum_{j \
 This situation obeys the dynamics:
 \begin{equation}
     \begin{split}
-        \frac{{\partial x}_i}{\partial t} &= \left(\rho_i - \kappa x_i\right) 
+        \frac{{\partial x}_i}{\partial t} &= \left(u_i - \kappa x_i\right) 
         \frac{1}{\tau}
     \end{split}.
 \end{equation}
 We then take the Laplace transform of both sides, and rearrange to obtain:
 \begin{equation}
-    s\mathcal{L}\{x_i\} = \left( \mathcal{L}\{\rho_i\} - \kappa\mathcal{L}\{x_i\} \right) \frac{1}{\tau} \quad \iff \quad \frac{\mathcal{L}\{x_i\}}{\mathcal{L}\{\rho_i\}} = \frac{1}{\tau s + \kappa}.
+    s\mathcal{L}\{x_i\} = \left( \mathcal{L}\{u_i\} - \kappa\mathcal{L}\{x_i\} \right) \frac{1}{\tau} \quad \iff \quad \frac{\mathcal{L}\{x_i\}}{\mathcal{L}\{u_i\}} = \frac{1}{\tau s + \kappa}.
 \end{equation}
 When $\kappa = 1$, this is commonly referred to as a first-order lowpass filter with time-constant $\tau$.
 The effect of this filter in the time-domain is a convolution with the exponentially decaying function $h(t) := \tau^{-1} \exp\left( -t / \tau \right)$.
@@ -38,12 +38,12 @@ In plain words, different values of $\kappa > 0$ do nothing but alter the effect
 %Setting $\kappa = 1$ is most convenient since this yields the time-constant 
 %$\tau$ with unit gain.
 
-Therefore, by setting $\kappa = 1$, we have $x_i = \rho_i \ast h$ provided that $\lambda \sum_{j \ne i} x_j = 0$.
+Therefore, by setting $\kappa = 1$, we have $x_i = u_i \ast h$ provided that $\lambda \sum_{j \ne i} x_j = 0$.
 % Since the NEF gives us freedom to vary such gains and time-constants (at the 
 % representational level) independently of the underlying neural and synaptic 
 % model parameters (via principles 1 and 3, respectively), it suffices to fix 
 % $\kappa = 1$ for simplicity.
-Below we prove that the latter assumption eventually holds whenever $i$ is the index of the winner and $\lambda = 1$, and so the winner $x_i$ will converge to the value of its input $\rho_i$.
+Below we prove that the latter assumption eventually holds whenever $i$ is the index of the winner and $\lambda = 1$, and so the winner $x_i$ will converge to the value of its input $u_i$.
 
 
 \section{Effect of \texorpdfstring{$\lambda = 1$}{λ=1}}
@@ -51,14 +51,16 @@ Below we prove that the latter assumption eventually holds whenever $i$ is the i
 Setting $\lambda = \kappa = 1$, and defining $\chi := \sum_j x_j$, we rewrite the dynamics as:
 \begin{equation} \label{eq:um-special}
     \begin{split}
-        \frac{{\partial x}_i}{\partial t} = \left(\rho_i - \chi \right) \frac{1}{\tau}, \quad x_i \ge 0.
+        \frac{{\partial x}_i}{\partial t} = \left(u_i - \chi \right) \frac{1}{\tau}, \quad x_i \ge 0.
     \end{split}
 \end{equation}
-We conceptualize $\chi$ as a single ``meta state-variable'' that, based on the value of each $\rho_i$, will change each corresponding $x_i$.
-% For instance, we know that $\chi > \rho_i \iff \frac{{\partial x}_i}{\partial t} < 0$.
-% This tells us that all $x_i$ will decrease until they are bounded by $0 \le x_i \le \rho_i$.
-For instance, if $i$ is the index of the winner, then $x_i$ is necessarily only stable when $\chi = \rho_i \iff \frac{{\partial x}_i}{\partial t} = 0$.
-Assuming stability, $\chi = \rho_i > \rho_j$ for all $j \ne i$, and thus each $x_j$ necessarily has a negative derivative.
-Consequently, all losers $x_j$ will decrease to zero and stabilize there due to rectification (and then $\chi = \rho_i = x_i$ holds as anticipated).
+We conceptualize $\chi$ as a single ``meta state-variable'' that, based on the value of each $u_i$, will change each corresponding $x_i$.
+% For instance, we know that $\chi > u_i \iff \frac{{\partial x}_i}{\partial t} 
+% < 0$.
+% This tells us that all $x_i$ will decrease until they are bounded by $0 \le 
+% x_i \le u_i$.
+For instance, if $i$ is the index of the winner, then $x_i$ is necessarily only stable when $\chi = u_i \iff \frac{{\partial x}_i}{\partial t} = 0$.
+Assuming stability, $\chi = u_i > u_j$ for all $j \ne i$, and thus each $x_j$ necessarily has a negative derivative.
+Consequently, all losers $x_j$ will decrease to zero and stabilize there due to rectification (and then $\chi = u_i = x_i$ holds as anticipated).
 
 We also remark that if $\lambda \ne 1$ then the derivatives are no longer sorted by their inputs, and in fact the order will depend on the current state (for instance, it will depend on the previous winner if the inputs were just altered). Consequently, if $\lambda < 1$, then not all losers will necessarily go to zero, and if $\lambda > 1$, then the previous winner may persist.
