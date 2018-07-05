@@ -159,7 +159,7 @@ As a spiking neural network model, the CUE model allows the recording of spikes 
 \begin{figure}
     \centering
     \includegraphics{figures/spikes}
-    \caption[Memory encoding in the CUE model.]{Memory encoding in the CUE model. From top to bottom: weights encoding $\mtf$ in LTM, spiking activity of a subset of STM neurons, and spiking activity of a subset of neurons encdoing the context signal $\ctx$. The colored bars at the top mark the presentation of four different list items.}\label{fig:spikes}
+    \caption[Memory encoding in the CUE model.]{Memory encoding in the CUE model. From top to bottom: weights encoding $\mtf$ in LTM, spiking activity of a subset of STM neurons, and spiking activity of a subset of neurons encoing the context signal $\ctx$. The colored bars at the top mark the presentation of four different list items.}\label{fig:spikes}
 \end{figure}
 The distribution of active neurons changes for the STM neurons with each item, with a delay of about \SI{250}{\milli\second} to encode the new item.
 When no new item is present, persistent neural firing preserves the firing pattern.
@@ -167,22 +167,22 @@ Similar behaviour is observed for neurons encoding the current context signal th
 The LTM for $\mtf$ (and $\mft$, but not shown) is encoded in neural weights that change for each list item to encode the newly learned associations.
 
 \Textcite{folkerts2018} recorded from the medial temporal lobe of epilepsy patients and found that the population activity vector exhibits a neural recency effect.
-The similarity of the population vector decreases with lag between presented item.
-A similar analysis can be done in the CUE model by recording the spikes from the context component of the model.
+The similarity of the population vector decreases with lag between presented items.
+A similar analysis can be done in the CUE model by recording spikes from the context component of the model.
 The population vector is given by the average firing rates during the presentation window of each item in a list.
-A decline in similarity qualitatively similar to \textcite{folkerts2018} when comparing to less recent population vectors can be found as shown in \cref{fig:popsim}.
+A decline in similarity qualitatively similar to \textcite{folkerts2018}, when comparing to less recent population vectors, can be found as shown in \cref{fig:popsim}.
 \begin{figure}
     \centering
     \includegraphics{figures/popsim}
-    \caption{Similarity of the context population vector with recency.}\label{fig:popsim}
+    \caption{Change in similarity of the context population vector with recency.}\label{fig:popsim}
 \end{figure}
-The absolute similarity values are higher in then reported from the experimental data which can be attributed to the possibility of specifically recording from the neurons responsible for representing the context, whereas experimentally many unrelated neurons will be included in the analysis.
+The absolute similarity values are higher than reported in the experimental data which can be attributed to the possibility of specifically recording from the neurons responsible for representing the context, whereas experimentally many unrelated neurons will be included in the analysis.
 
-Furthermore, \textcite{ninokura2003} identified neurons with activity selective to the serial order of items in the lateral prefrontal cortex cortex of monkeys.
+Furthermore, \textcite{ninokura2003} identified neurons with activity selective to the serial order of items in the lateral prefrontal cortex of monkeys.
 Using permutations of a three item list, analogous to \textcite{ninokura2003}, similar neurons can be found among the STM neurons of the CUE model (\cref{fig:seqsel}).
 Besides neurons selective to a single permutation of items that fire persistently during the delay period, some neurons appear selective for one permutation and either increase or decrease their firing rate during the delay period.
 Some neurons are selective for multiple sequences.
-\Cref{fig:seqsel}d shows a neurons that responds to sequences starting with ZY, but also the sequence XYZ\@.
+\Cref{fig:seqsel}d shows a neuron that responds to sequences starting with ZY, but also the sequence XYZ\@.
 Finally, many neurons are much more complex in their responses and cannot easily be assigned a specific preferred stimulus sequence (no figure shown).
 \begin{figure}
     \centering

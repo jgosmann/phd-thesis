@@ -27,10 +27,12 @@ Modelling the Hebb repetition effect also extends the model to effects across mu
 This is done by only few memory models, in particular, neither the OSE, nor the TCM model attempted to match this kind of data.
 
 As opposed to pure math models, the implementation as a spiking neural network allows the comparison and validation of the model against data from neural recordings in addition to the behavioural data.
+Neurons sensitive to the serial oder of items and a neural recency effect could be found.
+Both findings have also been reported in experimental data.
 In \cref{sec:aml-neural}, it was demonstrated that the proposed mechanism of association learning is able to explain neural data.
 Unfortunately, neural data recorded from humans in memory experiments is still scarce, because invasive recordings can only be done when such recordings are required for medical reasons.
 Nevertheless, implementing models with spiking neurons is worthwhile for several other reasons, despite the more complicated model construction and increased simulation times.
-Drug effects, like scopolamine, can be more readily modelled, as was done with CUE model (though I note that \textcite{hasselmo1997} did address the effects of scopolamine with more detail).
+Drug effects, like scopolamine, can be more readily modelled, as was done with CUE model (though I note that \cite{hasselmo1997} did address the effects of scopolamine with more detail).
 Also a higher degree of biological plausibility is achieved as one is forced to consider, for example, spiking noise and synaptic time constants.
 This prevents common assumptions like arbitrary precision or perfectly orthogonal vectors made in many math models, and forces the consideration of dynamics.
 
@@ -153,7 +155,7 @@ This is consistent with the connectivity in the model where the context network 
 The learning network for $\mft$ also projects back to an ensemble recalling the prior context before it gets combined in a different ensemble.
 
 The short-term memory related components of the CUE model can be assumed to correspond to cortical areas, in particular the prefrontal cortex.
-The prefrontal cortex has been found to be involved in working memory tasks in many studies \parencite[e.g.,][]{goldman-rakic1995,owen1997}
+The prefrontal cortex has been found to be involved in working memory tasks in many studies \parencite[e.g.,][]{goldman-rakic1995,owen1997}.
 
 
 \section{Optimally fuzzy temporal memory}\label{sec:fuzzymem}
@@ -254,10 +256,10 @@ Currently, it is not clear whether these non-noise related errors are sufficient
 At the same time it would require an increased number of neurons compared to the current implementation as each dimension requires a set of leaky integrators, i.e.\ additional values have to be stored for each dimension.
 In comparison, the context network for \num{256}~dimensional vectors uses only \num{51225} neurons, and even when adjusting by a factor of \num{10}, this is many fewer neurons than found in the human entorhinal cortex.
 
-Apart from this theoretical argument, it might be possible to differentiate experimentally between the context representation used in the CUE model and the scale-invariant fuzzy memory.
-With the fuzzy memory, the context representation get updated continuously, whereas in the CUE model the context signal is subject to discrete updates for each presented item.
-Such discrete changes in the firing pattern could potentially be detected if such discrete update are not too fine grained.
-A related prediction of the scale-invariant fuzzy memory is that the context signal will depend on presentation and inter-stimulus intervals which should have an effect on the contiguity in recall.
+Apart from this theoretical argument, it might be possible to differentiate experimentally between the context representation used in the CUE model and the fuzzy temporal memory.
+With the fuzzy memory, the context representation gets updated continuously, whereas in the CUE model the context signal is subject to discrete updates for each presented item.
+Such discrete changes in the firing pattern could potentially be detected if such discrete updates are not too fine grained.
+A related prediction of the fuzzy temporal memory is that the context signal will depend on presentation and inter-stimulus intervals which should have an effect on the contiguity in recall if their length is varied within a trial.
 
 
 \section{Advances in large-scale cognitive modeling}
